@@ -4,7 +4,7 @@
   var DASH = [
     { id: 'kapal', label: 'Kecelakaan Kapal', src: 'apps/kecelakaan-kapal.html' },
     { id: 'rob',   label: 'Banjir Rob',       src: 'apps/banjir-rob.html' },
-    { id: 'ptsp',  label: 'Kinerja PTSP',     src: 'apps/kinerja-ptsp.html' },
+    { id: 'ptsp',  label: 'PTSP',             src: 'apps/ptsp.html' },
     { id: 'skk',   label: 'SKK Migas',        src: 'apps/skk-migas.html' }
   ];
   var TOOLS = {
@@ -12,7 +12,7 @@
     'convert-pdf': { label: 'Convert PDF Scan', src: 'apps/convert-pdf-scan.html' },
     'satelit-ptsp': { label: 'Satelit PTSP', src: 'apps/satelit-ptsp.html' }
   };
-  var V = '9';
+  var V = '10';
   function bust(u) { return u + (u.indexOf('?') < 0 ? '?' : '&') + 'v=' + V; }
   var ROUTINE = { task: { label: 'Task Management', src: 'apps/fod.html' } };
 
@@ -84,8 +84,17 @@
 
   /* ---------- navigasi ---------- */
   /* Posisi disimpan di hash URL (#routine/task, #dashboard/rob, ...) agar refresh tetap di laman yang sama. */
-  function setHash(h) {
-    try { history.replaceState(null, '', h ? '#' + h : location.pathname + location.search); } catch (err) { /* abaikan */ }
+  /* Setiap perpindahan laman menambah satu entri riwayat (pushState) sehingga tombol Back browser
+     kembali ke laman sebelumnya, bukan keluar dari situs. Saat memulihkan dari hash/popstate tidak menambah entri. */
+  var restoring = false;
+  function setHash(h, replace) {
+    if (restoring) return;
+    if (location.hash.replace(/^#/, '') === (h || '')) return;
+    var url = h ? '#' + h : location.pathname + location.search;
+    try {
+      if (replace) history.replaceState(null, '', url);
+      else history.pushState(null, '', url);
+    } catch (err) { /* abaikan */ }
   }
 
   var current = 'home';
@@ -95,7 +104,7 @@
     return { routine: 'Operational Routine', dashboard: 'Dashboard', layanan: 'Layanan Khusus' }[name];
   }
 
-  function show(name) {
+  function show(name, skipHash) {
     Object.keys(views).forEach(function (k) { views[k].hidden = k !== name; });
     if (name === 'home' && current !== 'home') {
       ['routine', 'dashboard', 'layanan'].forEach(function (k) { clearStage(stages[k]); });
@@ -103,7 +112,7 @@
       resetLayanan();
     }
     current = name;
-    setHash(name === 'home' ? '' : name);
+    if (!skipHash) setHash(name === 'home' ? '' : name);
     document.body.classList.toggle('in-app', name !== 'home');
     window.scrollTo(0, 0);
     document.title = (name === 'home' ? '' : titleOf(name) + ' | ') + 'Maritime Information Workspace';
@@ -137,8 +146,9 @@
   /* Dashboard */
   function openDashboard(id) {
     dashId = id || dashId;
-    show('dashboard');
-    setHash('dashboard/' + dashId);
+    var already = current === 'dashboard';
+    show('dashboard', true);
+    setHash('dashboard/' + dashId, already);   /* ganti tab = replace, masuk dashboard = entri baru */
     var item = DASH.filter(function (d) { return d.id === dashId; })[0];
     frameFor(stages.dashboard, item.id, item.src, 'Dashboard ' + item.label);
     showOnly(stages.dashboard, item.id);
@@ -201,7 +211,7 @@
   try { if (localStorage.getItem(BAR_KEY) === '1') setBar(true); } catch (err) { /* abaikan */ }
 
   /* ---------- pulihkan laman dari hash ---------- */
-  (function restore() {
+  function applyHash() {
     var parts = location.hash.replace(/^#/, '').split('/');
     var view = parts[0], key = parts[1];
     if (view === 'routine') { openRoutine(); if (ROUTINE[key]) openRoutineItem(key); }
@@ -209,7 +219,15 @@
     else if (view === 'dashboard') {
       openDashboard(DASH.some(function (d) { return d.id === key; }) ? key : null);
     }
-  })();
+    else show('home');
+  }
+  function restoreFromHash() {
+    restoring = true;
+    try { applyHash(); } finally { restoring = false; }
+  }
+  if (location.hash) restoreFromHash();
+  /* tombol Back / Forward browser */
+  window.addEventListener('popstate', restoreFromHash);
 
   /* ---------- event ---------- */
   document.addEventListener('click', function (e) {
