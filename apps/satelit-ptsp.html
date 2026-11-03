@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Satelit PTSP</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--navy:#0B2E4F;--teal:#0E7C86;--teal-soft:#DDF0F1;--amber:#E9A21B;--amber-soft:#FBEED0;--paper:#F3F7FA;--ink:#102232;--muted:#51667A;--line:#D5E0E8;
+  font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+main{max-width:760px;margin:0 auto;padding:32px 24px 56px}
+h1{margin:0 0 6px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.lead{margin:0 0 22px;color:var(--muted)}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:16px}
+.card h2{margin:0 0 10px;font-size:1.02rem;font-weight:700}
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px;border-left:5px solid var(--teal)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:999px;border:0}
+.btn:hover{background:#0b6a73}
+.btn:focus-visible{outline:3px solid #2B7BE4;outline-offset:2px}
+.btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cta small{color:var(--muted);flex:1 1 220px}
+ol{margin:0;padding-left:1.2rem}
+li{margin:6px 0}
+code{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.88em}
+.note{background:var(--amber-soft);border-left:5px solid var(--amber);border-radius:10px;padding:12px 16px;font-size:.92rem}
+.note b{display:block;margin-bottom:2px}
+ul{margin:8px 0 0;padding-left:1.2rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Satelit PTSP</h1>
+  <p class="lead">Unduh dan pratinjau citra satelit Himawari (HCAI dan RP) dari server FTP untuk keperluan PTSP.</p>
+
+  <section class="card cta" aria-label="Unduh aplikasi">
+    <a class="btn" href="../downloads/CitraSatelitPTSP.exe" download>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+      Unduh CitraSatelitPTSP.exe
+    </a>
+    <small>Aplikasi Windows, sekitar 10 MB. Tidak perlu memasang Python.</small>
+  </section>
+
+  <section class="card">
+    <h2>Cara menggunakan</h2>
+    <ol>
+      <li>Unduh file <code>CitraSatelitPTSP.exe</code> lalu klik dua kali.</li>
+      <li>Jika Windows menampilkan peringatan "Windows protected your PC", klik <b>More info</b> lalu <b>Run anyway</b>. Peringatan ini muncul karena aplikasi internal belum ditandatangani.</li>
+      <li>Browser terbuka otomatis. Jika tidak, klik tombol di bawah.</li>
+      <li>Aplikasi menutup sendiri setelah tab-nya ditutup dan tidak ada unduhan yang berjalan.</li>
+    </ol>
+    <p style="margin:14px 0 0"><a class="btn" href="http://127.0.0.1:8765" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M10 14 21 3M19 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/></svg>
+      Buka Satelit PTSP</a></p>
+  </section>
+
+  <section class="card">
+    <h2>Mengapa harus diunduh?</h2>
+    <p style="margin:0;color:var(--muted)">Browser tidak mendukung FTP, sehingga halaman web biasa tidak bisa mengunduh dari server citra satelit. Aplikasi ini menjalankan server kecil di komputer Anda (<code>127.0.0.1:8765</code>) yang mengambil file lewat FTP, sedangkan tampilannya tetap berupa halaman web.</p>
+  </section>
+
+  <div class="note" role="note">
+    <b>Tidak terbuka?</b>
+    Muncul "tidak dapat dihubungi" berarti aplikasinya belum berjalan. Jalankan dulu file .exe-nya, lalu klik tombol lagi.
+    <ul>
+      <li>Komputer harus bisa mengakses server FTP citra (biasanya jaringan kantor).</li>
+      <li>Port <code>8765</code> tidak boleh dipakai aplikasi lain.</li>
+    </ul>
+  </div>
+</main>
+</body>
+</html>

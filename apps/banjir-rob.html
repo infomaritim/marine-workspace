@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="../assets/config.js?v=8"></script>
+<script src="../assets/gas-bridge.js?v=4" data-app="rob"></script>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{--bg:#f1f4f8;--card:#fff;--tx:#0f1f33;--mut:#5b6b7f;--bd:#dde4ec;--bd2:#c5cfdb;--pri:#0a2540;--acc:#1d62a8;--soft:#ecf3fa}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+header{background:var(--pri);color:#fff;position:sticky;top:0;z-index:1100}
+.hin{max-width:1280px;margin:0 auto;padding:0 24px;height:48px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;gap:10px;align-items:center;min-width:0}
+.logo{height:38px;width:auto;display:block;flex:none}
+h1{margin:0;font-size:13.5px;font-weight:600;letter-spacing:.04em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{font-size:11px;color:#9fb4d1;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{display:flex;gap:12px;align-items:center;font-size:12px;color:#b4c4dd;flex:none}
+#upd{max-width:46vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+button{font:inherit;font-weight:500;cursor:pointer;border:1px solid var(--bd2);background:#fff;color:var(--tx);border-radius:6px;padding:6px 14px;transition:background .15s,border-color .15s,color .15s}
+button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+button.p{background:var(--acc);border-color:var(--acc);color:#fff}
+button.p:hover:not(:disabled){background:var(--pri);border-color:var(--pri);color:#fff}
+button:disabled{opacity:.55;cursor:default}
+header button{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff;padding:4px 12px;font-size:12.5px}
+header button:hover:not(:disabled){background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5);color:#fff}
+select,input[type=search]{height:34px;padding:0 10px;border:1px solid var(--bd2);border-radius:6px;background:#fff;color:var(--tx);font:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+#rst{height:34px;background:#fdecea;border-color:#f1b5ae;color:#b42318;font-weight:600}
+#rst:hover:not(:disabled){background:#d92d20;border-color:#d92d20;color:#fff}
+select:focus,input:focus,button:focus-visible{border-color:var(--acc);box-shadow:0 0 0 3px rgba(29,98,168,.16);outline:0}
+main{max-width:1280px;margin:0 auto;padding:16px 24px 48px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:8px}
+section.card{margin-bottom:12px;overflow:hidden}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.stat{position:relative;display:flex;align-items:center;gap:14px;padding:14px 16px;background:linear-gradient(120deg,var(--t) 0%,#fff 75%);border:1px solid var(--bd);border-top:3px solid var(--c);border-radius:8px}
+.stat .ic{width:44px;height:44px;border-radius:11px;background:var(--c);color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 3px 8px -2px var(--c)}
+.stat b{display:block;font-size:28px;font-weight:700;color:var(--c);line-height:1.1;letter-spacing:-.02em}
+.stat span{display:block;margin-top:2px;font-size:12.5px;font-weight:500;color:var(--mut)}
+.s1{--c:#1d62a8;--t:#e3eefb}.s2{--c:#c26a05;--t:#fff0d6}.s3{--c:#0b7a55;--t:#ddf5ea}.s4{--c:#5b3fc4;--t:#ece7fb}
+.filters{display:flex;flex-wrap:wrap;gap:12px 14px;align-items:flex-end;padding:12px 16px}
+.grp{display:flex;gap:6px;align-items:flex-end}.arrow{padding-bottom:7px;color:var(--mut)}
+label{display:block;font-size:12px;font-weight:500;color:var(--mut);margin-bottom:4px}
+#upt{min-width:260px;max-width:340px}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--bd);min-height:49px}
+h2{margin:0;font-size:14px;font-weight:600;color:var(--pri)}
+.hint{font-size:12px;color:var(--mut)}
+#chart{overflow-x:auto;padding:10px 16px 14px}
+.bar{transform-box:fill-box;transform-origin:50% 100%;animation:g .6s ease-out;cursor:pointer;transition:fill .15s}
+.bar:hover{fill:#0a2540}
+@keyframes g{from{transform:scaleY(0)}}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools button{padding:5px 12px}
+.sbox{position:relative}.sbox svg{position:absolute;left:9px;top:9px;pointer-events:none}
+#q{width:210px;height:32px;padding:0 10px 0 29px;font-size:13px}
+#ps{height:32px;padding:0 8px;font-size:13px}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:780px}
+th,td{padding:10px 16px;text-align:left;border-bottom:1px solid var(--bd);vertical-align:top}
+th{background:#f7f9fc;font-size:12px;font-weight:600;color:var(--mut);white-space:nowrap;user-select:none}
+th.s{cursor:pointer}th.s:hover{color:var(--acc)}
+tbody tr:hover{background:#f6f9fd}
+tbody tr:last-child td{border-bottom:0}
+td.n{color:var(--mut);width:46px}td.d{white-space:nowrap;font-weight:600;color:var(--pri)}
+a{color:var(--acc);text-decoration:none;word-break:break-all}a:hover{text-decoration:underline}
+.empty,.msg{padding:26px;text-align:center;color:var(--mut)}
+.sb{display:none;align-items:center;gap:10px;background:var(--soft);border-bottom:1px solid #cfdeee;color:var(--pri);padding:8px 16px;font-size:13px}
+.sb button{padding:2px 10px;font-size:12px}
+.warn{background:#fff8e6;color:#7a5200;border:1px solid #f1d78a;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:13px}
+.pg{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid var(--bd);font-size:13px;color:var(--mut);flex-wrap:wrap;gap:8px}
+.pg div{display:flex;gap:4px}.pg button{padding:3px 10px;min-width:32px}.pg button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+#map{height:480px;z-index:0}
+.lg{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:var(--mut);padding:9px 16px;border-top:1px solid var(--bd);background:#fafbfd}
+.lg span{display:inline-flex;align-items:center}
+.leaflet-container{font-family:inherit;background:#e9eef4}
+.leaflet-popup-content-wrapper{border-radius:8px;box-shadow:0 6px 20px rgba(15,31,51,.2);padding:2px}
+.leaflet-popup-content{font-size:13px;line-height:1.5;margin:12px 14px}
+.leaflet-tooltip{border:0;border-radius:6px;box-shadow:0 3px 10px rgba(15,31,51,.2);font-weight:500;color:var(--tx);padding:4px 9px}
+.leaflet-bar{border:0!important;border-radius:8px!important;overflow:hidden;box-shadow:0 2px 10px rgba(15,31,51,.2)!important}
+.leaflet-bar a{color:#334155;border-bottom-color:#e8edf5!important}
+.leaflet-control-attribution{border-radius:6px 0 0 0;font-size:10px}
+.tgl{background:rgba(255,255,255,.97);border-radius:8px;box-shadow:0 2px 10px rgba(15,31,51,.2);padding:4px 10px;font:500 12.5px/1.2 "IBM Plex Sans",system-ui,sans-serif}
+.tr{display:flex;align-items:center;gap:9px;padding:6px 0;cursor:pointer;user-select:none;color:#334155;outline:0}
+.sw{position:relative;width:34px;height:20px;border-radius:10px;background:#c5cfdb;transition:background .2s;flex:none}
+.sw i{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .2s}
+.tr.on .sw{background:var(--acc)}.tr.on .sw i{left:16px}
+.tr:focus-visible .sw{box-shadow:0 0 0 3px rgba(29,98,168,.25)}
+.ofc{position:relative;width:28px;height:28px;border-radius:7px;background:#0a2540;border:2px solid #fff;box-shadow:0 2px 6px rgba(15,31,51,.35);display:grid;place-items:center}
+.ofc:after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-6px;border:6px solid transparent;border-top-color:#0a2540;border-bottom:0}
+.ofc.z{background:#94a3b8}.ofc.z:after{border-top-color:#94a3b8}
+.ofc .bd{position:absolute;top:-9px;right:-9px;min-width:18px;height:18px;border-radius:9px;background:#dc2626;color:#fff;font:600 11px/18px system-ui,sans-serif;text-align:center;padding:0 4px;border:1.5px solid #fff}
+.lk{color:var(--acc);text-decoration:none;cursor:pointer}.lk:hover{text-decoration:underline}
+.ofm{display:inline-block;width:14px;height:14px;border-radius:4px;background:#0a2540;margin-right:6px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){main{padding:12px 12px 40px}.hin{padding:0 12px}.sub{display:none}#map{height:380px}#q{width:150px}.stat{padding:10px 12px;gap:10px}.stat b{font-size:22px}.stat .ic{width:36px;height:36px}}
+@media(prefers-reduced-motion:reduce){.bar{animation:none}*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hin">
+    <div class="brand">
+      <img class="logo" alt="BMKG" src="data:image/png;base64,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">
+      <div><h1>REKAPITULASI KEJADIAN BANJIR ROB</h1><div class="sub">Dibaca otomatis dari laporan harian seluruh UPT</div></div>
+    </div>
+    <div class="meta"><span id="upd">Memuat…</span><button id="ref">Perbarui data</button></div>
+  </div>
+</header>
+<main>
+  <div id="warn"></div>
+  <section class="stats">
+    <div class="stat s1"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><div><b id="c1">–</b><span>Total kejadian</span></div></div>
+    <div class="stat s2"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></div><div><b id="c2">–</b><span>Hari terjadi rob</span></div></div>
+    <div class="stat s3"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V6l8-3 8 3v15M2 21h20M8 9h2M14 9h2M8 13h2M14 13h2M10 21v-4h4v4"/></svg></div><div><b id="c3">–</b><span>UPT melaporkan</span></div></div>
+    <div class="stat s4"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><b id="c4">–</b><span>Lokasi terdampak</span></div></div>
+  </section>
+
+  <section class="card filters">
+    <div class="grp"><div><label>Dari bulan</label><select id="fm"></select></div><div><label>Tahun</label><select id="fy"></select></div></div>
+    <div class="arrow">→</div>
+    <div class="grp"><div><label>Sampai bulan</label><select id="tm"></select></div><div><label>Tahun</label><select id="ty"></select></div></div>
+    <div><label>UPT pelapor</label><select id="upt"></select></div>
+    <button id="rst">↺ Reset filter</button>
+  </section>
+
+  <section class="card">
+    <div class="hd"><h2>Peta sebaran kejadian</h2><span class="hint" id="geost"></span></div>
+    <div id="map"></div>
+    <div class="lg">
+      <span><i class="ofm"></i>Kantor UPT</span>
+      <span><i class="dot" style="background:#f59e0b"></i>Titik duga lokasi kejadian</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="hd"><h2>Grafik kejadian banjir rob per bulan</h2><span class="hint">Klik batang untuk memfilter bulan tersebut</span></div>
+    <div id="chart"></div>
+  </section>
+
+  <section class="card">
+    <div class="hd">
+      <h2>Daftar kejadian</h2>
+      <div class="tools">
+        <div class="sbox"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Cari…"></div>
+        <select id="ps"><option>10</option><option selected>25</option><option>50</option><option>100</option></select>
+        <button id="xl" class="p">⬇ Download Excel</button>
+      </div>
+    </div>
+    <div id="sb" class="sb"><span id="sbt"></span><button id="sbx">Hapus pencarian</button></div>
+    <div class="wrap">
+      <table>
+        <thead><tr><th>No</th><th class="s" data-k="t">Tanggal Kejadian</th><th class="s" data-k="u">UPT Pelapor</th><th class="s" data-k="l">Lokasi Kejadian</th><th class="s" data-k="h">Ketinggian Rob</th><th class="s" data-k="s">Sumber Berita</th></tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+      <div id="msg" class="msg"></div>
+    </div>
+    <div class="pg"><span id="info"></span><div id="pgn"></div></div>
+  </section>
+</main>
+<script>
+const BLN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const BS=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const $=id=>document.getElementById(id);
+let GEO={},UPTS=[],MAP=null,LAYC=null,LAYO=null,MK={},geoBusy=false,geoInfo='';
+const ORG='#f59e0b';
+let ALL=[],VIEW=[],page=1,PS=25,sk='t',sd=-1,syncing=false,lo=0,hi=0,timer;
+
+const fmt=t=>{const p=t.split('-');return +p[2]+' '+BLN[+p[1]-1]+' '+p[0];};
+const norm=s=>String(s||'').toLowerCase();
+function opt(s,v,t){const o=document.createElement('option');o.value=v;o.textContent=t;s.appendChild(o);}
+
+function init(p){
+  ALL=p.rows;
+  ALL.forEach(r=>{r._h=norm([r.t,fmt(r.t),r.u,r.l,r.h,r.s,r.sh,r.f].join(' '));});
+  $('upd').textContent=p.updated?('Diperbarui '+new Date(p.updated).toLocaleString('id-ID')+' · '+p.nFiles+' file'):'Belum ada data';
+  $('warn').innerHTML='';
+  (p.errors||[]).forEach(e=>{const d=document.createElement('div');d.className='warn';d.textContent='Gagal membaca: '+e;$('warn').appendChild(d);});
+  const keep={};['fm','fy','tm','ty','upt'].forEach(i=>keep[i]=$(i).value);
+  ['fm','tm'].forEach(i=>{$(i).innerHTML='';opt($(i),'','Semua');BLN.forEach((n,k)=>opt($(i),k+1,n));});
+  const ys=new Set(ALL.map(r=>+r.t.slice(0,4)));ys.add(new Date().getFullYear());
+  ['fy','ty'].forEach(i=>{$(i).innerHTML='';opt($(i),'','Semua');[...ys].sort((a,b)=>b-a).forEach(y=>opt($(i),y,y));});
+  $('upt').innerHTML='';opt($('upt'),'','Semua UPT');
+  [...new Set(ALL.map(r=>r.u))].sort().forEach(u=>opt($('upt'),u,u));
+  Object.keys(keep).forEach(i=>{$(i).value=keep[i];});
+  apply();
+}
+
+function apply(){
+  const q=norm($('q').value.trim());
+  if(q){
+    VIEW=ALL.filter(r=>r._h.indexOf(q)>=0);
+    $('sb').style.display='flex';$('sbt').textContent='Hasil pencarian "'+$('q').value.trim()+'" di seluruh data (filter diabaikan)';
+  }else{
+    $('sb').style.display='none';
+    const ys=ALL.map(r=>+r.t.slice(0,4)),mn=Math.min(...ys),mx=Math.max(...ys);
+    lo=(+$('fy').value||mn)*12+(+$('fm').value||1)-1;
+    hi=(+$('ty').value||mx)*12+(+$('tm').value||12)-1;
+    const u=$('upt').value;
+    VIEW=ALL.filter(r=>{const v=+r.t.slice(0,4)*12+ +r.t.slice(5,7)-1;return v>=lo&&v<=hi&&(!u||r.u===u);});
+  }
+  sortView();page=1;render();drawChart();drawMap();
+}
+
+function sortView(){
+  VIEW.sort((a,b)=>{
+    let c=a[sk]<b[sk]?-1:a[sk]>b[sk]?1:0;
+    if(sk!=='t')c=String(a[sk]).localeCompare(String(b[sk]),'id');
+    return (c||(a.t<b.t?1:-1)*(sk==='t'?0:1))*sd;
+  });
+}
+
+function td(tr,txt,cls){const x=document.createElement('td');if(cls)x.className=cls;x.textContent=txt;tr.appendChild(x);return x;}
+
+function render(){
+  $('c1').textContent=VIEW.length;
+  $('c2').textContent=new Set(VIEW.map(r=>r.t)).size;
+  $('c3').textContent=new Set(VIEW.map(r=>r.u)).size;
+  $('c4').textContent=new Set(VIEW.map(r=>norm(r.l))).size;
+  const pages=Math.max(1,Math.ceil(VIEW.length/PS));if(page>pages)page=pages;
+  const tb=$('tb');tb.innerHTML='';
+  VIEW.slice((page-1)*PS,page*PS).forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    td(tr,(page-1)*PS+i+1,'n');
+    const d=td(tr,fmt(r.t)+(r.a?' ≈':''),'d');d.title='Sumber: '+(r.f||'-')+' › sheet '+(r.sh||'-')+(r.a?'\n≈ tanggal diambil dari nama sheet (tanggal di dalam sheet kosong)':'');
+    td(tr,r.u);td(tr,r.l);td(tr,r.h||'–');
+    const c=document.createElement('td');
+    if(r.k){const a=document.createElement('a');a.href=r.k;a.target='_blank';a.rel='noopener noreferrer';a.title=r.k;
+      let h=r.s;try{h=new URL(r.k).hostname.replace(/^www\./,'');}catch(e){}
+      a.textContent=(r.s&&r.s!==r.k)?r.s:h;c.appendChild(a);}
+    else c.textContent=r.s||'–';
+    tr.appendChild(c);tb.appendChild(tr);
+  });
+  $('msg').textContent=VIEW.length?'':(ALL.length?'Tidak ada kejadian yang cocok.':'Belum ada data.');
+  $('info').textContent=VIEW.length?('Menampilkan '+((page-1)*PS+1)+'–'+Math.min(page*PS,VIEW.length)+' dari '+VIEW.length+' kejadian'):'';
+  const pg=$('pgn');pg.innerHTML='';
+  const add=(t,p,on,dis)=>{const b=document.createElement('button');b.textContent=t;if(on)b.className='on';b.disabled=!!dis;b.onclick=()=>{page=p;render();};pg.appendChild(b);};
+  if(pages>1){add('‹',page-1,0,page<=1);
+    for(let p=Math.max(1,page-2);p<=Math.min(pages,page+2);p++)add(p,p,p===page);
+    add('›',page+1,0,page>=pages);}
+  document.querySelectorAll('th.s').forEach(h=>{const t=h.textContent.replace(/ [▲▼]$/,'');h.textContent=t+(h.dataset.k===sk?(sd<0?' ▼':' ▲'):'');});
+}
+
+function drawChart(){
+  const el=$('chart');
+  if(!VIEW.length){el.innerHTML='<div class="empty">Tidak ada data untuk ditampilkan.</div>';return;}
+  const cnt={};VIEW.forEach(r=>{const k=r.t.slice(0,7);cnt[k]=(cnt[k]||0)+1;});
+  const ks=Object.keys(cnt).sort();
+  let y=+ks[0].slice(0,4),m=+ks[0].slice(5),ey=+ks[ks.length-1].slice(0,4),em=+ks[ks.length-1].slice(5);
+  const list=[];
+  while(y<ey||(y===ey&&m<=em)){const k=y+'-'+('0'+m).slice(-2);list.push({k:k,y:y,m:m,v:cnt[k]||0});if(++m>12){m=1;y++;}}
+  const H=240,pT=26,pB=34,pL=34,slot=Math.max(56,Math.floor((el.clientWidth-pL-10)/list.length));
+  const W=pL+list.length*slot+10,mx=Math.max(...list.map(x=>x.v)),st=Math.max(1,Math.ceil(mx/4)),top=st*4,ch=H-pT-pB;
+  const sel=(+$('fy').value===+$('ty').value&&+$('fm').value===+$('tm').value&&$('fm').value)?(+$('fy').value+'-'+('0'+$('fm').value).slice(-2)):'';
+  let s='<svg width="'+W+'" height="'+H+'" font-size="11" font-family="inherit">';
+  for(let i=0;i<=4;i++){const yy=H-pB-ch*i/4;s+='<line x1="'+pL+'" x2="'+(W-6)+'" y1="'+yy+'" y2="'+yy+'" stroke="#e8edf5"/><text x="'+(pL-6)+'" y="'+(yy+4)+'" text-anchor="end" fill="#94a3b8">'+st*i+'</text>';}
+  list.forEach((x,i)=>{
+    const bw=slot*0.56,bx=pL+i*slot+(slot-bw)/2,h=Math.max(x.v?3:0,x.v/top*ch),by=H-pB-h;
+    s+='<g data-k="'+x.k+'">';
+    if(x.v)s+='<rect class="bar" x="'+bx+'" y="'+by+'" width="'+bw+'" height="'+h+'" rx="5" fill="'+(sel===x.k?'#0a2540':'#1d62a8')+'"><title>'+BLN[x.m-1]+' '+x.y+': '+x.v+' kejadian</title></rect><text x="'+(bx+bw/2)+'" y="'+(by-6)+'" text-anchor="middle" font-weight="600" fill="#0a2540">'+x.v+'</text>';
+    s+='<text x="'+(bx+bw/2)+'" y="'+(H-14)+'" text-anchor="middle" fill="#64748b">'+BS[x.m-1]+' '+String(x.y).slice(2)+'</text></g>';
+  });
+  el.innerHTML=s+'</svg>';
+}
+
+function initMap(){
+  if(typeof L==='undefined'){$('map').innerHTML='<div class="empty">Peta tidak dapat dimuat (library peta diblokir).</div>';return;}
+  MAP=L.map('map',{scrollWheelZoom:true,zoomControl:false}).fitBounds([[-11,95],[6,141]]);
+  L.control.zoom({position:'bottomright'}).addTo(MAP);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(MAP);
+  LAYC=L.layerGroup().addTo(MAP);LAYO=L.layerGroup().addTo(MAP);
+  addToggles([{label:'Kantor UPT',layer:LAYO},{label:'Titik duga lokasi kejadian',layer:LAYC}]);
+}
+function addToggles(items){
+  const Ctl=L.Control.extend({options:{position:'topright'},onAdd:function(){
+    const box=L.DomUtil.create('div','tgl');L.DomEvent.disableClickPropagation(box);
+    items.forEach(it=>{
+      const row=document.createElement('div');row.className='tr on';row.tabIndex=0;row.setAttribute('role','switch');
+      row.innerHTML='<span class="sw"><i></i></span><span class="tx"></span>';row.lastChild.textContent=it.label;
+      const sync=()=>{const on=MAP.hasLayer(it.layer);row.classList.toggle('on',on);row.setAttribute('aria-checked',String(on));};
+      const flip=()=>{if(MAP.hasLayer(it.layer))MAP.removeLayer(it.layer);else MAP.addLayer(it.layer);};
+      row.onclick=flip;row.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}};
+      MAP.on('layeradd layerremove',sync);sync();box.appendChild(row);
+    });
+    return box;
+  }});
+  new Ctl().addTo(MAP);
+}
+const BLD='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V6l8-3 8 3v15M2 21h20M8 9h2M14 9h2M8 13h2M14 13h2M10 21v-4h4v4"/></svg>';
+function goTo(p){
+  const m=MK[p[0]+','+p[1]];if(!m)return;
+  if(!MAP.hasLayer(LAYC))MAP.addLayer(LAYC);
+  MAP.flyTo(m.getLatLng(),Math.max(MAP.getZoom(),12),{duration:.8});
+  setTimeout(()=>m.openPopup(),900);
+}
+function drawMap(){
+  if(!MAP)return;
+  LAYC.clearLayers();LAYO.clearLayers();MK={};
+  const g={},byU={};let miss=0;
+  VIEW.forEach(r=>{
+    const i=parseInt(r.g);(byU[i]=byU[i]||[]).push(r);
+    const p=GEO[r.g];
+    if(!p||p[0]==null||p[2]>1){miss++;return;}
+    const k=p[0]+','+p[1];(g[k]=g[k]||{p:p,rows:[]}).rows.push(r);
+  });
+  const pts=[];
+  Object.keys(g).sort((a,b)=>g[b].rows.length-g[a].rows.length).forEach(k=>{
+    const x=g[k],n=x.rows.length;
+    const m=L.circleMarker([x.p[0],x.p[1]],{radius:6+Math.sqrt(n)*3,color:ORG,weight:2,fillColor:ORG,fillOpacity:.5});
+    const box=document.createElement('div');box.style.maxWidth='280px';
+    const t=document.createElement('b');t.textContent=n+' kejadian';box.appendChild(t);
+    const q=document.createElement('div');q.className='hint';q.textContent='Titik duga, bukan lokasi pasti';box.appendChild(q);
+    x.rows.slice(0,8).forEach(r=>{const d=document.createElement('div');d.style.fontSize='12px';d.textContent='• '+fmt(r.t)+' — '+r.l+(r.h?' ('+r.h+')':'');box.appendChild(d);});
+    if(n>8){const d=document.createElement('div');d.className='hint';d.textContent='+ '+(n-8)+' kejadian lainnya';box.appendChild(d);}
+    const tt=document.createElement('span');tt.textContent=n+' kejadian';
+    m.bindPopup(box).bindTooltip(tt).addTo(LAYC);MK[k]=m;pts.push([x.p[0],x.p[1]]);
+  });
+  UPTS.forEach((u,i)=>{
+    const gp=GEO['U|'+i],la=gp&&gp[0]!=null?gp[0]:u.la,ln=gp&&gp[0]!=null?gp[1]:u.ln;
+    const rows=byU[i]||[],n=rows.length;
+    const icon=L.divIcon({className:'',html:'<div class="ofc'+(n?'':' z')+'">'+BLD+(n?'<span class="bd">'+n+'</span>':'')+'</div>',iconSize:[28,36],iconAnchor:[14,36],popupAnchor:[0,-36]});
+    const box=document.createElement('div');box.style.maxWidth='290px';
+    const t=document.createElement('b');t.textContent=u.n;box.appendChild(t);
+    const c=document.createElement('div');c.style.margin='2px 0 4px';c.textContent=n?(n+' kejadian dilaporkan oleh UPT ini'):'Tidak ada kejadian pada filter ini';box.appendChild(c);
+    if(n){const hn=document.createElement('div');hn.className='hint';hn.textContent='Klik kejadian untuk menuju titiknya di peta';box.appendChild(hn);}
+    rows.forEach(r=>{
+      const d=document.createElement('div');d.style.fontSize='12px';
+      const p=GEO[r.g],txt='• '+fmt(r.t)+' — '+r.l;
+      if(p&&p[0]!=null&&p[2]<=1){const a=document.createElement('a');a.href='#';a.className='lk';a.textContent=txt;a.onclick=e=>{e.preventDefault();goTo(p);};d.appendChild(a);}
+      else{d.textContent=txt;d.style.color='#94a3b8';d.title='Lokasi tidak ditemukan di peta';}
+      box.appendChild(d);
+    });
+    L.marker([la,ln],{icon:icon,zIndexOffset:1000,title:u.n}).bindPopup(box,{maxHeight:260}).addTo(LAYO);
+    if(n)pts.push([la,ln]);
+  });
+  if(pts.length)MAP.fitBounds(pts,{padding:[30,30],maxZoom:9});else MAP.fitBounds([[-11,95],[6,141]]);
+  geoInfo='';
+  if(!geoBusy)$('geost').textContent=geoInfo;
+}
+const gsCall=(fn,...a)=>new Promise((ok,no)=>google.script.run.withSuccessHandler(ok).withFailureHandler(no)[fn](...a));
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function geoApply(p){GEO=p.pts;UPTS=p.upts||UPTS;drawMap();}
+function geoNote(t){$('geost').textContent=t;}
+
+/* Titik terdekat pada garis pantai / sungai (rumus sama dengan di server) */
+function nearestIn(els,la,ln,R){
+  const ky=110574,kx=111320*Math.cos(la*Math.PI/180);let best=null;
+  els.forEach(el=>{
+    const g=el.geometry;if(!g)return;
+    const kind=el.tags&&el.tags.natural==='coastline'?'c':'r';
+    for(let i=0;i+1<g.length;i++){
+      if(!g[i]||!g[i+1])continue;
+      const ax=(g[i].lon-ln)*kx,ay=(g[i].lat-la)*ky,bx=(g[i+1].lon-ln)*kx,by=(g[i+1].lat-la)*ky;
+      const dx=bx-ax,dy=by-ay,L2=dx*dx+dy*dy,t=L2?Math.max(0,Math.min(1,-(ax*dx+ay*dy)/L2)):0;
+      const px=ax+t*dx,py=ay+t*dy,d=Math.sqrt(px*px+py*py);
+      if(d<=R&&(!best||d<best.d))best={found:true,d:d,kind:kind,la:la+py/ky,ln:ln+px/kx};
+    }
+  });
+  return best||{found:false};
+}
+/* 1 permintaan Overpass dari browser untuk beberapa titik; server dicoba berurutan mulai dari urutan ke-i */
+async function overpassChunk(c,job,i){
+  const R=job.R;let q='[out:json][timeout:40];';
+  c.forEach(pt=>{
+    const kx=111320*Math.cos(pt.la*Math.PI/180),dLa=R*4/110574,dLn=R*4/kx,ar='(around:'+R+','+pt.la+','+pt.ln+')';
+    q+='(way["natural"="coastline"]'+ar+';way["waterway"~"^(river|canal)$"]'+ar+';);out geom('+[pt.la-dLa,pt.ln-dLn,pt.la+dLa,pt.ln+dLn].map(x=>x.toFixed(5)).join(',')+');';
+  });
+  for(let n=0;n<job.servers.length;n++){
+    const u=job.servers[(i+n)%job.servers.length],ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),45000);
+    try{
+      const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(q),signal:ctl.signal});
+      clearTimeout(tm);
+      if(!r.ok)continue;
+      const j=await r.json();
+      if(j.remark&&/runtime error|timed out|out of memory/i.test(j.remark))continue;
+      return c.map(pt=>Object.assign({k:pt.k},nearestIn(j.elements||[],pt.la,pt.ln,R)));
+    }catch(e){clearTimeout(tm);}
+  }
+  return null;
+}
+/* Geser titik ke pesisir/sungai: 3 permintaan paralel (tiap 8 titik) ke server berbeda dari browser Anda sendiri */
+async function snapLoop(p){
+  let fails=0;
+  while(p.snap>0&&fails<6){
+    geoNote('Menyesuaikan titik ke pesisir/sungai… sisa '+p.snap);
+    const job=await gsCall('getSnapJob',3*8);
+    if(!job.jobs.length)break;
+    const chunks=[];for(let i=0;i<job.jobs.length;i+=job.batch)chunks.push(job.jobs.slice(i,i+job.batch));
+    const out=await Promise.all(chunks.map((c,i)=>overpassChunk(c,job,i)));
+    const res=[].concat(...out.filter(Boolean));
+    if(!res.length){
+      fails++;geoNote('Server data pesisir/sungai sibuk, mencoba lagi ('+fails+'/6)… sisa '+p.snap);
+      if(fails>=2){const q=await gsCall('snapPending');geoApply(q);if(q.snap<p.snap)fails=0;p=Object.assign({},p,q);}   // cadangan lewat server Apps Script
+      await wait(6000);continue;
+    }
+    fails=0;
+    const q=await gsCall('saveSnap',res);geoApply(q);p=Object.assign({},p,q);
+  }
+  return p;
+}
+async function geoLoop(){
+  if(geoBusy||!MAP)return;geoBusy=true;
+  try{
+    let p=await gsCall('getGeo');geoApply(p);
+    let prev=p.left,stall=0;                                   // tahap 1: cari koordinat lokasi (Google Maps)
+    while(p.left>0){
+      geoNote('Mencari lokasi… sisa '+p.left);
+      p=await gsCall('geocodePending');geoApply(p);
+      if(p.left<prev){prev=p.left;stall=0;}
+      else{if(++stall>=3)break;await wait(3000);}
+    }
+    p=await snapLoop(p);                                       // tahap 2: geser ke pesisir/sungai
+    geoBusy=false;geoNote('');
+  }catch(e){geoBusy=false;geoNote('Peta: '+(e.message||e));}
+}
+function status(t){$('upd').textContent=t;}
+function sync(){
+  if(syncing)return;syncing=true;$('ref').disabled=true;$('ref').textContent='Memperbarui…';
+  let n=0,fails=0;
+  const done=()=>{syncing=false;$('ref').disabled=false;$('ref').textContent='Perbarui data';};
+  const step=()=>google.script.run.withSuccessHandler(p=>{
+      init(p);
+      if((p.pending>0||p.busy)&&++n<300){status(p.busy?'Menunggu proses lain selesai…':'Membaca file… sisa '+p.pending+' file');setTimeout(step,p.busy?5000:200);}
+      else{done();geoLoop();}
+    }).withFailureHandler(e=>{
+      if(++fails<=5){status('Terputus ('+(e.message||e)+'), mencoba lagi…');setTimeout(step,5000);}
+      else{done();$('msg').textContent='Gagal: '+(e.message||e);}
+    }).refreshData();
+  status('Memeriksa pembaruan…');step();
+}
+
+function periodText(){
+  if($('q').value.trim())return 'Pencarian "'+$('q').value.trim()+'" di seluruh data';
+  const f=(m,y)=>(m?BLN[m-1]+' ':'')+(y||'');
+  const a=f($('fm').value,$('fy').value),b=f($('tm').value,$('ty').value);
+  return 'Periode: '+(a||b?(a||'awal')+' s/d '+(b||'akhir'):'Semua')+' | UPT: '+($('upt').value||'Semua');
+}
+$('xl').onclick=()=>{
+  if(!VIEW.length)return;
+  const b=$('xl');b.disabled=true;b.textContent='Menyiapkan…';
+  const ks=VIEW.map(r=>r.t.slice(0,7)).sort(),tag=ks[0]===ks[ks.length-1]?ks[0]:ks[0]+'_sd_'+ks[ks.length-1];
+  const done=()=>{b.disabled=false;b.textContent='⬇ Download Excel';};
+  google.script.run.withSuccessHandler(b64=>{
+    const bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+    const url=URL.createObjectURL(new Blob([u],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+    const a=document.createElement('a');a.href=url;a.download='Rekap_Banjir_Rob_'+tag+'.xlsx';document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),3000);done();
+  }).withFailureHandler(e=>{done();alert('Gagal membuat Excel: '+(e.message||e));})
+   .exportExcel(VIEW.map(r=>({t:r.t,u:r.u,l:r.l,h:r.h,s:r.s,k:r.k})),periodText());
+};
+
+['fm','fy','tm','ty','upt'].forEach(i=>$(i).addEventListener('change',apply));
+$('q').addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(apply,150);});
+$('sbx').onclick=()=>{$('q').value='';apply();};
+$('rst').onclick=()=>{['fm','fy','tm','ty','upt','q'].forEach(i=>$(i).value='');apply();};
+$('ps').onchange=()=>{PS=+$('ps').value;page=1;render();};
+$('ref').onclick=sync;
+document.querySelectorAll('th.s').forEach(h=>h.onclick=()=>{sd=(sk===h.dataset.k)?-sd:(h.dataset.k==='t'?-1:1);sk=h.dataset.k;sortView();page=1;render();});
+$('chart').addEventListener('click',e=>{
+  const g=e.target.closest('[data-k]');if(!g)return;
+  const k=g.getAttribute('data-k');$('q').value='';
+  $('fy').value=$('ty').value=+k.slice(0,4);$('fm').value=$('tm').value=+k.slice(5);apply();
+});
+window.addEventListener('resize',()=>{clearTimeout(timer);timer=setTimeout(drawChart,200);});
+
+$('msg').textContent='Memuat data…';initMap();
+google.script.run.withSuccessHandler(p=>{init(p);geoLoop();sync();}).withFailureHandler(e=>{$('msg').textContent='Gagal memuat: '+(e.message||e);}).getData();
+</script>
+</body>
+</html>

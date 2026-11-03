@@ -1,0 +1,3162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<script src="../assets/config.js?v=4"></script>
+<script src="../assets/gas-bridge.js?v=8" data-app="ptsp"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTSP</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+/* ===================== SHELL ===================== */
+:root{--bmkg-blue:#0a3282;--bmkg-green:#309900;--ink:#172033}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:Inter,Arial,Helvetica,sans-serif;color:var(--ink);
+  background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 45%,#ecfeff 100%);
+  background-attachment:fixed;
+}
+
+.app-header{
+  position:sticky;top:0;z-index:1000;background:var(--bmkg-blue);
+  box-shadow:0 4px 18px rgba(10,50,130,.30);
+  border-bottom:6px solid var(--bmkg-green);
+}
+.app-header-inner{
+  max-width:1650px;margin:0 auto;padding:10px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand-logo{height:60px;width:auto;flex:none}
+.brand-eyebrow{font-size:11px;font-weight:700;letter-spacing:.4px;color:rgba(255,255,255,.78);text-transform:uppercase}
+.brand-title{margin:2px 0 0;font-size:22px;font-weight:800;letter-spacing:-.3px;color:#fff;line-height:1.2}
+
+.main-nav{display:flex;gap:6px;padding:5px;border-radius:14px;background:rgba(255,255,255,.16);flex:none}
+.nav-btn{
+  border:0;cursor:pointer;font:inherit;font-size:14px;font-weight:700;color:#fff;
+  padding:9px 20px;border-radius:10px;background:transparent;transition:.18s;
+  display:flex;align-items:center;gap:8px;
+}
+.nav-btn:hover{background:rgba(255,255,255,.18)}
+.nav-btn.active{color:var(--bmkg-blue);background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+
+.view{display:none}
+.view.active{display:block}
+.view-inner{max-width:1650px;margin:0 auto;padding:24px}
+
+.page-banner{
+  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:22px 28px;margin-bottom:18px;border-radius:22px;color:#fff;
+  background:linear-gradient(120deg,#0a3a91 0%,#054dcf 58%,#2b8f10 120%);
+  box-shadow:0 18px 44px rgba(5,77,207,.20);
+}
+.page-banner:before{content:"";position:absolute;width:340px;height:340px;right:-110px;top:-190px;border-radius:50%;background:rgba(255,255,255,.08)}
+.page-banner h2{margin:0;font-size:26px;font-weight:850;letter-spacing:-.5px;position:relative}
+.page-banner-sub{margin-top:6px;opacity:.85;font-size:13px;position:relative}
+.live{position:relative;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:30px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);font-size:12px;font-weight:700;white-space:nowrap}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 12px rgba(74,222,128,.8)}
+
+.loading{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(248,250,252,.85);backdrop-filter:blur(7px)}
+.loading-box{padding:25px 32px;border-radius:18px;background:#fff;box-shadow:0 25px 70px rgba(15,23,42,.18);text-align:center}
+.spinner{width:38px;height:38px;margin:auto auto 12px;border:4px solid #e2e8f0;border-top-color:var(--bmkg-blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:820px){
+  .app-header-inner{flex-wrap:wrap;padding:10px 14px}
+  .brand-logo{height:44px}
+  .brand-title{font-size:17px}
+  .main-nav{width:100%}
+  .nav-btn{flex:1;justify-content:center}
+  .view-inner{padding:12px}
+  .page-banner{padding:18px}
+  .page-banner h2{font-size:20px}
+}
+
+/* ===================== LAYANAN (scoped) ===================== */
+#view-layanan .filter-panel{margin-top: 18px; padding: 18px; border-radius: 20px; background: rgba(255,255,255,.90); border: 1px solid rgba(148,163,184,.16); box-shadow: 0 12px 35px rgba(15,23,42,.07);}
+#view-layanan .filter-grid{display: grid; grid-template-columns: 1fr 1fr 1.5fr 2fr auto; gap: 12px; align-items: end;}
+#view-layanan .field label{display: block; margin-bottom: 6px; color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;}
+#view-layanan select,
+#view-layanan input{width: 100%; height: 44px; padding: 0 13px; border: 1px solid #dbe3ef; border-radius: 12px; background: white; color: #172033; font-size: 13px; outline: none;}
+#view-layanan select:focus,
+#view-layanan input:focus{border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.10);}
+#view-layanan button{border: 0; cursor: pointer; font-family: inherit;}
+#view-layanan .reset-btn{height: 44px; padding: 0 18px; border-radius: 12px; color: white; font-weight: 800; background: linear-gradient( 135deg, #4f46e5, #0891b2 ); transition: .2s;}
+#view-layanan .reset-btn:hover{transform: translateY(-1px); box-shadow: 0 8px 20px rgba(79,70,229,.25);}
+#view-layanan .kpi-grid{display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-top: 18px;}
+#view-layanan .kpi{position: relative; overflow: hidden; padding: 21px; min-height: 135px; border-radius: 20px; background: rgba(255,255,255,.93); border: 1px solid rgba(148,163,184,.14); box-shadow: 0 12px 35px rgba(15,23,42,.06);}
+#view-layanan .kpi:after{content: ""; position: absolute; right: -35px; bottom: -50px; width: 130px; height: 130px; border-radius: 50%; background: linear-gradient( 135deg, rgba(79,70,229,.09), rgba(8,145,178,.09) );}
+#view-layanan .kpi-label{color: #64748b; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px;}
+#view-layanan .kpi-value{margin-top: 10px; color: #172033; font-size: 27px; font-weight: 850; letter-spacing: -.5px;}
+#view-layanan .kpi-note{margin-top: 6px; color: #94a3b8; font-size: 11px;}
+#view-layanan .chart-grid{display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-top: 18px;}
+#view-layanan .chart-card{min-height: 390px; padding: 21px; border-radius: 20px; background: rgba(255,255,255,.94); border: 1px solid rgba(148,163,184,.14); box-shadow: 0 12px 35px rgba(15,23,42,.06);}
+#view-layanan .chart-card.full{grid-column: 1 / -1;}
+#view-layanan .ly-card-title{display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;}
+#view-layanan .ly-card-title h3{margin: 0; font-size: 15px; font-weight: 850;}
+#view-layanan .ly-card-title span{color: #94a3b8; font-size: 11px;}
+#view-layanan .chart-wrap{position: relative; height: 310px;}
+#view-layanan .analytics-grid{display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px;}
+#view-layanan .top-list{display: flex; flex-direction: column; gap: 11px;}
+#view-layanan .top-row{display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center;}
+#view-layanan .rank{width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 9px; background: #eef2ff; color: #4338ca; font-weight: 850; font-size: 11px;}
+#view-layanan .top-info{min-width: 0;}
+#view-layanan .top-name{overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; font-weight: 750;}
+#view-layanan .ly-progress{margin-top: 5px; width: 100%; height: 5px; overflow: hidden; border-radius: 10px; background: #eef2f7;}
+#view-layanan .ly-progress-bar{height: 100%; border-radius: inherit; background: linear-gradient( 90deg, #4f46e5, #06b6d4 );}
+#view-layanan .top-value{font-size: 11px; color: #64748b; font-weight: 800;}
+#view-layanan .table-card{margin-top: 18px; padding: 21px; border-radius: 20px; background: rgba(255,255,255,.95); border: 1px solid rgba(148,163,184,.14); box-shadow: 0 12px 35px rgba(15,23,42,.06);}
+#view-layanan .table-head{display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 15px;}
+#view-layanan .table-head h3{margin: 0; font-size: 15px; font-weight: 850;}
+#view-layanan .record-count{color: #94a3b8; font-size: 11px;}
+#view-layanan .table-wrapper{overflow-x: auto; border-radius: 13px; border: 1px solid #edf1f7;}
+#view-layanan table{width: 100%; min-width: 1100px; border-collapse: collapse; font-size: 12px;}
+#view-layanan thead{position: sticky; top: 0; z-index: 2;}
+#view-layanan th{padding: 13px 12px; color: white; background: #312e81; text-align: left; white-space: nowrap; font-size: 11px; text-transform: uppercase; letter-spacing: .3px;}
+#view-layanan td{padding: 11px 12px; border-bottom: 1px solid #eef2f7; white-space: nowrap;}
+#view-layanan tbody tr:hover{background: #f7f8ff;}
+#view-layanan .money{font-weight: 800; color: #312e81;}
+#view-layanan .ly-pagination{display: flex; justify-content: space-between; align-items: center; margin-top: 15px;}
+#view-layanan .page-info{color: #64748b; font-size: 11px;}
+#view-layanan .page-buttons{display: flex; gap: 6px;}
+#view-layanan .page-btn{min-width: 34px; height: 34px; padding: 0 9px; border-radius: 9px; background: white; border: 1px solid #dbe3ef; color: #475569; font-size: 11px; font-weight: 750;}
+#view-layanan .page-btn.active{color: white; background: #4f46e5; border-color: #4f46e5;}
+#view-layanan .page-btn:disabled{opacity: .4; cursor: not-allowed;}
+#view-layanan .empty{padding: 45px; text-align: center; color: #94a3b8;}
+@media(max-width:1200px){
+#view-layanan .filter-grid{grid-template-columns: repeat(3,1fr);}
+#view-layanan .kpi-grid{grid-template-columns: repeat(2,1fr);}
+}
+@media(max-width:900px){
+#view-layanan .chart-grid,
+#view-layanan .analytics-grid{grid-template-columns: 1fr;}
+#view-layanan .chart-card.full{grid-column: auto;}
+}
+@media(max-width:650px){
+#view-layanan .filter-grid,
+#view-layanan .kpi-grid{grid-template-columns: 1fr;}
+}
+#view-layanan{font-family:Inter,Arial,Helvetica,sans-serif;color:#172033;font-size:16px}
+#view-layanan .table-head{flex-wrap:wrap}
+#view-layanan .table-search{position:relative;width:min(380px,100%)}
+#view-layanan .table-search i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:13px;pointer-events:none}
+#view-layanan .table-search input{padding-left:36px}
+#view-layanan .ly-pagination{flex-wrap:wrap;gap:8px}
+
+
+/* ===================== KINERJA (scoped) ===================== */
+#view-kinerja .card{box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: none; margin-bottom: 20px; border-radius: 10px;}
+#view-kinerja .kpi-card{padding: 15px 20px !important;}
+#view-kinerja .kpi-title{font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 2px; opacity: 0.85; font-weight: 600; text-transform: uppercase;}
+#view-kinerja .kpi-value{font-size: 1.6rem; font-weight: 800; margin: 0; line-height: 1.2;}
+#view-kinerja .section-title{font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;}
+#view-kinerja .list-group-item{font-size: 0.85rem; padding: 0.5rem 1rem; border-color: #f1f3f5;}
+#view-kinerja .table-custom-header th{background-color: #1e293b !important; color: white !important; font-size: 0.85rem; font-weight: 600; text-align: center; vertical-align: middle; border-bottom: 2px solid #0f172a;}
+#view-kinerja .table td{font-size: 0.85rem; vertical-align: middle;}
+#view-kinerja .col-durasi{width: 110px; text-align: center;}
+#view-kinerja .alert-box{max-height: 180px; overflow-y: auto;}
+#view-kinerja .vertical-year{writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-size: 0.85rem; color: #94a3b8; letter-spacing: 2px;}
+#view-kinerja .chart-container-bar{position: relative; height: 160px; width: 100%;}
+#view-kinerja .chart-container-pie{position: relative; height: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center;}
+#view-kinerja .dt-buttons .btn{margin-right: 5px; margin-bottom: 10px; font-size: 0.8rem; padding: 0.3rem 0.6rem;}
+#view-kinerja{font-family:Inter,Arial,Helvetica,sans-serif;color:#172033;font-size:16px}
+
+/* ===================== REVISI ===================== */
+.app-header-inner{padding:8px 24px}
+.view-inner{padding-top:14px}
+.page-banner{padding:11px 22px;margin-bottom:12px;border-radius:16px;
+  background:linear-gradient(120deg,var(--bmkg-blue) 0%,#0f4fae 100%);box-shadow:0 10px 26px rgba(10,50,130,.18)}
+.page-banner:before{width:220px;height:220px;right:-80px;top:-130px}
+.page-banner h2{font-size:19px;letter-spacing:-.3px}
+.page-banner-sub{margin-top:2px;font-size:12px}
+.live{padding:5px 10px;font-size:11px}
+#view-layanan .filter-panel{margin-top:0;padding:16px}
+
+/* Kinerja: tampilan lebih luwes, mengikuti Layanan (warna tetap) */
+#view-kinerja .card{border:1px solid rgba(148,163,184,.14);border-radius:20px;box-shadow:0 12px 35px rgba(15,23,42,.06)}
+#view-kinerja .form-label{display:block;margin-bottom:6px;color:#64748b !important;font-size:11px !important;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+#view-kinerja .form-select{height:44px;padding:0 2.25rem 0 13px;border:1px solid #dbe3ef;border-radius:12px;font-size:13px;color:#172033}
+#view-kinerja .form-select:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.10)}
+#view-kinerja .kpi-card{position:relative;overflow:hidden;text-align:left;padding:16px 22px !important}
+#view-kinerja .section-title{font-size:15px;font-weight:850 !important;text-transform:none;letter-spacing:0;color:#172033 !important;margin-bottom:12px}
+#view-kinerja .list-group-item{font-size:12.5px;padding:.55rem .25rem}
+#view-kinerja .ky-table-title{margin:0 0 12px;font-size:15px;font-weight:850;color:#172033}
+#view-kinerja .table{--bs-table-hover-bg:#f7f8ff;--bs-table-hover-color:inherit;margin-bottom:0}
+#view-kinerja table.dataTable{margin:0 !important;border-collapse:collapse !important}
+#view-kinerja .table-custom-header th{padding:13px 26px 13px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.3px;text-align:left;white-space:nowrap;border:0 !important;background:#1e293b !important}
+#view-kinerja .table td{padding:11px 12px;font-size:12px;white-space:nowrap;border-bottom:1px solid #eef2f7}
+#view-kinerja .ky-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800}
+#view-kinerja .ky-badge.done{background:#dcfce7;color:#15803d}
+#view-kinerja .ky-badge.prog{background:#fef3c7;color:#b45309}
+#view-kinerja .dt-buttons .btn{border-radius:10px;font-weight:700}
+#view-kinerja .dataTables_filter label{margin:0}
+#view-kinerja .dataTables_filter input{height:40px;min-width:280px;margin:0 !important;padding:0 13px;border:1px solid #dbe3ef;border-radius:12px;font-size:13px;outline:none}
+#view-kinerja .dataTables_filter input:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.10)}
+#view-kinerja .dataTables_info{color:#64748b;font-size:11px}
+#view-kinerja .pagination{gap:6px;flex-wrap:wrap;justify-content:flex-end}
+#view-kinerja .page-link{min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;padding:0 9px;border:1px solid #dbe3ef !important;border-radius:9px !important;color:#475569;font-size:11px;font-weight:750;box-shadow:none}
+#view-kinerja .page-item.active .page-link{background:#4f46e5;border-color:#4f46e5 !important;color:#fff}
+#view-kinerja .page-item.disabled .page-link{opacity:.4}
+@media(max-width:820px){#view-kinerja .dataTables_filter input{min-width:0;width:100%}}
+/* ===================== REVISI 2 ===================== */
+#view-kinerja .ky-tablewrap{margin-top:4px;border:1px solid #edf1f7;border-radius:13px;overflow-x:auto;overflow-y:hidden;background:#fff}
+#view-kinerja .card{margin-bottom:0}
+#view-kinerja .row.mb-4{margin-bottom:16px !important}
+#view-kinerja .card.mt-2{margin-top:0 !important}
+#view-layanan .kpi-grid,#view-layanan .chart-grid,#view-layanan .analytics-grid,#view-layanan .table-card{margin-top:16px}
+#view-layanan .chart-grid,#view-layanan .analytics-grid{gap:16px}
+
+/* ===================== REVISI 3 ===================== */
+/* Kinerja: status & deadline editable, kartu On Progress */
+#view-kinerja .kpi-clickable{cursor:pointer;transition:transform .15s,box-shadow .15s}
+#view-kinerja .kpi-clickable:hover{transform:translateY(-2px)}
+#view-kinerja .kpi-clickable.active{box-shadow:0 0 0 4px rgba(245,158,11,.35)}
+#view-kinerja .kpi-hint{font-size:.62rem;opacity:.85;margin-top:2px}
+#view-kinerja .ky-status{min-width:155px;height:32px;padding:0 2rem 0 10px;font-size:12px;font-weight:700;border-radius:9px}
+#view-kinerja .ky-status.done{background-color:#dcfce7;color:#15803d;border-color:#bbf7d0}
+#view-kinerja .ky-status.prog{background-color:#fef3c7;color:#b45309;border-color:#fde68a}
+#view-kinerja .ky-dl{display:flex;gap:6px;align-items:center}
+#view-kinerja .ky-deadline{width:112px;height:32px;padding:0 4px 0 8px;font-size:12px;border:1px solid #dbe3ef;border-radius:9px}
+#view-kinerja .ky-deadline::-webkit-calendar-picker-indicator{margin-left:0;padding:0;cursor:pointer}
+#view-kinerja .ky-deadline::-webkit-datetime-edit{padding:0}
+#view-kinerja .ky-deadline.overdue{border-color:#ef4444;color:#b91c1c;background:#fef2f2}
+#view-kinerja .ky-wd{height:32px;padding:0 8px;font-size:11px;font-weight:800;border-radius:9px;white-space:nowrap}
+
+/* Layanan: kolom bisa diurutkan */
+#view-layanan th.sortable{cursor:pointer;user-select:none}
+#view-layanan th.sortable:hover{background:#3b3799}
+#view-layanan th .sort-ind{display:inline-block;margin-left:6px;font-size:10px;opacity:.5}
+#view-layanan th.sorted .sort-ind{opacity:1}
+</style>
+</head>
+
+<body>
+
+<div id="loading" class="loading">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <strong id="loadingText">Memuat Dashboard...</strong>
+  </div>
+</div>
+
+<header class="app-header">
+  <div class="app-header-inner">
+
+    <div class="brand">
+      <img class="brand-logo" alt="Logo BMKG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKYAAADICAYAAABidppdAAA5SUlEQVR42u19d3xcxbX/98y9u6tuueFusDHNphlwQkmQlZCEXhKkAKG+QOAFUiE9QRIkLyEPeLwX+EEoIQTyIFJowfCAEGRhDAQI1QbbYNx7U11pd+/M+f1xZ6Sr9Za7q10Vew+fi2Tt3jbzne8pc+YMYa8Xpro60EIsFC0LAbRUSwDs/YYFwBZAj2QBoOKmpo0VnZ1y1KqNspRCVKIkh6QiC5CAEDJgUSQa4fCM8VZXUZHVVn/x5HYA7UUWqZgC1O4PQahqtqrmA/MxXzU0gAHivblXaK+EIjPV1kI0bV1IaKl2vI0RtIE33uLRf3x5w37vrYse0B1xDmrrkvt39TjTojE1MSYxOuKoMmYUSUUBkIBi6kUyASBiEEtYhBgIPSGbOgMW7QoGxOZQ0F43psxaGQjay2dPCX70teqy1SfNrdwVlXGjoarZrtlnPjc1QoH2PpDSXgfGpiYAtdK8fHFI4Mf3bjnoteXt8zbsdI5r7Ywe3dWjZkUcMTbKRYgpgpIKUBJQDsASgAKYNbFyEtAQAeT+gADIAoQNCAskBAKCERQ9CFpyR2nQ+ri81P7XxNHBV48+oOKN26+esLwnojxAbbRQUwPsRSDd44FZU9NoNaEGaCIJADaAd9a2jrn+/rYTPtnS86Ud7dETO8LqkLAqtqMOABkDVBRgBwAkhAsE0mQIMJmm4zTtRwD38SAZFLt/UEwALJANiCBgBRCwgGIr7JSGrA/HlNkvTRsffO76C8YuPvHQyp29tF7DVg2a0NTkDq4CMEcYO1IthAGjALCqlUd/97/XnvTRxu4vb2l1qjuj9oTumACcCKAiAFhCELsAZMEu1Q1CBzADpBhgF6xkQYQAO4SQrVAaiG0ZU2E3Tx8feqzhgjEvVB1euUt5QLqnsijtcYCcv9AydmNJELjwprUnvvlRz9c27Og5sy0SmtgTY8DpBjimIIQisHCtwuHRFpplmUEKSglQQMAuRtAmlAUjmydUBv922PTgn/92w8yXemJ99igvnC9pDwIo7YmAZOZRp/58Te3yDeGvb2vnT3dEbSAWBtiR2uwbNEbMBaMywzU4ybYQKEGJHUNlKf6536SS+x789xmN++9PbXsaQGmEI5KgAUkAnnlz66RfP9x+xcpNkcu3hwPTIj1RQIUZQkgCWyMFjClBCpJQyoJVQoFgEJWh6Lpp44P3fu/0ynsuPmWfTawBioXz5UhW8SO2o2pq2GrSNuQ/l2yZeN0DXdd8tC585bZwaJyMdAEckyRADBJ7pnPAihUYFLCsUCkqQ5Ht+04I/v5bJ4+6/bLTJ2zutUF1GxWAmWepq2PR0FAPoEExc9mXfrH26vdXdn5/a1dwH9nTAQjpEDDi2dF/52kWZWFboXJUFkW2zppUdOtrt5XfQTShE6gTdXX1aGggVQBmPh6UgBdfZLu6mpySAHDOL1ed/+qHkfoNrfaBke4OEEmHaOSra2SrfImZGRJs23ZRGcaVRlccMSNU33LTrId7HKC5me3PfY4c5gIwc+ncCHLDhnzhrz4+9LVV6qbVW/hUp6sbQNSBgAX2AUgaCS1NA24tABII2nZxEaaO5mfmTrZ/9PivZy3R8CWi4c+eNAJAaRORw8wCwA8/2tDzi80dRSWW6pBCEDGntiH98if5PJF8XoSy7QDKQccRIAiKFbMjSq1xpZHwzImhGwH8loiUadMCMLMMAQEQRCSZ+VAA/w/AZ/XHEm5uRUHSi7etFgH4JhEtYWYLgBquoSUapqAURt0w8zcA3AKgDICjFCw2cei9qMkGeFcWAhLujGwngGuJ6O74ti4A05/qLgNwO4BLCiyZF/Z8AMA1RNQ5HFU7DVNQHgzgfwHMBeDoxqQCrnLm9xv2fBvABUS0bLiBUwxDUJ4M4GUPKO0CKHNORrZu27kAXmbmk3Xb2wVgepwcZrZ0w1wB4GkAYz2juiD5EVu38VgATzPzFboPLO14DvnDDSkoa5sgmmpJRqPOzwD8UiooMBQRLFfr0PDhmT3vthazu9JDCNztOLwPEf2qsZEtZla0F2bOg5mppqbRsgXAzLewKw4zKy7IYIvSbc/MfAsBqGlsHFLmtIcKlFTbJAKP1spn3mi7ffkmXB3u6nJAZFMqjqA4Ez4NpVD8VyjJ7+iLp5Pnw6Sfx33XJRZK8734z6j3O7t9TgCB3J/Uu0jDJ6cmILn0swwEV4U7paXB7y/f0BOaPa3omtomtsA8JInINCSgnL/QCr1c7VT/ZMXvXv0ocE3b9h0xWBwYlMchf3+nuL+5MOLEoE1wjfi/7Q5ySnivZCB1P+D8dh8zlEJsVOXYwKTy8O1L7jzkW9HPDk0K3eBTdVWzHXip2jn1+o9++/z71g+623fGyEZg2BszPFjXHQYtITkWKB8bOHJa5D/f/t3sHzpVzbZ3NemeB8w6tkUDOWc3rPjhs++Jm8LtrQ7ZsIdDxgvteRQwsPEi4YRKK+15MyI/euXWOb9VdWyjYfDinIMWLqqqa7bRQM7lt6288MWldFO4vc0hG9ZwScPifB88sg4SbEW62py3VgduOvnnyy5EAzlVdc32HsWYNY1sNdWS/NWDaz572zPd/9i2LSwoIAXz0OZO9nM+jC3XC1TuXXzLe2lNDAIzS0tVjCpSX55nff6PPzpokXflwIhmzLo6Fk21JF9/f8e0u/8Rbtq2oydAtqShACURYAmCbREs4VbPYIehIgoqrCC7HMhOBzIsoboVVJTB0k09ti33PCH2HmAyiMiS1N4RCyx4x2m64/H105qaSNbVcd5bIa/U7CalNhEzB468elnjmi08gSgmGWQNJhiFcJORpKMge6ROZSBQicDoygDGltsoKxYoL7ZgW0A4otDZrdDaJbGzw0G4U8KJaJIIEBASsC2CYkAp3tPBKQhRub0tOOE/n2xtZOYTiZoUmCmfnnpegTm/fqEVFLXOKT9fdtuHG4PHWrzTYUvYNBi6kdw4oIwpyE4JEFA5Lohj5pbi+NmlOHJWCQ6aWoSJo21UlFiwrd0JPNyjsKtLYtWmCD5c14PXPuzCP5d3YemabjitMSAgQMUCQhB4TwaoEJbgTmf9rtHHzvv2B7cGqPZbx9c32y3ufPvIsjGNXXn6L1Z+5dn3nL86u9oc2LD9BMZz5s1EGaPGBXDyp0bhnBNG48TDyjBpTCDpKQZbhOQxaaWA91d145k32vD44la88WEnEFFAcC/IM1HkoKzcnjuVz337rkMezae9mZfWrGMWDQCvXReefNW9m9/9ZENstGXFeu1K7lX1uY3gmfkXVkBZUOC86tE4v3oMpo4P9gOfUtxvdgVJZla41/nh3meNZ9bFSztx3zPb8cqHnYAlwHuwp0RglirAE8dYu+q/MvqIk44bu7GuHpSPFZh5AabOFpKOw08LC6cSlAQLi1MAKpdxZWaG5QGQ1FQotHofcFhJAYq5H0iVGhah8UEwOpWEEJZSeCZo02mmr4c9MM2DMvNlAP6AvpzKQRdHMoQgiDxqWQN6S+xVKaOmT/+NiO7PBzgpx6AUANDV1bVPaWnpUgCVmmUGPcgy2DDZm0Kd1FcUubWrq2tOaWnpVtffzJ1KzzUwDVv+CcBFQ8mWBRk01nyQiC7ONWtSrkEZjfJn7AAWMSCJ9cKnXMKfMaJrbewRzKpfggmSAMuJ4bPBIL2cS3DmEphGXb8K4FMorGrcG8T08esAjsulOqccgdKo8PMU8LATU5IoD7M75HrEkhnFwZE3N9gdVSgOCk+964FTKWfLyTkK1TGztG1hEXA+ET2SK9a0c4BKqq+vZ2YOHv+9ZQ0bd4IFxYhzqL9NkoUA4MQYj9Xvj6NmlUApjIi5a6kYliDc++wO3PbwJhRX2nAc9tG0WQCTszQfWCeuZHw/JkaARxWrBmZ+rL6+3nHr1A9sunLA6KmqarZbWqqdml+u/LdHX5f3qfZdEpaw+r9CXGo3ZzG6bQJaHXzz4sm44+rpvZ09IkwyzZCd3RLzvrUMK5Z1AiVW31TTiHbRCZAsUVZpfWp/+fXX//uQPyAHicU0wBYnEMCMwIxL3luyeivNsijKIAgiN37IcIPPUrHbEaxfRrixP8N4SiHprIkQBO5RmDm9CO/eORtFWo2PJCfIDKS3V4Zx7NUfgi035sIJl+i4bUfUP5fTrP0x7610oH8YiFII0dgy5+PtjUceSgRdHT571hyQHViF+faalhlqWfGlX/3XKnEFx7oUWcKSElDdCrJLuqljBIRCFkaVWagst2HbBCkBp0dBdUmoiAILQNgu4Ax+zUEEyAjjTz+didnTi6HYDZyPJBFEcCRjytggdnQpvPJ6G0Sx1Ttj1DteBUFKdtPwwm77KcnubFPMTdGTYQUZVVAEkE0gor7p06E5CMpRMat83POvb1u27rXx71dVzbfXrHkga0doQDZmS8NCxcw0+4ol3+8JE6ObAemgeLSNuYdU4LhDSjHvoFLMmBjEhNEBlBcLhAIC3RGFtrDEhh0xvLsyjOZ3O9DyXgd2bokCQYJVbEEpd37asgiy3cGp1WNw2rxRI0qFJ2J+xcD1F0zEI807sHVHDCLg5oUKQZDdEirCKBptY96hFTj24FIcMbMEk8cGURR0gb2rU2Lpmm68vTKMV5d2Yv2GiDuSSy1YgnpnogZdowuCE4nxRxuj32fmh4nqB+SdZ93DNTVs/fWvQl5685qq+59vX0gyrKrnjhK1VaPxxaMrMGNiKKPrbd4Zw2Mvt+LOp7ZiybIuoEQgEBSuUR5VeOPOOThi/2KoEQxMwJ0mtS3CbY9vxfduXY3Q2AAiYQl0KxwwqwSXnzwOX/7MaMyakr79OsISLe914I/P78Bji1vBPRJWmT10Jo5iFSwuEacdXTS/6eczW3Bu9jXgs3+FmkaLmmrlidct/8tB+46pvfrUUufwmcW21+A3o9ddG027LQs3WTsmsxwAIjHG75/ehvoHNmDX9hjQJXHuuRPQ9NOZI5ot4x2h7ojCAf+2BJtWdGH8fiX46QWT8I3TxqEkJBK2X/w1vG0GAK8v78IvH9qEp17aCchcsmZG7e3ALrOppKeR/+/or6Km0UKWO7hl1ctugX5SzDxlR1tsxdhRgRKYKvUqu8QJ0xEmY+fjjRHc0rQF7R0OfnrRJMyeXgwegbZlYk/BfY9n3mjDK2914Mov74NpOjUvk8QT5j7nx4C08aVd+NeHXbB0vNQbBSFwL0kY50qQq4Z7/60dUkMk8QUcyAMb2m0dPTMgqLSIwlecMu5AItpgsDIowPRUZvs+gFscCUcQ7FzEFFl33J6erRNflckMaMoa7H1VO4baWtG+y7VEdGu25Q2zBaY57w1mPlpH+nM60+NdT2MJ2iM3R5E6RJbL1DypeMAJ2AN5FGaWRGQJon8JgXk6/MV5B6YpjczMh8Mt/Eko1K/co5h8oJkm7E4hcdiJzi0Phd7Lppx2NsrXnHO2/l0WunN4Szii3GC8YjdGzCl2WQf6F/PK4hACUgiIsmDw7Gxxlk0cU2pVfkYOmL8geTUVXFv9wRd24jcPbUTJKNtd7wTt3GhnRoi+ZSeJ7VTKtKOJRBClgdgZzHxjNuSVEag8avwAAB9oYHMBnMM3NAUAnd0Kh121FGtWhYGQ1X9+UzHgcF+ISRBg6YwZgp43zUaZE1GJ7Zx3XMXsh6+f9VGm3nmmjCn0o1ajr453IUN9mAqRG34qLxG48ZLJuPiGlQiVWnAkQ4alC8hiC2PH2agsdX3Xjm6JbW0OOKxcABdbCAbJk8uQnoPYXVDpiFCZvWR9TzWAjxoWLjTYyQswzdg5qdDtI0NMKZxzjq/ExClF2LyuBwgKHH94OWpOHIMTDi3DjIlBjCp1E8I6uyXWbovhnZVhPPtmO557sw27tkaBkIBVJJKy524xTSJAMTqjfJIF3C1btmXEu75VsN6DkJm5CMByANP1CBCF7h8ZtubZN3yCVavDuPma6fjCURW+zt20I4Y//2MH7nhqG1avCrtqPpXn3pfSqICgQIla23z+2IOqL5vRk0meZibANPblETpMVHB8RpKtScAnmyKYPC6I4gD1zrT1rrWnPmC5Xru7/5yZ6GgLS9z26Ba8/mEXAkEBxezOIAk9e9T7O8ESpl4UcygoUHV4xdyLPz/m3Tpm0eAzbJQJMM1sz9cB3FuwL0c+g/oFtXeqOEMxGLmciO7LZBYoG2DNK3TtyBTlkmBG072mBKOXYVu7HLz9cTdCIdFbTGz3mvX6p7BhCzkPwH0LF/p/1kyAaWJRhxfU+MiUgUx7mmwm1qVxrrt3Pd55ryP5EhET+hQlmDDaOTxoAdXV/uOZvhwXj+NTDmD/TM4tyJ4VfmIAFSUWbv3GVJ25lGBinrVbrFggFsHODmf//9eyrRwghs+9g/wypkmemgZgXIEx92LW1eGnYw8pxVFHVmDb9igsz1Lqvn2JyN3KiIGSImvculWxaQA+qKsHNfgI2fsCl2fd+GkAFqBQzKAgAKIO99qdXjszLndTEsFigdMDRE/7XXeeCWMCwEwPYRdkL5eg7SuxjOOwk1NVbmTfQncUpE+TpqcyVgAJgDLEjl9gmkeYUuiOgnjtybTf6TM/p2SibUWGwJxQcHwKkil+47CTO2B6so9HF4BZkCyBOToOSwMDplnfw8w2gPJCOxckSynXGIKffdAzcX5CSqliIoJSioQoxNcLkl4MVpi5WAgRgs+9gTIBZlBfGJZVCGEWxJ8YrBBRCEAQQFeugWlt2bIlwFwIYRbEv7BOjwMQKC0t9c1ovoH57rvvioceeog6OjrMjQpSEP/qNhikY445RuQcmEop7urqQgGYBcnIJSc3I6moqAhFRUW+1W36+SSdWdTW1jZ2xYoVHzuOUwmfKyMLAC60j8GKEKJ10qRJs6ZOnbrDYConwGTmUQA+AjAehSW7BckQmAC2ATiAiNr8ANO3Kl+3bl108uTJPZqamQp0WBB/zo9htp6NGzdGc6bKvcwJ4EMAB6GwOrIg/sVgZTmAQ/wW2Moogx1Am4eeC1IQv6ocANq0SUg5A6bne9sL7VyQLGV7JpjzC0yD8s0FxixIloy5ORPzMdNE4XXMqnex+1CKW7GsYOaOIFmXyZczBeZqIgFrmPjjiiUEFebtR4iszgcwGQA6und90iHbIKUURKQ5mo2D1O/r/T/z/G7+v9vehel2MjQL6wmSFSpCozChdBoUK4gCcw5nMZ3zSSZmoC9g1tfXMwD8c9MLq3/7yncjO3t2hNzaYOzx/eN/477QahwI+0GQefenJey+FaXZeYHcnQJtUYZfnHgbzjjwsgJzDm/7UgCIeBgzh0W1GAQ3rh74woOTlm2JbJ4pZHaxzFxYAUSAo4BuB7jli/fjzAMvLYBzeIrByCcADiaimJ9ZH/9eOYFRA8uiYGxs6YRloZAFW1hsCwu7HyLlYeXgECRQZNsoC9q48aV/xye7PgCBoLhQDn6YeuTLNCgtvwF2384PNzYTUTVu/eITb4FwKkvFQ73HiSBCTEqMKR4HIqErlqiCtz78gPlWpgozA698PgPA5LL93ojKHqhhMl1OIDgqhvbILggSKAuOKjhEw0d694PKxL7MCJjGAXpiyf1v/2Hpr3pae3aZwsdDjk53CzoL3THGtcfdiK8cciWkisESgQI0hpYtLQA96Cv0m7t8zPjvMzO++OCUNzdFNx5FseGTzGE2WHAkcPMXH8BpB1wMRzmwRaG27BA7Pm8BOEYTSO4ZEwCq6mARCeeix+ctauvaPDcmWREghkVmJrvMaRPwwxcuRVlwFKr2PQuOihW89TxERtKiklmRIBIQi3TyhtnlJPfA3GdODQNNmFw28++rwku+E+PI8FnFq1s7aAkQAdc+fwHuOm0BjplcXUDiEIhFvTsF/T1TNZ7x4DExqDWta0Zf8Nicjzd1d46x1PDKZme3URCRQGkAuOmkB7H/6DkIWAG9aULi1ycfzbP7hmGUtnnTfmPA10jwjJTmudNdkSiLJ6J+QBGWIILYOaF06iwi2uU3fpkVYxIR1zTWWPtVztxV13xpSydaz+YoJMhcJ82kIvuF1kDByTqU5ODZlQ9j5c4lWN26FmVBG5JVWjgmb3LKYlhnf7ek59BAYJe5MqeM35ukVcRWGca1PPe19bvQCF81MbMGJgA01jQSgVA3/97HAZyDEbD2Z3XrMpz/2LHYEW5DMEnJ8ExZOZcnjPQcwvjZY6VARRZoclnF4wCjaimoJd92sKHkje0bx48vGf+xEFSh9CZAw9I1ZAVbBPDq+ufw65d/gJDNuyOBMlWelJnq837O8d+nnKcQ0sC7eUA4ZQIFKdQ+d/qJs75z1K+36SxJziswNThN6etGBXUuKyWJyB6OI5884FQs3VxSH6qJMmimtECmQQfHUIoDN375VyKq9VvaesCqvI8ECIDzJwG7BsO8wpYJFwmyBrSlSEH8NTcAcpzInwZCftl1kyYdZg7+9pXvfLilZ90MSFIEFvl/BMrqm5zWmsv0uvlBeCZqnfLWbpTF6xEAKNgsKu1xq358wu2HEFE0WzM6O8YkcFUdbCIROf1/ZzywMvJJfawDiij/s0CFxUbD2AliqEAZRJkTfOAnn7kjUlUHu6XBf1A9F6oc81GnWtCA60+8/w8/bj73h7uKdhZbIHaDhcPJwizIIDo9VokoCZ935A/+8CZ+gfmAahmKnqtphNVUK2Rt0+F/WtnzzkUqTA7AI3ZymkAQojB9maUqc6hE2WN5yoPPXrTh4ppGZTXVIusE2QGCqAZAE1VPO/2WTSs+uaCN24VFNCIVLgGIKUZnjzOoDtKeYJroBBpRKSAPmXrMLc9iHWlsDJ2uq2mE9WitLc/5y0GPr458cDZ1WxLE1kjqWEECPY7C7PFzcMaBl6Ez2taXbMyc1IHiZE/CyZfWxf9990K4Sa7PPq8Xf19O/7zss1UTvZMbjoO0AmRFeyJP/Ogzt5/zl8ZHrNraWjlQsA8QmDVWU22T+u/Xrj3qkeV3vL65rQd2DpwgGsS3MBwvCLjz1Ccxf78zC6o5MzE7UXyKiN7S8y1DC0wAaGxstM6rvUD+5MXzm6Ki+1wnEpMAWb0jjDkJ4/TNwiRjkt1HKaPvtCQcFnfNlKyi70NE6HEcFNlB3DD/fowp3qfgQPlR4aykJSxLsvxr0ArVZBtQzwsw9QhhZj4YwDvadqWR2qsjd2kG5/HbicDDDAiGO9tzJIBl7hj3t5dPHp0fGLZReqR8GJOR39si+C2ppEOUzfVp0Ee9t6PcZRouKGMqioAIjjAOG8yWJgnAVlC/t8j6MFdsmVMUMPfO+oyGW0dzrPEtRhzvsAIRYW3bSvys+SJ0x7oRsi1IpVKnYHK+xhel/Sz1Nyj5J5T+PonOJyKlhMLo4PgdPz7+7kPuufWeXQDQ0NCghhUwNThNcsfXAdyrKX5ExjWNOl+0dgGuevoMRCUQsgDJg2+fDElIKc3srVJwisphTxCTLv/7xZvu006wHIyhOFBwLgRQpZSSJMjCkOwPRAM6VSkJS9h4c1MzrlpwBmIyjJBtQbHCniOUDWglitiaEJjW8sJFW+ef9fDpOQVlvoAptM15MNxlmwGtzke0e/vO5kW46ukzEI61IWAR9uKNuFgRVHlRWezz0y6Y21B997I6hmggqGENTC9rOux8f2dk8y1OVDpEZKd7hGRpi+TrMRPZQT6+k9h+6vdvqRyUBiqweP3T+Mk/vg7mHq3r9j5wKoZTVGHbM+0jrn249l+35lqF59sFpkZuFF+l8+RFj8/7+0fhd0/isJAQ8TNCftNxs1zFQn5zuRMt6Nrd5iwJlKM9sgNRJwYiF9R9IKZBbvA8dR2lokpILnKsCfb0F/5+0eYvnPNI1GqqhcrHCM2XY8JL65cys6Kz3rvmsruWXvf2JrVlrC2heIi99IG0YHukCzZBgxKIKkZM6hJOnPoe7PmFB+v5OafXVywgppeM3n7y/pdd9n+qgWYvrWOggQd5fAxcDM3/puWa0/5vw4MLdrW3OQESFg+r1LhMO451vSTGpPLJmFQ+Az1OGLawNYOKfj8Fmd8FhC5lI4QFiyx/za/XCBl29v5E3N80hwOEvs+15qDdQktxycDsvZZw47kQ5j2YiGRRScjesXPb6f/xhT8/3dhYY9XmQYUPCjABoKq5ym6pXuT8+1NfqH+7s7muuzUaEwIjuqgQgeAwML5kKu467WnMGnPYnm5axrQT20Ak6pv5Rbuaqp38tvEgSFUd7FduKHJq/zrn0WXdb31ZdsIh4hFdVEgQIRxjjC4ei7tPewZz9vkUHBWDJez4tKAEKjJ77Zd7vZk6YMlKObYVsGMq+ljQCn2lrrnOvqH6Bofz7PgNCjCZmaieiOu5+Ct/PfilT7qWH0XdlMAZGllikUDYUagIjcbdpz+Dw/Y5dk8r5CXhrnh8C8CJALoBcCYVNbIe+IOi+oi4rr4ORNT1w2PvOmty8fR1MsAWmEZ0CWDJCiW2QEdkF6546mS8u+UV2MKGVM6eBMp1AM4ioi7Tl4OikQbrLRuoQdU01ljHTqtef96M7586qWzyLmmxRRDKNbazOajvyMN/8HFIVigOWOiKteEbT52CdzYvgjXywak0KHcBOJWI1uvY9KBNeQ26d1zXXGU3VLc4ty362WcWrL/n2Y1tW0sh/a2wTBYvp0xeLpNzyF8DMgCbBHqkQrFdjrtOW4CjJp2IEbp7tqlr2QXgZCJ6mZltIhrUkTYkreZ66i3OjS3XfO79nQufCke6S6R0pCC3MkH/JGAT+OPe37n3d4YCQ7ECswIze5KA+ycJ933G+nd4fmc9xdj3u7l+771S29BQ7FaZ63GAkB3C7055Ap+e8nnYI6uqsQRgOSoWtkXgDCJ6cShAiaEcznXNdXZDdYMTi/HnFEX+ZllWqZRSErkJH8lzzrnfhlYGlIoZLky9nmbfdzkOhO5/qg98u/1U/UGaimJYwlEOlK4kF3a6ERQ2nlh+HxavW4gxRWWIKSdjNs5VN1EaH1zHNaUUjjWmaHxXzQHfPvPzs856sZmb8x4WGnbABIDm5jq7urrBYeYTADwBYBxGcKpcvGztWo8rFnwBb29ahsoiIKZ231trqMXd6QMOB2BXhkLb97H3PfupC1csHkpQDjkwtRq0iciJRCKH2rb9lBBiP6WUQ4JyB07OPIbHA74lwyILrT3bcOmT87FixweoCAV3Z84hhiUzHCpS9tjAxNWn7nvpGd894TdL6pqvtxuqG5yhHjAYLuBk5ikAHgXw6T2BOc1ubZs71+DSJz+HNa2foDxkwVFymDwfnEAZ2ePtqf/86vTvfuXS46/dUFVXZbc0tDhDP2SGiXgSjEvgZr+fj75loSN20x7JEhZZWN/+MS55shqbOtajNGhBDik4SUlmFFcExER7xsNPnLD8cppC4XylsGUjw6bDNSgFEYWJ6AIAP9PPJwCM2KCgRRYkO5haMQv3nvEcxpdOQDgqYQ3RKkxmOMpiUVZSKmaGDvvZgtrVF9AUCtfV1YnhAsphxZge5iQAQgP1S5o9p6KvIOiIzEySyoElbKzY8Q4uebIandFWFFkCcrCWaTBYAdIqgT3KGrd+9phPX37HKc88hxq2uBEq04q/ex0wE9idkwD8PwBnA4BSSjJx/zVENNybzA20SxVD0CrCW5tacPlTJyPi9KA4QImrHOfI53O9bpZKwCoqDWKfwJQnamf++JsXHXPlpoGUCdxrgem1O/Xv/w7gPwBUwg0E00i2PT/c/i9cteB0tPZsARHnpSOUDvMGSmGVWpWtM8oP+un/nvX2nQ6iGE725IgDpke1k17gNmtb16Zb3ml96cyOcDtsFXIAtshTArff/8n8y/tv6rcXTt834hJx4wr456bxqFetlwTL0bLmSfxlyT2oCJUhHGuHIAu5SCdjZlasZElRiR0qKkKIS/920vSvXHvt8f/1MeoguJ55sJIx9lhgGmlubrarq92A76l/2ff8nd1bf9mmumdGugDBcIhgcfL1bPlpGBoIeIAiGwhaxairuhPHTv0iwtF2N5/Tp5pOhEgA0rIsu7SsDDt2bf9kZdv7Pz9lxkUPS0QxnFX3iAWmbnfhkp2lmOWoy5+pum5V67Jvd2JnRaxTQkBIIhK5qmqcf0phRKVCeWgcfn/6Ahw6/tMDeVSTEQQA7QD+B8DNRNSGOog6AA0NGDEL4kekh+tWMoYECH9+75aZT6784482tq+5pFu0hZwwQIBDIAsjYG2RIEKPwwjZxbjrtAWYN/lziKkobLLTDgxmZhKQApbtOoYyosAPOMK5qZiKPwGARm60aql2xOW9jtxFYQyqbYJwAWrh1n9eO+fV9c98b3Pn+gu6RVtxrJtBEpIEEbLaTWPwxNIpcyGrpHdj1jSZ8GbJrGHIbgD/C+C/iGipcRwBqOFuS+5xwDRSV1cnGuY0EDRAf/fPHxz40vqnr9wW3vi1btE+IRKJgSNgEpAEEsMVpIIEIlIhaJXgrtOewrzJn4sHp/Koa9NvWwD8GcDviWiFB5A8mEm9BWD6BijhpRVPj79v2a9qN3WsvqTTaZ0XFV1wIgA7UERQwxGklgZnwCrGnaf+DZ+acpKSSipLWCIuNPYGgAcANBLRtj0JkHscMBMDFAiJInzrhTNPWLVj6Xk7e7ac3o3O/Rz0GJBqexQEkAANsU3KYCEsFXEk2yJk337mYzhh0qnm09UAFgB4hIgWe+zMPQqQeywwvTbo/HpYfeERAWZZ8u3nz/jMuvaVZ7X17DypR3YeKO1uOFJBRQF2wESQumCAXtjD+aiMzACx+5hsEvMtskAiCARtG7FuC+NKxq3445mvvDCxdPqTAF4morAHkDYAOVJtyL0WmP29+BqraWkToT9IAz9pufDIVTs/nN8e2VEVjnbMjXJksrIjkOxAOi6jsutmKDKZTiaUz0QutpKVcmW34AixN+EeDAi4BTlAFmDZ7h6XlhOEjdDGIrvk7dLgqJb99zl44c1Vj71DRLE4MHKuqvYWgDlsaBRU01Qj+oMUELCxhTeV39Ly3YPX7froqPZI65E9TtecmOyZEZU9E9iWASUcMCkopcCsAQv3Z3xFQnINA/d34f5bCAKxBaFswBExWwS3BO3QqiKrbGlpsOKdaRX7vXX5kf+xbPb4wzrYEwM3YBzJHnYBmBmCtA51tLC+QbQACv2CzwQLATgcKfnl4isn7ezZPn1718bpXZG2qQERnNwRbR3LjNHdsa5yYYkiC1YQMMUbSErIqJKqpzhQ0kGEXeXByh2RWGRjaahi/ZiS8Wsrysat/eUJD2yyKRiWcNAvlF8HUQWI+fV1qgENDCpsn7lXCzOoprHGqmqGjTrYSJog4uaOCAQgYCNAIYTsYjAzMTOF7GIEKASCDZG+Zq1AHeyqOtg1jTUWuLB3S4Ex/bJqfR19MOcD2rp0K2F+C7AQaJkDxlIwGlJUb2UQ6kGYA6paCsJ8AAuBfebU8Oyls7mhvsCGBRm8QV4Y6AUpSEEKUpCCFKQgBSlIQQpSkIIUZISLO+3Lucuqyde0WSbPOJBnyLQt/Nwr1TVz0V6D1TZx94ufOUi2xSsji+ynfO2MZh7aXF/taWlZw0XMFomDcJ/e5dLZJpHoeX9fWCANIhs5WnvlzYZJ9GLZvJR+IeHzGQlALFtmYOZAhgM75b10vqSF5KUp5QA62uzb6ad9FIAyAO2Ztk38PuTMXAHgQABzAMwAMBFuCcmAvk8rgO0A1gJYCWAJEa2Na5OULGoDqALwB31BGvjA4jCANrgr9dYBeA/AIiJ6D4DUA4F9qkDTIHcA+BLcMjGpss6lbpynAVztl008HXwUgL/CX41q1s9yDoB3EnSe+fePAHwD7l45VoJnfRzA9zLdhN5TqeRcADel0YAOgAoAvwfQwMzkt110X0k9YM8A8FUAnwEwOQNcdDPz+wCeAfCwdxlI0ndm5tM5/yKZeSEzn56JXaRHFph5QYb328DMoQzuY+uf12bxbsd5nzXBNW9Lc/5fEp3v83nnM3OPz+dcwMxFzCwyaXv9+4XM/H7c9RQzxzyH4zm8f5dx53Uz8/3MPCPVews9cpXnZy4OqQ/Hw3JVAJ5i5ruZOZih0R7V1435vPdEALMzsKMNe8zP8D7Kc24yMdeKxp0f9fzMVK06zHwogMcAhFL0nbn2cwDOJqIeP9pKs7Fk5hnM/H8AHgRwqKdfjUaxPYflObx/NyaG0lgoAnApgDeZ+Wv6PnYiVU6ek/OZhGBe6AqtBs4BoJjZTwKs9xnTLSAzVeFOhLtfukgFHqPWmLkMwDEeb9OPKve7X7XwHF5SyGgfd21ySGaeptXiaPTtx5OoHYIAXgLwZWNGpVPhHhPhFAB/0rajqRWV7YZhFNeHEsAYAA8x81Qiuil+EwK/qwQ5wyORmJEUBXAagNu0fZHrlYrkYT/4cJjM/Q/XTDss90Dx2MGVAJ4CMC0NKG09MM/Ua4UoA1B+De7Ct3GegS6S4EJ5NKP3UCn6x/ac9xtm/o6+r5UpMCnDw1B+IgnoB/omM39eM0Aut+4z7/QpZi7R1ycfQP6Mh9mHGyjJEzF4FMARHsAk0kw2gA8BnEJEbT6Z0pgIp2nVbUwcOwkgHQ8L2gkOkaY9hX5+CeA2Zq7yYsFPBScJd4esdGJp+6HI02AqAfgNeBlAPTO/iNyWCTLXngzgMAD/9NjSqezLE/MZ2x1o/FB32iMAPofk9ekNg64C8CUi2uLH2/eYCAcCeDjBIE90D3P/JQCW6XtG9WczdCjp0LhQGaWIo9/NzEcCiDBzyp0hDKg2atsrgtS7gdgASvVxCIDLAJyeBJzmYY8HMJuIluY4UGxY47MamJTGviwHMC9DLTJYYpjsfwDUoG+L5mSA2aRBuc4nKEnHsy0AfwRQnsJEMH9v06GnPwN4P5GPoK87D8A1AC5KYZdbeqAdCOAKIvofZrbBzKd63P/4EA8z85pEXpPP0X593LW8EtM/r/KGQJKEix7X33V8hkbM9xZ44nGpwlGfTdIGqcR899NpwkU3x71v/Ps/lCxsYoL9zPxz/d1oinAcM/NOzTrw22ee57wyyXPGt+nTJtTjbUdmtj1HfFt8hZk7dJupJM+vmPljZg66tcL8SUAvthJm0VWSQ+jD1qP1BrhbCqfyjGdmq+X0z+0Adsb9zbzXPGYu16xIKezLE1PYQysxBHtGaUckxszfAHBjCvVtNFIH3A1J3/G7zZ5uE6k1xvUpoh6GKe8notOIaJXu494pSiJyPIepAi2YOUBEj8ItVW5CZ5zA3lQaC8cRke/aPSb2xUSU6lD6cLR6IB1rQwpglgwQmBsBvBv3N9L32wfAkSlUdDr7MgxgMQZ5QzOPd3ymVpkGGJTg+UnbducQ0WsZ7v1o6X69UNvkicwuc+/niOjfDPloAKY0vTQWYswcJKJ/AKjzqG7p+QnP+12Ud3tKv/TONF/rGuBtogBeThAaSgk6j31ZAeDoOPCa66yFO6UKH4H0XIPyBACNHrBQkoHJAGqJ6B9ZbEhqpoivSDLwjE3YCuDr3rLjGb5WTKv3/wKwRtvIlicwDwCbAbwCYLlfr3xAsTc9M5FKPhrgbWwPMEUSNf2rBMAynvpRAMbGsYUp9/eubjAMBmN6Qjaz4e6tGULiHAZvBeHziejJTEHpiYseocNPSODwGCfyd0S0IdudeImINRFEmPleAFfrtl0G4E0d2lpJRK3eTs1niMNh5s8nUZOG0hcNkJGK9Uvu1LMJjP47WhzDzKN0PI88HmS8fakSMObLAHoG0fuO6u1jFnhmXKwEoDSAuZyIHtF2XCyLeK8CcAr6Nvmy4+5j6fe/V/dp1lpDY4EA3Azgf4ioPVmEgIiUX1Vua+/NjvO+Eh2WtjejzHwGgFPRvz6418l4iYiWDzBUFCSiLR47U8XZmWN0uCueUVOpevO9RUlCM/kQR5sVT+s4YLKQjSGUa4noPuMkZXE/8/5VSYjDMPWrOmWNBhrO07joIaJ2j5NsG6fa+Cl+bUxFRJ3a2I3FeV+JDsnMlcz8bQB/we7zzuxhtfocBLXNOyxOYWf2a3yPfTlaq/J4+1LATdv7QDNyPsVk+9gAmgDMTTGrY6bxfkJEt2arWj3vX4TkyS6mHV/yJgnnQpua+3sws1u+hJ1mBgUAxjDzzUlCKWZaycylhuDONx8DYFKCoCrrkEEQbr3wRZnmIabwzhelsDM/GwdUY1/OhZsIkdC+NB5lnoGptA32JwBfTBEWMu3YBeD3psZ6tuSlrzfN008iSf+/o58vV4nkvq7jB5gVAK7NcvYl3pskDcq/ALhugI0bz4pv61heeQI7cy4zjyWiHcaOSQDYRPYlkH1GjV8JM3Md3ATcWArTweQgVAK4i4i+OoAcA/P+49GXUJFodg5wpxp9OX85ZFbl1/lxMnxpEdehRn1vB3A73K33etli4NqBA0S0jZmXADgO/YvoKwCjNIs/h/7B/qoU9uXiPHvjpu3P9bB2OnvWJD3UMvOfiOjpLDWOed9JSd7RDGwHQGeGbChz2Ti5+l46ddsEd1Mk6QkncQ6ubWm2WayBGW9nCrhpcM95vN+xKezLDs3AgxG/HA1/eabxavh2Zm7RjEtZDvCyNIMvCjdHwm/oaQ6AW5B96qA57z9sDI4YAF4N4HydkPBbIurOUfIGe1juuhTxTC/QjtZMmsi+fI+INg5S/DJZJ6oktp+xj/cDcCMRfU+r9Hyk63nTF9kHA4+FuzZroPKg31HqZHjIBExjRvoY7Y0vYub99UgbqF1i7vUm3M2YvExsrn0EM0/0eLEnJmDEePtyMICZDJQCyVc+GnB+m5mPyUNOq5GA9gn8Rk5M38c8oM7kMOdFfccxMzwsjy3HCcAZ04z1IjNPHyA4vVnzGwAsjQOUsTNLAXzKc95nEzQ4JQDmYItZI9UIdz9ISsCG5AHoXZ4sqUzVZ08a0HmB6XeQWTk4UuZjGhWzA8BPUjhAlg4TBbUHvw/chIAjtbqJV1ekXzgGYDqAh5m5aoC2HBsngJlf0Y5OvIoWAOYz81M6pHVkAvvS0uGYfw0hKG0ACwF8TbfreXBngeI9ZzNzdjSA75i4pk9H1QzazUmASZ72GDUUDeEHmB1EdE8WSCkBcBaA/wQwJYEtZcB5PIDLiOiebAPGcfIygG8nYcL5OiY3Vw+iRPblUiLalOU0Xy5A+TqAM+FmcnXpUNKdSWxIY1veyMxPAFjl02b3pgwqJM+8Mtnob2bgzPhZOZpWO/pRn4KZy/TUUcDHlKSZlgwT0cPaG96axMM1mezfMxsq5cDOfAN9Kf7xduYcvRry0ynsy1cHKX6ZCJRLAZxORB2eqMW9cDOcrBQqvQTAHdozpwwYc60GZ7KQkbHN/ZbxNnaxjf4rQ+OPnIWBHDMJ7zcsoV8mSEQfM/PPAdyNxBk+DHcpxpFE9GYWXjqbGJq+51q4qVOHeVja2GlBHbs8OoV9+dIgay2TkLEC7pKIbR6zxGQbXQfg+RSmlAPgZGa+kIgeShfb9GT7dDDzcm1+xeczmPY4Xn9f+SCF9wB8PkmkwZgHRXD3wRyXKqyUt3CRfpmoHvVPALhVx83iH8Z0zFytMsQA7E2T9f2aBmYiNfV1uEt1E9mX3ZpxByN+6VWX6zQoN3hB5QHn35n5b1rFJ0ruMG12CzM/C2CnjwFuAL1YO4KcRJt+mpmnANiY7JqGrIioDcCLPkgrkiZUlv9EYf0iO7XHnCr8sm+OYoIA0JKAEU1nnglgatzn5rxlehEXDQIwTadsBHAyEa1OwnRGE/xQmyiUBESsme9m3ebks62eT4IFM/NTAuCrGnwinZbU638SHbb+WeHHLBjMFYHpTIDSHISLDJheR18RK07AFJREFb0yiPalqW7xAhF9oJ0tmWBwK7i5rcvhTueKNI7QJcz8BR+xTeWxqdck0VQG8N9h5lLPIElFRDLRgb6qdr5MwbwC06Q46ZDDpDQxs/Ycgv8TuIvI/AbIzTMtGorIiDZ3VJpwmIC7KG1LCnPHsOkdzFycCkja1LJ1PaNHkpgv5j7T4c4ymQp1WSlQPVC6/WgjkU9QAghoFfAlDU6ZApircnRfow5f92krGvsyOsj2Ze/9/Szq0qzZCqAB6WeEDgBwvT7PD2veA3dOXCTRMFJHTi7ReQa23wkRo97Rt2vwweifAZY1MAkZZrDHZbFPAfCbFA9i1O27OQJFpt616YgVAFYnqB05XLbVM6o5VfjIC6TrmPnI+JpA8YDXfbUSwEMpzATDnPcz85UmuddjP4oEy7gtzcgGkBYzf1Pb/6PSaE9fwJSZZrBr+6aYmc/SDzI9yf0MAJYDeN9vQdE0tqs5/7UEIZBUrLHYB8MMmXg83xjcRJV0A9MGcKcPZjPqvl6bU4nMBG8c8y5mfpCZZ3lsSJVgGbfUg6KcmS+GWxHlDvRfl5VVHDM+g91B6vXVRegrEVMBN2V/hqfzk80u2AAe0C/hd0otFTi9DLgKwP4p7u+VxRjmEhc+egpuhd9E4SPDmscCuJqIfpdsVs3Dmut1vPRu7TiKJPargrsO/Rw92/SM1nZb0ZfoPA5u3aL5cCv77etx+NKVXlQARD4z2L1slAyUAu7Mwz2mKkSO4qeWjme+ngaYrAeGo0f0YNuXWZrRTAB+AHcpRiAJAxnm+6WOga5NEYc0gL+HmY+HW1g1UTa9d7KiFO58/tf0Z62ec0YliFWnq6+pPPZ+ON9pb6mmoMzo+QER7dDGPQ+QLeMH1cs+z/0YwCe6wznDMNdgs6Y3fHRnCrvQvEsF3OWy6dSn0rboFXBXappcBk7hF3jzNSvhLtWo9IDX8ZhTIkUfmIwqS0cens132luykWFG1j1E9MccLEhLFaNLFZfsjXtqNWfla5+iHItJE7whTfjIqPQzmfncVLFN/d6mhPeXdQgp4CGRRMD37sgRf5hKG+kAaVaIbgBwLhFdT0TRwQqws2cECf3C9wG4MhcL0hKAqXcmB+50X7qZnBaMIDHsR0S7tNOSaomKYc7bdDViTuYQeRysKBGdD+Cn6FtKbECbTEPFH+lwYADZDTfv9GgietQMHOFBbq4PbxY7eUbQJgBXEdHlZvT7YCmZ5l7J7Ewz9+3oOGX8eSZp+bUU9qVKc2/2wd7p2ilb1vSGj0jHIhOVnI7CTT38VbrpSpPgoe3RX8NNS3zeo2rj1XSy8uaM/qWwZRwOdmpT5Ggi+k58kVkbbjJqvtf+7NCN9zjcfV62Z7Lfj7Zb7CTPOTaN8/aKVk3J3nEL+uonJXqW4hT3BtLPhJQnOd/2vFu2Tp4pvfIDuAvtQmmiL99k5ud1raOk5pOp7Ke/8yaALzHzSQCugjtZUpZBPNm7pNfRRNEIoNGsqzJa0/s8NoD3AfwM2W9AZWzGmKblbt3BnXpUdABYR0Q7PW6lX5vSMNidcLNWvM9okgq2JVHp5txHkbg4lbGDVmgPnpKcvxjAz7H75lfm/quSsK35dxOA9QnOV572zyoaYOrLE9HzzHwFgAlIPrtmnJBiv/fT1zcE8gKAF/SOGVUAToCbETZNxyZDcX0TQV/yzntaKy3SThs8gOSEOQKDGOMwHrocIQ7GiJEBLN/N5B6WAWvc3yv1gCjXTEqalDoAbPZWcDPPamzWVJMp/x/UIyNRH0y8xAAAAABJRU5ErkJggg==">
+      <div>
+        <div class="brand-eyebrow">Badan Meteorologi, Klimatologi, dan Geofisika</div>
+        <h1 class="brand-title">Pelayanan Terpadu Satu Pintu Meteorologi Maritim</h1>
+      </div>
+    </div>
+
+    <nav class="main-nav" role="tablist" aria-label="Menu dashboard">
+      <button class="nav-btn active" role="tab" data-view="layanan">Layanan</button>
+      <button class="nav-btn" role="tab" data-view="kinerja">Kinerja</button>
+    </nav>
+
+  </div>
+</header>
+
+<!-- ===================== VIEW: LAYANAN ===================== -->
+<main id="view-layanan" class="view active">
+<div class="view-inner">
+
+<section class="page-banner">
+  <div>
+    <h2>Layanan PTSP Meteorologi Maritim</h2>
+    <div class="page-banner-sub">Rekapitulasi Pelayanan PTSP Tahun 2020 — 2026</div>
+  </div>
+  <div class="live"><span class="live-dot"></span>LIVE DATA</div>
+</section>
+
+
+
+<!-- ===================================================
+     FILTER
+=================================================== -->
+
+<section class="filter-panel">
+
+  <div class="filter-grid">
+
+
+    <div class="field">
+
+      <label>Tahun</label>
+
+      <select id="yearFilter">
+
+        <option value="ALL">
+          Semua Tahun
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Bulan</label>
+
+      <select id="monthFilter">
+
+        <option value="ALL">
+          Semua Bulan
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>Jenis Layanan</label>
+
+      <select id="serviceFilter">
+
+        <option value="ALL">
+          Semua Layanan
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="field">
+
+      <label>User / Perusahaan</label>
+
+      <input
+        id="searchFilter"
+        type="text"
+        placeholder="Ketik nama perusahaan..."
+      >
+
+    </div>
+
+
+    <button
+      id="resetButton"
+      class="reset-btn"
+    >
+      RESET
+
+    </button>
+
+
+  </div>
+
+</section>
+
+
+<!-- ===================================================
+     KPI
+=================================================== -->
+
+<section class="kpi-grid">
+
+
+  <div class="kpi">
+
+    <div class="kpi-label">
+      Total PNBP
+    </div>
+
+    <div
+      id="totalPnbp"
+      class="kpi-value"
+    >
+      Rp 0
+    </div>
+
+    <div
+      id="pnbpNote"
+      class="kpi-note"
+    >
+      Semua data
+    </div>
+
+  </div>
+
+
+  <div class="kpi">
+
+    <div class="kpi-label">
+      Total Transaksi
+    </div>
+
+    <div
+      id="totalTransaction"
+      class="kpi-value"
+    >
+      0
+    </div>
+
+    <div class="kpi-note">
+      Surat / pelayanan
+    </div>
+
+  </div>
+
+
+  <div class="kpi">
+
+    <div class="kpi-label">
+      User / Perusahaan
+    </div>
+
+    <div
+      id="totalCompany"
+      class="kpi-value"
+    >
+      0
+    </div>
+
+    <div class="kpi-note">
+      User unik
+    </div>
+
+  </div>
+
+
+  <div class="kpi">
+
+    <div class="kpi-label">
+      Jenis Layanan
+    </div>
+
+    <div
+      id="totalService"
+      class="kpi-value"
+    >
+      0
+    </div>
+
+    <div class="kpi-note">
+      Kategori layanan
+    </div>
+
+  </div>
+
+
+</section>
+
+
+<!-- ===================================================
+     MAIN CHARTS
+=================================================== -->
+
+<section class="chart-grid">
+
+
+  <div class="chart-card">
+
+    <div class="ly-card-title">
+
+      <h3>
+        📈 Tren PNBP Bulanan
+      </h3>
+
+      <span>
+        Berdasarkan filter
+      </span>
+
+    </div>
+
+    <div class="chart-wrap">
+
+      <canvas id="lineChart"></canvas>
+
+    </div>
+
+  </div>
+
+
+  <div class="chart-card">
+
+    <div class="ly-card-title">
+
+      <h3>
+        🥧 Komposisi Layanan
+      </h3>
+
+      <span>
+        PNBP
+      </span>
+
+    </div>
+
+    <div class="chart-wrap">
+
+      <canvas id="pieChart"></canvas>
+
+    </div>
+
+  </div>
+
+
+  <div class="chart-card full">
+
+    <div class="ly-card-title">
+
+      <h3>
+        📊 Perbandingan PNBP Tahun
+      </h3>
+
+      <span>
+        2020 — 2026
+      </span>
+
+    </div>
+
+    <div class="chart-wrap">
+
+      <canvas id="yearChart"></canvas>
+
+    </div>
+
+  </div>
+
+
+  <div class="chart-card full">
+
+    <div class="ly-card-title">
+
+      <h3>
+        📊 PNBP Berdasarkan Jenis Layanan
+      </h3>
+
+      <span>
+        Ranking
+      </span>
+
+    </div>
+
+    <div class="chart-wrap">
+
+      <canvas id="serviceChart"></canvas>
+
+    </div>
+
+  </div>
+
+
+</section>
+
+
+<!-- ===================================================
+     TOP ANALYTICS
+=================================================== -->
+
+<section class="analytics-grid">
+
+
+  <div class="chart-card">
+
+    <div class="ly-card-title">
+
+      <h3>
+        🏆 Top 10 User / Perusahaan
+      </h3>
+
+      <span>
+        Berdasarkan PNBP
+      </span>
+
+    </div>
+
+    <div
+      id="topUsers"
+      class="top-list"
+    ></div>
+
+  </div>
+
+
+  <div class="chart-card">
+
+    <div class="ly-card-title">
+
+      <h3>
+        📅 PNBP Bulanan
+      </h3>
+
+      <span>
+        Detail
+      </span>
+
+    </div>
+
+    <div class="chart-wrap">
+
+      <canvas id="monthlyBarChart"></canvas>
+
+    </div>
+
+  </div>
+
+
+</section>
+
+
+<!-- ===================================================
+     TABLE
+=================================================== -->
+
+<section class="table-card">
+
+
+  <div class="table-head">
+
+    <div>
+      <h3>Detail Transaksi</h3>
+      <div id="recordCount" class="record-count">0 data</div>
+    </div>
+
+    <div class="table-search">
+      <i class="bi bi-search"></i>
+      <input id="lyTableSearch" type="search" autocomplete="off"
+             placeholder="Cari nomor surat, perusahaan, layanan...">
+    </div>
+
+  </div>
+
+  <div class="table-wrapper">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th class="sortable" data-sort="tahun">Tahun<span class="sort-ind">⇅</span></th>
+
+          <th>Bulan</th>
+
+          <th class="sortable" data-sort="no">No<span class="sort-ind">⇅</span></th>
+
+          <th>Nomor Surat</th>
+
+          <th>User / Perusahaan</th>
+
+          <th>Jenis Layanan</th>
+
+          <th class="sortable" data-sort="hari">Hari<span class="sort-ind">⇅</span></th>
+
+          <th class="sortable" data-sort="tarif">Tarif<span class="sort-ind">⇅</span></th>
+
+          <th class="sortable" data-sort="harga">Harga Tarif<span class="sort-ind">⇅</span></th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody
+        id="lyTableBody"
+      ></tbody>
+
+    </table>
+
+  </div>
+
+
+  <div class="ly-pagination">
+
+    <div
+      id="pageInfo"
+      class="page-info"
+    ></div>
+
+    <div
+      id="pageButtons"
+      class="page-buttons"
+    ></div>
+
+  </div>
+
+
+</section>
+
+</div>
+</main>
+
+<!-- ===================== VIEW: KINERJA ===================== -->
+<main id="view-kinerja" class="view">
+<div class="view-inner container-fluid">
+
+<section class="page-banner">
+  <div>
+    <h2>Kinerja &amp; Operasional PTSP</h2>
+    <div class="page-banner-sub">Monitoring permohonan, durasi layanan, dan beban kerja FOD</div>
+  </div>
+  <div class="live"><span class="live-dot"></span>LIVE DATA</div>
+</section>
+<!-- PANEL FILTER -->
+    <div class="card p-3 mb-3">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label fw-bold text-muted" style="font-size: 0.8rem;">TAHUN</label>
+                <select id="filterTahun" class="form-select form-select-sm" onchange="kinerjaApplyFilters()">
+                    <option value="All">Semua Tahun</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold text-muted" style="font-size: 0.8rem;">BULAN</label>
+                <select id="filterBulan" class="form-select form-select-sm" onchange="kinerjaApplyFilters()">
+                    <option value="All">Semua Bulan</option>
+                    <option value="0">Januari</option>
+                    <option value="1">Februari</option>
+                    <option value="2">Maret</option>
+                    <option value="3">April</option>
+                    <option value="4">Mei</option>
+                    <option value="5">Juni</option>
+                    <option value="6">Juli</option>
+                    <option value="7">Agustus</option>
+                    <option value="8">September</option>
+                    <option value="9">Oktober</option>
+                    <option value="10">November</option>
+                    <option value="11">Desember</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold text-muted" style="font-size: 0.8rem;">STAF FOD</label>
+                <select id="filterFod" class="form-select form-select-sm" onchange="kinerjaApplyFilters()">
+                    <option value="All">Semua Staf</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- KARTU KPI -->
+    <div class="row text-center mb-4 g-3">
+        <div class="col-md-4">
+            <div class="card kpi-card" style="background-color: #4f46e5; color: white;">
+                <div class="kpi-title">Total Permohonan</div>
+                <div id="kpiTotal" class="kpi-value">0</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card kpi-card" style="background-color: #10b981; color: white;">
+                <div class="kpi-title">Selesai</div>
+                <div id="kpiSelesai" class="kpi-value">0</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div id="cardProgress" class="card kpi-card kpi-clickable" style="background-color: #f59e0b; color: white;" title="Klik untuk menampilkan hanya On Progress di tabel">
+                <div class="kpi-title">On Progress</div>
+                <div id="kpiProgress" class="kpi-value">0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRAFIK -->
+    <div class="row mb-4 g-3 align-items-stretch">
+        <!-- Grafik Kiri (Proporsi Layanan) -->
+        <div class="col-md-5 d-flex flex-column">
+            <div class="card p-3 h-100 m-0 d-flex flex-column">
+                <h6 class="fw-bold section-title">Proporsi Jenis Layanan</h6>
+                <div class="chart-container-pie flex-grow-1">
+                    <canvas id="chartLayanan"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Grafik Kanan (Atas Bawah) -->
+        <div class="col-md-7 d-flex flex-column gap-3">
+            <!-- Atas: Surat Masuk -->
+            <div class="card p-3 m-0 d-flex flex-row align-items-center h-50">
+                <div class="flex-grow-1 w-100">
+                    <h6 class="fw-bold section-title">Jumlah Surat Masuk</h6>
+                    <div class="chart-container-bar">
+                        <canvas id="chartSuratMasuk"></canvas>
+                    </div>
+                </div>
+                <div class="ms-1 fw-bold vertical-year" id="labelTahunSurat">-</div>
+            </div>
+            
+            <!-- Bawah: Hari Layanan -->
+            <div class="card p-3 m-0 d-flex flex-row align-items-center h-50">
+                <div class="flex-grow-1 w-100">
+                    <h6 class="fw-bold section-title">Jumlah Hari Layanan</h6>
+                    <div class="chart-container-bar">
+                        <canvas id="chartHariLayanan"></canvas>
+                    </div>
+                </div>
+                <div class="ms-1 fw-bold vertical-year" id="labelTahunHari">-</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROW: RATA-RATA DURASI & TOP PERFORMER -->
+    <div class="row mb-4 g-3" id="row-stats">
+        <div class="col-md-6" id="col-sla">
+            <div class="card p-3 h-100 m-0">
+                <h6 class="fw-bold section-title"><i class="bi bi-stopwatch text-info"></i> Rata-rata Durasi per Layanan</h6>
+                <ul class="list-group list-group-flush mt-1" id="slaList"></ul>
+            </div>
+        </div>
+        <div class="col-md-6" id="col-top-performer">
+            <div class="card p-3 h-100 m-0">
+                <h6 class="fw-bold section-title"><i class="bi bi-trophy text-warning"></i> Top 3 Performer</h6>
+                <ul class="list-group list-group-flush mt-1" id="topPerformerList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALERT BOX -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card p-3 shadow-sm bg-white" style="border-left: 4px solid #ef4444;">
+                <h6 class="text-danger fw-bold m-0"><i class="bi bi-exclamation-triangle-fill"></i> Mohon Segera Dikerjakan!</h6>
+                <div class="alert-box mt-2">
+                    <ul class="list-group list-group-flush" id="alertList"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABEL UTAMA -->
+    <div class="card p-3 mt-2">
+        <h3 class="ky-table-title">Detail Layanan <span id="kyFilterBadge" class="ky-badge prog" style="display:none;margin-left:8px">Hanya On Progress</span></h3>
+    <div class="ky-table-area">
+            <table id="dataTable" class="table table-hover w-100">
+                <thead class="table-custom-header">
+                    <tr>
+                        <th style="width: 40px;">No</th>
+                        <th>No Surat</th>
+                        <th>Perusahaan</th>
+                        <th>Jenis Layanan</th>
+                        <th style="width: 60px;">Hari</th>
+                        <th>FOD</th>
+                        <th>QC</th>
+                        <th>Status</th>
+                        <th>Deadline</th>
+                        <th class="col-durasi">Durasi Pengerjaan</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- ===================== SHELL JS ===================== -->
+<script>
+(function(){
+  if (window.Chart) { Chart.defaults.font.family = 'Inter, Arial, Helvetica, sans-serif'; }
+  var loaded = {};
+  var LABEL = { layanan: 'Memuat Dashboard Layanan...', kinerja: 'Memuat Dashboard Kinerja...' };
+
+  window.setLoading = function(on, text){
+    var el = document.getElementById('loading');
+    if (text) document.getElementById('loadingText').textContent = text;
+    el.style.display = on ? 'flex' : 'none';
+  };
+
+  window.markViewFailed = function(name){ loaded[name] = false; };
+
+  function showView(name){
+    document.querySelectorAll('.view').forEach(function(v){
+      v.classList.toggle('active', v.id === 'view-' + name);
+    });
+    document.querySelectorAll('.nav-btn').forEach(function(b){
+      var on = b.getAttribute('data-view') === name;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+
+    var app = name === 'layanan' ? window.LayananApp : window.KinerjaApp;
+
+    if (!loaded[name]) {
+      loaded[name] = true;
+      setLoading(true, LABEL[name]);
+      app.init();
+    } else if (app.onShow) {
+      app.onShow();
+    }
+
+    window.dispatchEvent(new Event('resize'));
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(function(b){
+    b.addEventListener('click', function(){ showView(b.getAttribute('data-view')); });
+  });
+
+  window.addEventListener('load', function(){ showView('layanan'); });
+})();
+</script>
+
+<!-- ===================== LAYANAN JS ===================== -->
+<script>
+(function(){
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let allData = [];
+
+let filteredData = [];
+
+let currentPage = 1;
+
+const PAGE_SIZE = 25;
+
+
+let lineChart = null;
+let pieChart = null;
+let yearChart = null;
+let serviceChart = null;
+let monthlyBarChart = null;
+
+
+/* =====================================================
+   MONTHS
+===================================================== */
+
+const MONTHS = [
+
+  'JANUARI',
+  'FEBRUARI',
+  'MARET',
+  'APRIL',
+  'MEI',
+  'JUNI',
+  'JULI',
+  'AGUSTUS',
+  'SEPTEMBER',
+  'OKTOBER',
+  'NOVEMBER',
+  'DESEMBER'
+
+];
+
+
+/* =====================================================
+   LOAD
+===================================================== */
+
+window.LayananApp = { init: loadDashboard };
+
+
+function loadDashboard() {
+
+  google.script.run
+
+    .withSuccessHandler(
+      function(result) {
+
+        allData = ((result && result.data) || []).sort(byNewest);
+
+        if (!allData.length) {
+          var info = document.querySelector('#view-layanan .page-banner-sub');
+          info.style.color = '#fecaca';
+          info.textContent = !result
+            ? 'Server mengembalikan data kosong (null). Cek Executions/log di Apps Script.'
+            : 'Server mengembalikan 0 data. Spreadsheet: ' + (result.ssName || '?') +
+              ' | Sheet ditemukan: ' + ((result.sheetsFound || []).join(', ') || '-');
+        }
+
+        buildFilters();
+
+        applyFilters();
+
+        document
+          .getElementById(
+            'loading'
+          )
+          .style.display =
+            'none';
+
+      }
+    )
+
+    .withFailureHandler(
+      function(error) {
+
+        document
+          .getElementById(
+            'loading'
+          )
+          .style.display =
+            'none';
+
+        window.markViewFailed('layanan');
+        alert('Gagal memuat dashboard:\n' +
+          error.message
+        );
+
+      }
+    )
+
+    .getLayananData();
+
+}
+
+
+/* =====================================================
+   FILTER BUILD
+===================================================== */
+
+function buildFilters() {
+
+  const years =
+    [
+      ...new Set(
+        allData.map(
+          x => x.tahun
+        )
+      )
+    ]
+    .sort();
+
+
+  const services =
+    [
+      ...new Set(
+        allData
+          .map(
+            x => x.layanan
+          )
+          .filter(Boolean)
+      )
+    ]
+    .sort();
+
+
+  const yearFilter =
+    document.getElementById(
+      'yearFilter'
+    );
+
+
+  years.forEach(
+    year => {
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+      option.value =
+        year;
+
+      option.textContent =
+        year;
+
+      yearFilter.appendChild(
+        option
+      );
+
+    }
+  );
+
+
+  const monthFilter =
+    document.getElementById(
+      'monthFilter'
+    );
+
+
+  MONTHS.forEach(
+    month => {
+
+      const exists =
+        allData.some(
+          x =>
+            x.bulan === month
+        );
+
+
+      if (!exists) return;
+
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+      option.value =
+        month;
+
+      option.textContent =
+        month;
+
+      monthFilter.appendChild(
+        option
+      );
+
+    }
+  );
+
+
+  const serviceFilter =
+    document.getElementById(
+      'serviceFilter'
+    );
+
+
+  services.forEach(
+    service => {
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+      option.value =
+        service;
+
+      option.textContent =
+        service;
+
+      serviceFilter.appendChild(
+        option
+      );
+
+    }
+  );
+
+
+  yearFilter.addEventListener(
+    'change',
+    applyFilters
+  );
+
+
+  monthFilter.addEventListener(
+    'change',
+    applyFilters
+  );
+
+
+  serviceFilter.addEventListener(
+    'change',
+    applyFilters
+  );
+
+
+  document
+    .getElementById(
+      'searchFilter'
+    )
+    .addEventListener(
+      'input',
+      debounce(
+        applyFilters,
+        250
+      )
+    );
+
+
+  document
+    .getElementById(
+      'resetButton'
+    )
+    .addEventListener(
+      'click',
+      resetFilters
+    );
+
+}
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+function applyFilters() {
+
+  const year =
+    document
+      .getElementById(
+        'yearFilter'
+      )
+      .value;
+
+
+  const month =
+    document
+      .getElementById(
+        'monthFilter'
+      )
+      .value;
+
+
+  const service =
+    document
+      .getElementById(
+        'serviceFilter'
+      )
+      .value;
+
+
+  const search =
+    document
+      .getElementById(
+        'searchFilter'
+      )
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  filteredData =
+    allData.filter(
+      row => {
+
+
+        const matchYear =
+          year === 'ALL' ||
+          String(
+            row.tahun
+          ) === year;
+
+
+        const matchMonth =
+          month === 'ALL' ||
+          row.bulan === month;
+
+
+        const matchService =
+          service === 'ALL' ||
+          row.layanan === service;
+
+
+        const matchSearch =
+          !search ||
+          String(
+            row.user || ''
+          )
+          .toLowerCase()
+          .includes(search);
+
+
+        return (
+          matchYear &&
+          matchMonth &&
+          matchService &&
+          matchSearch
+        );
+
+      }
+    );
+
+
+  currentPage = 1;
+
+
+  updateDashboard();
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+function resetFilters() {
+
+  document
+    .getElementById(
+      'yearFilter'
+    )
+    .value = 'ALL';
+
+
+  document
+    .getElementById(
+      'monthFilter'
+    )
+    .value = 'ALL';
+
+
+  document
+    .getElementById(
+      'serviceFilter'
+    )
+    .value = 'ALL';
+
+
+  document
+    .getElementById(
+      'searchFilter'
+    )
+    .value = '';
+
+
+  applyFilters();
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+function updateDashboard() {
+
+  updateKPI();
+
+  updateLineChart();
+
+  updatePieChart();
+
+  updateYearChart();
+
+  updateServiceChart();
+
+  updateTopUsers();
+
+  updateMonthlyChart();
+
+  updateTable();
+
+}
+
+
+/* =====================================================
+   KPI
+===================================================== */
+
+function updateKPI() {
+
+  const total =
+    filteredData.reduce(
+      (sum, row) =>
+        sum +
+        Number(
+          row.harga || 0
+        ),
+      0
+    );
+
+
+  const companies =
+    new Set(
+      filteredData
+        .map(
+          x => x.user
+        )
+        .filter(Boolean)
+    );
+
+
+  const services =
+    new Set(
+      filteredData
+        .map(
+          x => x.layanan
+        )
+        .filter(Boolean)
+    );
+
+
+  document
+    .getElementById(
+      'totalPnbp'
+    )
+    .textContent =
+      formatRupiah(total);
+
+
+  document
+    .getElementById(
+      'totalTransaction'
+    )
+    .textContent =
+      formatNumber(
+        filteredData.length
+      );
+
+
+  document
+    .getElementById(
+      'totalCompany'
+    )
+    .textContent =
+      formatNumber(
+        companies.size
+      );
+
+
+  document
+    .getElementById(
+      'totalService'
+    )
+    .textContent =
+      formatNumber(
+        services.size
+      );
+
+
+  const year =
+    document
+      .getElementById(
+        'yearFilter'
+      )
+      .value;
+
+
+  document
+    .getElementById(
+      'pnbpNote'
+    )
+    .textContent =
+      year === 'ALL'
+        ? 'Seluruh tahun'
+        : 'Tahun ' + year;
+
+}
+
+
+/* =====================================================
+   LINE CHART
+===================================================== */
+
+function updateLineChart() {
+
+  const map = {};
+
+
+  MONTHS.forEach(
+    month => {
+
+      map[month] = 0;
+
+    }
+  );
+
+
+  filteredData.forEach(
+    row => {
+
+      if (
+        map[row.bulan] !==
+        undefined
+      ) {
+
+        map[row.bulan] +=
+          Number(
+            row.harga || 0
+          );
+
+      }
+
+    }
+  );
+
+
+  const values =
+    MONTHS.map(
+      month =>
+        map[month]
+    );
+
+
+  destroyChart(
+    lineChart
+  );
+
+
+  lineChart =
+    new Chart(
+
+      document
+        .getElementById(
+          'lineChart'
+        ),
+
+      {
+
+        type: 'line',
+
+        data: {
+
+          labels:
+            MONTHS,
+
+          datasets: [{
+
+            label:
+              'PNBP',
+
+            data:
+              values,
+
+            borderWidth:
+              3,
+
+            tension:
+              .38,
+
+            fill:
+              true,
+
+            pointRadius:
+              4,
+
+            pointHoverRadius:
+              7
+
+          }]
+
+        },
+
+        options: chartOptions(
+          true
+        )
+
+      }
+
+    );
+
+}
+
+
+/* =====================================================
+   PIE
+===================================================== */
+
+function updatePieChart() {
+
+  const totals = {};
+
+
+  filteredData.forEach(
+    row => {
+
+      const key =
+        row.layanan ||
+        'Tidak diketahui';
+
+
+      totals[key] =
+        (
+          totals[key] ||
+          0
+        ) +
+        Number(
+          row.harga || 0
+        );
+
+    }
+  );
+
+
+  const sorted =
+    Object.entries(
+      totals
+    )
+    .sort(
+      (a,b) =>
+        b[1] - a[1]
+    );
+
+
+  const labels =
+    sorted.map(
+      x => x[0]
+    );
+
+
+  const values =
+    sorted.map(
+      x => x[1]
+    );
+
+
+  destroyChart(
+    pieChart
+  );
+
+
+  pieChart =
+    new Chart(
+
+      document
+        .getElementById(
+          'pieChart'
+        ),
+
+      {
+
+        type:
+          'doughnut',
+
+        data: {
+
+          labels:
+            labels,
+
+          datasets: [{
+
+            data:
+              values,
+
+            borderWidth:
+              2
+
+          }]
+
+        },
+
+        options: {
+
+          responsive:
+            true,
+
+          maintainAspectRatio:
+            false,
+
+          cutout:
+            '62%',
+
+          plugins: {
+
+            legend: {
+
+              position:
+                'bottom',
+
+              labels: {
+
+                boxWidth:
+                  10,
+
+                font: {
+
+                  size:
+                    10
+
+                }
+
+              }
+
+            },
+
+            tooltip: {
+
+              callbacks: {
+
+                label:
+                  function(context) {
+
+                    return (
+                      context.label +
+                      ': ' +
+                      formatRupiah(
+                        context.raw
+                      )
+                    );
+
+                  }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    );
+
+}
+
+
+/* =====================================================
+   YEAR CHART
+===================================================== */
+
+function updateYearChart() {
+
+  const totals = {};
+
+
+  allData.forEach(
+    row => {
+
+      totals[row.tahun] =
+        (
+          totals[row.tahun] ||
+          0
+        ) +
+        Number(
+          row.harga || 0
+        );
+
+    }
+  );
+
+
+  const years =
+    Object.keys(
+      totals
+    )
+    .map(Number)
+    .sort(
+      (a,b) => a-b
+    );
+
+
+  const values =
+    years.map(
+      y => totals[y]
+    );
+
+
+  destroyChart(
+    yearChart
+  );
+
+
+  yearChart =
+    new Chart(
+
+      document
+        .getElementById(
+          'yearChart'
+        ),
+
+      {
+
+        type:
+          'bar',
+
+        data: {
+
+          labels:
+            years,
+
+          datasets: [{
+
+            label:
+              'Total PNBP',
+
+            data:
+              values,
+
+            borderRadius:
+              9,
+
+            borderWidth:
+              0
+
+          }]
+
+        },
+
+        options:
+          chartOptions(
+            false
+          )
+
+      }
+
+    );
+
+}
+
+
+/* =====================================================
+   SERVICE BAR
+===================================================== */
+
+function updateServiceChart() {
+
+  const totals = {};
+
+
+  filteredData.forEach(
+    row => {
+
+      const key =
+        row.layanan ||
+        'Tidak diketahui';
+
+
+      totals[key] =
+        (
+          totals[key] ||
+          0
+        ) +
+        Number(
+          row.harga || 0
+        );
+
+    }
+  );
+
+
+  const sorted =
+    Object.entries(
+      totals
+    )
+    .sort(
+      (a,b) =>
+        b[1] - a[1]
+    );
+
+
+  const labels =
+    sorted.map(
+      x => x[0]
+    );
+
+
+  const values =
+    sorted.map(
+      x => x[1]
+    );
+
+
+  destroyChart(
+    serviceChart
+  );
+
+
+  serviceChart =
+    new Chart(
+
+      document
+        .getElementById(
+          'serviceChart'
+        ),
+
+      {
+
+        type:
+          'bar',
+
+        data: {
+
+          labels:
+            labels,
+
+          datasets: [{
+
+            label:
+              'PNBP',
+
+            data:
+              values,
+
+            borderRadius:
+              8
+
+          }]
+
+        },
+
+        options: {
+
+          responsive:
+            true,
+
+          maintainAspectRatio:
+            false,
+
+          indexAxis:
+            'y',
+
+          plugins: {
+
+            legend: {
+              display:
+                false
+            }
+
+          },
+
+          scales: {
+
+            x: {
+
+              ticks: {
+
+                callback:
+                  value =>
+                    compactRupiah(
+                      value
+                    )
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    );
+
+}
+
+
+/* =====================================================
+   MONTHLY BAR
+===================================================== */
+
+function updateMonthlyChart() {
+
+  const totals = {};
+
+
+  MONTHS.forEach(
+    m => {
+      totals[m] = 0;
+    }
+  );
+
+
+  filteredData.forEach(
+    row => {
+
+      if (
+        totals[row.bulan] !==
+        undefined
+      ) {
+
+        totals[row.bulan] +=
+          Number(
+            row.harga || 0
+          );
+
+      }
+
+    }
+  );
+
+
+  destroyChart(
+    monthlyBarChart
+  );
+
+
+  monthlyBarChart =
+    new Chart(
+
+      document
+        .getElementById(
+          'monthlyBarChart'
+        ),
+
+      {
+
+        type:
+          'bar',
+
+        data: {
+
+          labels:
+            MONTHS,
+
+          datasets: [{
+
+            label:
+              'PNBP',
+
+            data:
+              MONTHS.map(
+                m => totals[m]
+              ),
+
+            borderRadius:
+              7
+
+          }]
+
+        },
+
+        options:
+          chartOptions(
+            false
+          )
+
+      }
+
+    );
+
+}
+
+
+/* =====================================================
+   TOP USERS
+===================================================== */
+
+function updateTopUsers() {
+
+  const totals = {};
+
+
+  filteredData.forEach(
+    row => {
+
+      const user =
+        row.user ||
+        'Tidak diketahui';
+
+
+      totals[user] =
+        (
+          totals[user] ||
+          0
+        ) +
+        Number(
+          row.harga || 0
+        );
+
+    }
+  );
+
+
+  const sorted =
+    Object.entries(
+      totals
+    )
+    .sort(
+      (a,b) =>
+        b[1] - a[1]
+    )
+    .slice(
+      0,
+      10
+    );
+
+
+  const container =
+    document.getElementById(
+      'topUsers'
+    );
+
+
+  if (!sorted.length) {
+
+    container.innerHTML =
+      '<div class="empty">Tidak ada data</div>';
+
+    return;
+
+  }
+
+
+  const max =
+    sorted[0][1];
+
+
+  container.innerHTML =
+    sorted
+      .map(
+        (item,index) => {
+
+          const percentage =
+            max
+              ? (
+                item[1] /
+                max
+              ) * 100
+              : 0;
+
+
+          return `
+
+            <div class="top-row">
+
+              <div class="rank">
+                ${index + 1}
+              </div>
+
+              <div class="top-info">
+
+                <div class="top-name">
+                  ${escapeHtml(
+                    item[0]
+                  )}
+                </div>
+
+                <div class="progress">
+
+                  <div
+                    class="progress-bar"
+                    style="
+                      width:${percentage}%
+                    "
+                  ></div>
+
+                </div>
+
+              </div>
+
+              <div class="top-value">
+                ${compactRupiah(
+                  item[1]
+                )}
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      )
+      .join('');
+
+}
+
+
+/* =====================================================
+   TABLE  (terbaru di atas + pencarian)
+===================================================== */
+
+let tableSearchTerm = '';
+
+function byNewest(a, b) {
+
+  return (
+    (b.tahun - a.tahun) ||
+    ((b.bulanIndex || 0) - (a.bulanIndex || 0)) ||
+    ((b.rowIdx || 0) - (a.rowIdx || 0))
+  );
+
+}
+
+function rowSearchText(row) {
+
+  if (row._s) return row._s;
+
+  row._s = [
+    row.tahun, row.bulan, row.no, row.surat, row.user,
+    row.layanan, row.hari,
+    row.tarif, formatNumber(row.tarif),
+    row.harga, formatNumber(row.harga)
+  ]
+  .map(v => (v === null || v === undefined) ? '' : String(v))
+  .join(' ')
+  .toLowerCase();
+
+  return row._s;
+
+}
+
+function getTableRowsBase() {
+
+  const terms = tableSearchTerm.split(/\s+/).filter(Boolean);
+
+  if (!terms.length) return filteredData;
+
+  return filteredData.filter(row => {
+    const hay = rowSearchText(row);
+    return terms.every(t => hay.includes(t));
+  });
+
+}
+
+
+/* ---------- URUTKAN KOLOM (klik header: terbesar -> terkecil -> normal) ---------- */
+
+let sortKey = null;
+let sortDir = 'desc';
+
+const SORT_NAME = { tahun: 'Tahun', no: 'No', hari: 'Hari', tarif: 'Tarif', harga: 'Harga Tarif' };
+
+function sortVal(v) {
+
+  if (v === null || v === undefined || v === '') return null;
+
+  const n = Number(v);
+
+  return isNaN(n) ? null : n;
+
+}
+
+function getTableRows() {
+
+  const rows = getTableRowsBase();
+
+  if (!sortKey) return rows;
+
+  const dir = sortDir === 'asc' ? 1 : -1;
+
+  return rows.slice().sort((a, b) => {
+    const x = sortVal(a[sortKey]);
+    const y = sortVal(b[sortKey]);
+    if (x === null && y === null) return 0;
+    if (x === null) return 1;
+    if (y === null) return -1;
+    return (x - y) * dir;
+  });
+
+}
+
+function orderNote() {
+
+  if (!sortKey) return 'terbaru di atas';
+
+  return 'urut ' + SORT_NAME[sortKey] + ' ' + (sortDir === 'desc' ? 'terbesar' : 'terkecil');
+
+}
+
+function updateSortHeaders() {
+
+  document.querySelectorAll('#view-layanan th.sortable').forEach(th => {
+    const on = th.dataset.sort === sortKey;
+    th.classList.toggle('sorted', on);
+    th.querySelector('.sort-ind').textContent = on ? (sortDir === 'desc' ? '▼' : '▲') : '⇅';
+    th.title = 'Klik: terbesar → terkecil → normal';
+  });
+
+}
+
+document.querySelectorAll('#view-layanan th.sortable').forEach(th => {
+  th.addEventListener('click', function() {
+    const k = th.dataset.sort;
+    if (sortKey !== k) { sortKey = k; sortDir = 'desc'; }
+    else if (sortDir === 'desc') { sortDir = 'asc'; }
+    else { sortKey = null; }
+    currentPage = 1;
+    updateSortHeaders();
+    updateTable();
+  });
+});
+
+document.getElementById('resetButton').addEventListener('click', function() {
+  sortKey = null;
+  updateSortHeaders();
+});
+
+updateSortHeaders();
+
+
+function updateTable() {
+
+  const tbody = document.getElementById('lyTableBody');
+  const rows = getTableRows();
+  const total = rows.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  document.getElementById('recordCount').textContent =
+    tableSearchTerm
+      ? formatNumber(total) + ' dari ' + formatNumber(filteredData.length) + ' transaksi · ' + orderNote()
+      : formatNumber(total) + ' transaksi · ' + orderNote();
+
+  if (!total) {
+
+    tbody.innerHTML =
+      '<tr><td colspan="9" class="empty">' +
+      (tableSearchTerm ? 'Tidak ada transaksi yang cocok dengan pencarian.' : 'Tidak ada data yang sesuai filter.') +
+      '</td></tr>';
+
+    updatePagination(0);
+    return;
+
+  }
+
+  const start = (currentPage - 1) * PAGE_SIZE;
+
+  tbody.innerHTML = rows.slice(start, start + PAGE_SIZE).map(row => `
+    <tr>
+      <td>${row.tahun}</td>
+      <td>${escapeHtml(row.bulan)}</td>
+      <td>${escapeHtml(row.no)}</td>
+      <td>${escapeHtml(row.surat)}</td>
+      <td>${escapeHtml(row.user)}</td>
+      <td>${escapeHtml(row.layanan)}</td>
+      <td>${formatNumber(row.hari)}</td>
+      <td class="money">${formatRupiah(row.tarif)}</td>
+      <td class="money">${formatRupiah(row.harga)}</td>
+    </tr>`).join('');
+
+  updatePagination(total);
+
+}
+
+function updatePagination(total) {
+
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const pageInfo = document.getElementById('pageInfo');
+  const pageButtons = document.getElementById('pageButtons');
+
+  if (!totalPages) {
+    pageInfo.textContent = '';
+    pageButtons.innerHTML = '';
+    return;
+  }
+
+  const start = (currentPage - 1) * PAGE_SIZE + 1;
+  const end = Math.min(currentPage * PAGE_SIZE, total);
+
+  pageInfo.textContent = `${start}–${end} dari ${formatNumber(total)}`;
+
+  const maxButtons = 7;
+  let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+  let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+  if (endPage - startPage < maxButtons - 1) {
+    startPage = Math.max(1, endPage - maxButtons + 1);
+  }
+
+  let html = `<button class="page-btn" onclick="lyChangePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+
+  for (let p = startPage; p <= endPage; p++) {
+    html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="lyChangePage(${p})">${p}</button>`;
+  }
+
+  html += `<button class="page-btn" onclick="lyChangePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+
+  pageButtons.innerHTML = html;
+
+}
+
+function changePage(page) {
+
+  const totalPages = Math.ceil(getTableRows().length / PAGE_SIZE);
+
+  if (page < 1 || page > totalPages) return;
+
+  currentPage = page;
+  updateTable();
+
+}
+
+window.lyChangePage = changePage;
+
+(function initTableSearch() {
+
+  const input = document.getElementById('lyTableSearch');
+
+  const run = debounce(function() {
+    tableSearchTerm = input.value.trim().toLowerCase();
+    currentPage = 1;
+    updateTable();
+  }, 200);
+
+  input.addEventListener('input', run);
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { input.value = ''; run(); }
+  });
+
+  document.getElementById('resetButton').addEventListener('click', function() {
+    input.value = '';
+    tableSearchTerm = '';
+  });
+
+})();
+
+
+/* =====================================================
+   CHART OPTIONS
+===================================================== */
+
+function chartOptions(
+  fillArea
+) {
+
+  return {
+
+    responsive:
+      true,
+
+    maintainAspectRatio:
+      false,
+
+    interaction: {
+
+      intersect:
+        false,
+
+      mode:
+        'index'
+
+    },
+
+    plugins: {
+
+      legend: {
+
+        display:
+          false
+
+      },
+
+      tooltip: {
+
+        callbacks: {
+
+          label:
+            function(context) {
+
+              return (
+                ' ' +
+                formatRupiah(
+                  context.raw
+                )
+              );
+
+            }
+
+        }
+
+      }
+
+    },
+
+    scales: {
+
+      x: {
+
+        grid: {
+
+          display:
+            false
+
+        },
+
+        ticks: {
+
+          font: {
+            size: 10
+          }
+
+        }
+
+      },
+
+      y: {
+
+        grid: {
+
+          color:
+            '#edf1f7'
+
+        },
+
+        ticks: {
+
+          font: {
+            size: 10
+          },
+
+          callback:
+            function(value) {
+
+              return compactRupiah(
+                value
+              );
+
+            }
+
+        }
+
+      }
+
+    }
+
+  };
+
+}
+
+
+/* =====================================================
+   CHART DESTROY
+===================================================== */
+
+function destroyChart(
+  chart
+) {
+
+  if (chart) {
+
+    chart.destroy();
+
+  }
+
+}
+
+
+/* =====================================================
+   FORMAT
+===================================================== */
+
+function formatRupiah(
+  value
+) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    isNaN(value)
+  ) {
+
+    return 'Rp 0';
+
+  }
+
+
+  return new Intl.NumberFormat(
+    'id-ID',
+    {
+
+      style:
+        'currency',
+
+      currency:
+        'IDR',
+
+      maximumFractionDigits:
+        0
+
+    }
+  )
+  .format(
+    Number(value)
+  );
+
+}
+
+
+function compactRupiah(
+  value
+) {
+
+  value =
+    Number(value) || 0;
+
+
+  if (
+    Math.abs(value) >=
+    1000000000
+  ) {
+
+    return (
+      'Rp ' +
+      (
+        value /
+        1000000000
+      ).toFixed(1) +
+      ' M'
+    );
+
+  }
+
+
+  if (
+    Math.abs(value) >=
+    1000000
+  ) {
+
+    return (
+      'Rp ' +
+      (
+        value /
+        1000000
+      ).toFixed(1) +
+      ' Jt'
+    );
+
+  }
+
+
+  if (
+    Math.abs(value) >=
+    1000
+  ) {
+
+    return (
+      'Rp ' +
+      (
+        value /
+        1000
+      ).toFixed(0) +
+      ' Rb'
+    );
+
+  }
+
+
+  return (
+    'Rp ' +
+    value
+  );
+
+}
+
+
+function formatNumber(
+  value
+) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ''
+  ) {
+
+    return '0';
+
+  }
+
+
+  return Number(
+    value
+  ).toLocaleString(
+    'id-ID'
+  );
+
+}
+
+
+/* =====================================================
+   HTML ESCAPE
+===================================================== */
+
+function escapeHtml(
+  value
+) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
+    return '';
+
+  }
+
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      '&amp;'
+    )
+
+    .replace(
+      /</g,
+      '&lt;'
+    )
+
+    .replace(
+      />/g,
+      '&gt;'
+    )
+
+    .replace(
+      /"/g,
+      '&quot;'
+    )
+
+    .replace(
+      /'/g,
+      '&#039;'
+    );
+
+}
+
+
+/* =====================================================
+   DEBOUNCE
+===================================================== */
+
+function debounce(
+  func,
+  wait
+) {
+
+  let timeout;
+
+
+  return function() {
+
+    const context =
+      this;
+
+    const args =
+      arguments;
+
+
+    clearTimeout(
+      timeout
+    );
+
+
+    timeout =
+      setTimeout(
+        function() {
+
+          func.apply(
+            context,
+            args
+          );
+
+        },
+        wait
+      );
+
+  };
+
+}
+
+
+})();
+</script>
+
+<!-- ===================== KINERJA JS ===================== -->
+<script>
+(function(){
+
+    let rawData = [];
+    let lastFiltered = [];
+    let progressOnly = false;
+    let myChartLayanan = null;
+    let myChartSurat = null;
+    let myChartHari = null;
+    let dataTableInst = null;
+
+    const STATUS_LIST = ['Download Data', 'Analisis', 'QC', 'Done', 'Verifikasi Lokasi'];
+    const brandColors = ['#4f46e5', '#10b981', '#f59e0b', '#ec4899', '#06b6d4', '#8b5cf6', '#f43f5e', '#14b8a6'];
+
+    function esc(v) {
+        return String(v === null || v === undefined ? '' : v)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    function fmtIso(iso) { return iso ? iso.split('-').reverse().join('/') : ''; }
+
+    // Status Selesai / On Progress + overdue dihitung di sini agar langsung
+    // ikut berubah saat Status / Deadline diedit dari tabel.
+    function deriveStatus(d) {
+        const selesai = String(d.statusAsli || '').toLowerCase() === 'done'
+            || d.tglKeluarAda
+            || String(d.fod || '').toLowerCase() === 'forecaster on duty';
+        d.statusWaktu = selesai ? 'Selesai' : 'On Progress';
+        d.isOverdue = false;
+        if (!selesai && d.deadlineIso) {
+            const batas = new Date(d.deadlineIso + 'T00:00:00').getTime();
+            d.isOverdue = (Date.now() + 2 * 86400000) >= batas;
+        }
+    }
+
+    function loadKinerja() {
+        document.getElementById('kpiTotal').innerText = "-";
+        google.script.run
+            .withSuccessHandler(function(d) { setLoading(false); initDashboard(d); })
+            .withFailureHandler(function(err) {
+                setLoading(false);
+                window.markViewFailed('kinerja');
+                alert('Gagal memuat data kinerja:\n' + err.message);
+            })
+            .getKinerjaData();
+    }
+
+    window.KinerjaApp = {
+        init: loadKinerja,
+        onShow: function() { if (dataTableInst) dataTableInst.columns.adjust(); }
+    };
+    window.kinerjaApplyFilters = function() { applyFilters(); };
+
+    function initDashboard(data) {
+        if (!data || data.length === 0) {
+            alert("Data kosong. Periksa Spreadsheet Anda.");
+            return;
+        }
+        data.forEach(deriveStatus);
+        rawData = data;
+        populateDropdowns();
+        initCharts();
+        renderDashboard(rawData);
+    }
+
+    function populateDropdowns() {
+        let years = new Set();
+        let fodStats = {};
+
+        rawData.forEach(item => {
+            if (item.tglVerifikasi) {
+                let y = new Date(item.tglVerifikasi).getFullYear();
+                if (!isNaN(y)) years.add(y);
+            }
+            let f = item.fod; let q = item.fodQc;
+            if (f && f !== "-" && f !== "") {
+                if (!fodStats[f]) fodStats[f] = { hariAnalisis: 0, hariQc: 0 };
+                fodStats[f].hariAnalisis += item.hariLayananNum;
+            }
+            if (q && q !== "-" && q !== "") {
+                if (!fodStats[q]) fodStats[q] = { hariAnalisis: 0, hariQc: 0 };
+                fodStats[q].hariQc += item.hariQcNum;
+            }
+        });
+
+        let thnSelect = document.getElementById('filterTahun');
+        Array.from(years).sort().forEach(y => thnSelect.innerHTML += `<option value="${y}">${y}</option>`);
+
+        let fodSelect = document.getElementById('filterFod');
+        Object.keys(fodStats).sort().forEach(nama => {
+            if (nama.toLowerCase() !== "forecaster on duty") {
+                let stats = fodStats[nama];
+                fodSelect.innerHTML += `<option value="${esc(nama)}">${esc(nama)} (Analisis: ${stats.hariAnalisis} | QC: ${stats.hariQc})</option>`;
+            }
+        });
+    }
+
+    /* ---------- render kolom tabel ---------- */
+
+    function textCol(v, type) {
+        return type === 'display' ? esc(v || '-') : (v || '');
+    }
+
+    function statusCol(v, type, row) {
+        if (type !== 'display') return v || '';
+        const cur = String(v || '').trim();
+        const found = STATUS_LIST.find(s => s.toLowerCase() === cur.toLowerCase());
+        const opts = STATUS_LIST.slice();
+        if (cur && !found) opts.unshift(cur);
+        const sel = found || cur;
+        const cls = row.statusWaktu === 'Selesai' ? 'done' : 'prog';
+        return '<select class="form-select form-select-sm ky-status ' + cls + '" data-row="' + row.sheetRow + '">'
+            + (cur ? '' : '<option value="" selected disabled>— pilih —</option>')
+            + opts.map(o => '<option value="' + esc(o) + '"' + (o === sel ? ' selected' : '') + '>' + esc(o) + '</option>').join('')
+            + '</select>';
+    }
+
+    function deadlineCol(v, type, row) {
+        if (type !== 'display') return v || '';
+        return '<div class="ky-dl">'
+            + '<input type="date" class="form-control form-control-sm ky-deadline' + (row.isOverdue ? ' overdue' : '') + '"'
+            + ' data-row="' + row.sheetRow + '" value="' + esc(v || '') + '" title="Format yyyy-mm-dd">'
+            + '<button type="button" class="btn btn-outline-primary btn-sm ky-wd" data-row="' + row.sheetRow + '"'
+            + ' title="Isi otomatis: 14 hari kerja setelah Tanggal Verifikasi Pembayaran">+14H</button>'
+            + '</div>';
+    }
+
+    function initCharts() {
+        myChartLayanan = new Chart(document.getElementById('chartLayanan'), {
+            type: 'doughnut',
+            data: { labels: [], datasets: [{ data: [], backgroundColor: brandColors, borderWidth: 2, borderColor: '#ffffff' }] },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                cutout: '60%',
+                plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11, family: 'Inter, Arial, Helvetica, sans-serif' } } } },
+                animation: { duration: 600 },
+                layout: { padding: 10 }
+            }
+        });
+
+        myChartSurat = new Chart(document.getElementById('chartSuratMasuk'), {
+            type: 'bar',
+            data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'], datasets: [{ label: 'Surat Masuk', data: [], backgroundColor: '#6366f1', borderRadius: 4 }] },
+            options: { maintainAspectRatio: false, responsive: true, animation: { duration: 600 }, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+        });
+
+        myChartHari = new Chart(document.getElementById('chartHariLayanan'), {
+            type: 'line',
+            data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'], datasets: [{ label: 'Hari Layanan', data: [], borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.15)', borderWidth: 3, fill: true, tension: 0.4, pointBackgroundColor: '#f59e0b', pointRadius: 3 }] },
+            options: { maintainAspectRatio: false, responsive: true, animation: { duration: 600 }, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+        });
+
+        dataTableInst = $('#dataTable').DataTable({
+            data: [],
+            columns: [
+                { data: 'no' },
+                { data: 'noSurat', render: textCol },
+                { data: 'perusahaan', render: textCol },
+                { data: 'jenisLayanan', render: textCol },
+                { data: 'hariLayananNum', render: function(v, t) { return t === 'display' ? '<span class="fw-bold">' + esc(v) + '</span>' : v; } },
+                { data: 'fod', render: textCol },
+                { data: 'fodQc', render: textCol },
+                { data: 'statusAsli', render: statusCol },
+                { data: 'deadlineIso', render: deadlineCol },
+                { data: 'durasi', render: textCol }
+            ],
+            "language": { "search": "", "searchPlaceholder": "Cari nomor surat, perusahaan, FOD..." },
+            "pageLength": 10,
+            "order": [[ 0, "desc" ]],
+            "dom": "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
+                   "<'row'<'col-sm-12'<'ky-tablewrap't>r>>" +
+                   "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            "buttons": [
+                { extend: 'excelHtml5', text: '<i class="bi bi-file-earmark-excel-fill"></i> Excel', className: 'btn btn-success btn-sm text-white', exportOptions: { orthogonal: 'export' } },
+                { extend: 'pdfHtml5', text: '<i class="bi bi-file-earmark-pdf-fill"></i> PDF', className: 'btn btn-danger btn-sm text-white', exportOptions: { orthogonal: 'export' } }
+            ]
+        });
+
+        bindTableEvents();
+    }
+
+    /* ---------- edit Status & Deadline ---------- */
+
+    function findRow(sheetRow) { return rawData.find(d => d.sheetRow === sheetRow); }
+
+    function bindTableEvents() {
+        const tb = $('#dataTable tbody');
+
+        tb.on('change', '.ky-status', function() {
+            const item = findRow(Number(this.dataset.row));
+            const val = this.value;
+            if (!item || !val) return;
+            setLoading(true, 'Menyimpan status ke Google Sheet...');
+            google.script.run
+                .withSuccessHandler(function() {
+                    item.statusAsli = val;
+                    deriveStatus(item);
+                    setLoading(false);
+                    applyFilters();
+                })
+                .withFailureHandler(function(err) {
+                    setLoading(false);
+                    alert('Gagal menyimpan status:\n' + err.message);
+                    applyFilters();
+                })
+                .updateKinerjaStatus(item.sheetRow, item.noSurat, val);
+        });
+
+        tb.on('change', '.ky-deadline', function() {
+            const item = findRow(Number(this.dataset.row));
+            const val = this.value; // yyyy-mm-dd atau kosong
+            if (!item) return;
+            setLoading(true, 'Menyimpan deadline ke Google Sheet...');
+            google.script.run
+                .withSuccessHandler(function(res) { afterDeadline(item, res); })
+                .withFailureHandler(function(err) { deadlineFail(err); })
+                .updateKinerjaDeadline(item.sheetRow, item.noSurat, val);
+        });
+
+        tb.on('click', '.ky-wd', function() {
+            const item = findRow(Number(this.dataset.row));
+            if (!item) return;
+            if (item.deadlineIso && !confirm('Deadline saat ini ' + fmtIso(item.deadlineIso) + '. Ganti dengan 14 hari kerja dari Tanggal Verifikasi Pembayaran?')) return;
+            setLoading(true, 'Menghitung 14 hari kerja...');
+            google.script.run
+                .withSuccessHandler(function(res) { afterDeadline(item, res); })
+                .withFailureHandler(function(err) { deadlineFail(err); })
+                .setKinerjaDeadlineWorkday(item.sheetRow, item.noSurat);
+        });
+    }
+
+    function afterDeadline(item, res) {
+        item.deadlineIso = res.deadlineIso || '';
+        deriveStatus(item);
+        setLoading(false);
+        applyFilters();
+    }
+
+    function deadlineFail(err) {
+        setLoading(false);
+        alert('Gagal menyimpan deadline:\n' + err.message);
+        applyFilters();
+    }
+
+    /* ---------- klik kartu On Progress ---------- */
+
+    function setProgressOnly(on) {
+        progressOnly = on;
+        document.getElementById('cardProgress').classList.toggle('active', on);
+        document.getElementById('kyFilterBadge').style.display = on ? 'inline-block' : 'none';
+        renderTable(true);
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!document.getElementById('view-kinerja').classList.contains('active')) return;
+        if (document.getElementById('cardProgress').contains(e.target)) {
+            setProgressOnly(!progressOnly);
+            return;
+        }
+        // klik di area kosong -> tampilkan semua lagi
+        // (kontrol seperti dropdown, input, tombol tidak ikut mereset)
+        if (progressOnly && !e.target.closest('select,input,button,a,label,option')) {
+            setProgressOnly(false);
+        }
+    });
+
+    function renderTable(resetPage) {
+        if (!dataTableInst) return;
+        const rows = progressOnly ? lastFiltered.filter(d => d.statusWaktu !== 'Selesai') : lastFiltered;
+        dataTableInst.clear();
+        dataTableInst.rows.add(rows).draw(resetPage ? true : false);
+    }
+
+    /* ---------- filter & render ---------- */
+
+    function applyFilters() {
+        let selTahun = document.getElementById('filterTahun').value;
+        let selBulan = document.getElementById('filterBulan').value;
+        let selFod = document.getElementById('filterFod').value;
+
+        if (selFod !== "All") {
+            document.getElementById('col-top-performer').style.display = 'none';
+            document.getElementById('col-sla').classList.remove('col-md-6');
+            document.getElementById('col-sla').classList.add('col-12');
+        } else {
+            document.getElementById('col-top-performer').style.display = 'block';
+            document.getElementById('col-sla').classList.remove('col-12');
+            document.getElementById('col-sla').classList.add('col-md-6');
+        }
+
+        let filtered = rawData.filter(item => {
+            let matchTahun = true; let matchBulan = true; let matchFod = true;
+            if (item.tglVerifikasi) {
+                let dateObj = new Date(item.tglVerifikasi);
+                if (selTahun !== "All") matchTahun = dateObj.getFullYear() == selTahun;
+                if (selBulan !== "All") matchBulan = dateObj.getMonth() == selBulan;
+            } else {
+                if (selTahun !== "All" || selBulan !== "All") matchTahun = false;
+            }
+            if (selFod !== "All") matchFod = (item.fod && item.fod === selFod);
+            return matchTahun && matchBulan && matchFod;
+        });
+        renderDashboard(filtered);
+    }
+
+    function renderDashboard(data) {
+        lastFiltered = data;
+
+        let total = data.length; let selesai = 0; let progress = 0;
+        let alertHtml = ""; let tahunTampil = new Set();
+        let fodLeaderboard = {}; let slaTracker = {};
+
+        let layananCount = {};
+
+        data.forEach(d => {
+            if (d.statusWaktu === "Selesai") {
+                selesai++;
+                let f = d.fod;
+                if (f && f !== "-" && f !== "" && f.toLowerCase() !== "forecaster on duty") {
+                    fodLeaderboard[f] = (fodLeaderboard[f] || 0) + d.hariLayananNum;
+                }
+                let lay = d.jenisLayanan || "Lainnya";
+                if (!slaTracker[lay]) slaTracker[lay] = { sumDurasi: 0, count: 0 };
+                if (d.durasiNum > 0) {
+                    slaTracker[lay].sumDurasi += d.durasiNum;
+                    slaTracker[lay].count++;
+                }
+            } else { progress++; }
+
+            if (d.tglVerifikasi) {
+                let yr = new Date(d.tglVerifikasi).getFullYear();
+                if (!isNaN(yr)) tahunTampil.add(yr);
+            }
+
+            if (d.isOverdue && d.statusWaktu !== "Selesai") {
+                alertHtml += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-bold text-danger">${esc(d.noSurat)}</span>
+                            <span class="text-muted ms-2" style="font-size:0.8rem;"><i class="bi bi-person"></i> ${esc(d.fod || '-')}</span>
+                        </div>
+                        <span class="badge bg-danger rounded-pill">Deadline: ${fmtIso(d.deadlineIso)}</span>
+                    </li>`;
+            }
+
+            let layCount = d.jenisLayanan || "Lainnya";
+            layananCount[layCount] = (layananCount[layCount] || 0) + 1;
+        });
+
+        let tahunArr = Array.from(tahunTampil).sort();
+        let labelTahunStr = "Semua";
+        if (tahunArr.length === 1) labelTahunStr = tahunArr[0];
+        else if (tahunArr.length > 1) labelTahunStr = tahunArr[0] + " - " + tahunArr[tahunArr.length - 1];
+
+        document.getElementById('labelTahunSurat').innerText = labelTahunStr;
+        document.getElementById('labelTahunHari').innerText = labelTahunStr;
+
+        document.getElementById('kpiTotal').innerText = total;
+        document.getElementById('kpiSelesai').innerText = selesai;
+        document.getElementById('kpiProgress').innerText = progress;
+
+        let alertContainer = document.getElementById('alertList');
+        alertContainer.innerHTML = alertHtml === "" ? "<li class='list-group-item text-success fw-bold'><i class='bi bi-check-circle-fill'></i> Aman!</li>" : alertHtml;
+
+        let slaHtml = "";
+        for (let lay in slaTracker) {
+            let stats = slaTracker[lay];
+            if (stats.count > 0) {
+                let avg = (stats.sumDurasi / stats.count).toFixed(1);
+                slaHtml += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold text-secondary">${esc(lay)}</span> <span class="badge bg-info text-dark rounded-pill">${avg} Hari</span>
+                            </li>`;
+            }
+        }
+        document.getElementById('slaList').innerHTML = slaHtml === "" ? "<li class='list-group-item text-muted'>Belum ada data Selesai</li>" : slaHtml;
+
+        let sortableFod = [];
+        for (let f in fodLeaderboard) { sortableFod.push([f, fodLeaderboard[f]]); }
+        sortableFod.sort((a, b) => b[1] - a[1]);
+
+        let perfHtml = "";
+        let medals = ['🥇', '🥈', '🥉'];
+        for (let i = 0; i < Math.min(3, sortableFod.length); i++) {
+            perfHtml += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><span class="fs-6 me-1">${medals[i]}</span> <span class="fw-bold text-dark">${esc(sortableFod[i][0])}</span></span>
+                            <span class="text-secondary fw-bold">${sortableFod[i][1]} Hari</span>
+                        </li>`;
+        }
+        document.getElementById('topPerformerList').innerHTML = perfHtml === "" ? "<li class='list-group-item text-muted'>Belum ada data</li>" : perfHtml;
+
+        let sortedLayananLabels = Object.keys(layananCount).sort((a, b) => layananCount[b] - layananCount[a]);
+        let sortedLayananData = sortedLayananLabels.map(key => layananCount[key]);
+
+        let trenSuratBulan = Array(12).fill(0);
+        let trenHariBulan = Array(12).fill(0);
+
+        data.forEach(d => {
+            if (d.tglVerifikasi) {
+                let b = new Date(d.tglVerifikasi).getMonth();
+                if (!isNaN(b)) {
+                    trenSuratBulan[b] += 1;
+                    trenHariBulan[b] += d.hariLayananNum;
+                }
+            }
+        });
+
+        myChartLayanan.data.labels = sortedLayananLabels;
+        myChartLayanan.data.datasets[0].data = sortedLayananData;
+        myChartLayanan.update();
+
+        myChartSurat.data.datasets[0].data = trenSuratBulan;
+        myChartSurat.update();
+
+        myChartHari.data.datasets[0].data = trenHariBulan;
+        myChartHari.update();
+
+        renderTable(false);
+    }
+
+})();
+</script>
+
+</body>
+</html>

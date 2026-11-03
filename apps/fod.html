@@ -1,0 +1,6225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script src="../assets/config.js?v=4"></script>
+<script src="../assets/gas-bridge.js?v=4" data-app="fod"></script>
+
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>
+Forecaster on Duty — Task Management
+</title>
+
+<link rel="preconnect" href="https://docs.google.com">
+<link rel="preconnect" href="https://ssl.gstatic.com">
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f4f7fb;
+  color: #1f2937;
+  font-family:
+    Inter,
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+.container {
+  width: min(1500px, 96%);
+  margin: 24px auto 40px;
+}
+
+
+/* =====================================================
+   TITLE
+   ===================================================== */
+
+.title-box {
+
+  background:
+    linear-gradient(
+      135deg,
+      #062a52 0%,
+      #0a4590 58%,
+      #0b5cbf 100%
+    );
+
+  color: white;
+
+  border-radius: 16px;
+
+  padding: 20px 26px 22px;
+
+  /* aksen hijau BMKG di sisi bawah */
+  box-shadow:
+    inset 0 -4px 0 #309900,
+    0 8px 22px
+    rgba(6, 42, 82, 0.20);
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+}
+
+:root {
+  --bmkg-logo: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHUAAACMCAMAAAB1RxZfAAAAkFBMVEX///////7+//7+/v/+/v79/v/9/vz9/f/9/f38/f38/fv8/Pz7/P77+/v5/Pnx9/Dp6+3Z69PV3+G827iXy36tvNiqqqp5uWpPqCc7nBY0mgMymgIxmQBLkFtcaYImlAAjkgAikgAfjQwwTYMFS80CScwASMwAQMo4ODgAO8kPDw8EBAQDAwMCAgIBAQEAAAA/KOzPAAAKPUlEQVR42u1babeiSAytBlR4yCIIrgf0HJ8i6///d5OkikUFxKd095yZ++G1bHUrqeQmhTZjP4A80bQ5QtMmMhsf0kSba3fnYAITaTxKWZvzD5bteByObfFTc00ehxJtlG3POwEul8v1eoW/eOB59gRt/jjxBK20kBHYLufzN+CEf85npEdmNHo++SQnmGl4ATBezkR2rkH0QH05BZ4JBk8+5lvGbA8okfHcDrwCxJ79KV7wreOdrpduyor4cj15DjzxiYhGO79PHfhuAA+5ve/mp2x53xA/16GAO88Q0u9Fs8zKzHwFDvsdivV5TOavY/Jvs3Eg5D68HkYfEZgXLWX2i7DawGTpJT3yOnXhFXhs/hLp9fwJXF+gRdI20eWid6uC/TgNp9WYc1vM6rLClfFyflYJ6nleHKYNCyTr9P1gz4lKKFZv7CWw0A4yGUay2QDRkCcmlDVsTm5wPUMREz0Ss6D0fT/c0gYY6WQOqAXg39ZodKgEYUOqUTY43vBA1t7I+LoNhGbx80VFa8F8dnfTbK4NxBDG+/qhvfpAG7TfIb8vjiuzx8Zg3t/hDOsu+mgnsn268oC/CEG4epLWG/Eeb6rKTGnH2ZZnfVJ4OZWpdqadxYn175w0FlzEFgTRUTP6hFEGVaLNg4ct2gk3MU8FbQbuQcU4kSPhE2hWG2+3QoGpjW7WxHb/9DTDqT4FjnAg9uut/WqPsRN8WMbNMO1SZ97J6VmPKhZItyhDZOzZA8J9PPW2M3V/J72gY7NZc+/XfkvPxG8iR9Jm8jCpvOlkNY39AcjMdlowH5d1xpzzhTcAsL8u8/D6VukZ2AFB1gUBpnGZR5eXOref1CzZERloYfYJnOayNK6TTbt6O1LvCY3xd3o8A2V8XTCbz2YTWZrNx+aUavmbz72ftOTvJ9Lp8g297CVgvzGRpWrLxP4DkMVO9y+akjI2/h5TTXtsmA+cKnOiYFxELrDcLSqz/bFhs79laRVdHRf6XxTEUgf+zGym4yas1Q4mjWnRatMOd0Rrv9jyGB4O4QMOR/fLHK/4WosOWGOu7deyE+M5WZquj104uOxr+iY6FzbcbDsQuqMFsXsM23EIj4elu3gPXRFpun1YHw/HwTjcITxuf5b39votLDsDcvpH5J+5y9GgSH3y9OqKDUJ4XMLoHXWdWZvd9gn2L2HHsd9Y3d0LGHt4xrre/ADbZU/MKJK97c+Pw3Fp/QRf0pvxZI4RxgOqxNfLdUX59UQXv55BsVavKsSQkiX1s5pfi02XYLfiuLaUTzRB5nq33T2iI+p3i+emTtli9QzL1b6VY9c2leNyiH+n1hobqD4cQxCAY1uT9YD9YT2dDvAvKNT6mULtduHKfQ7RdUnDyvsCRaxf6fabxdAo+DW0SXXDp7Th3mUmhPTTfmlw+GLxAdr+MN1tIQ1/0qD10Ya1XV15ePx0C6ew21arK176M2zxancybIfbk2SwU1maL7dET5YMtXH6BSoVdlX/3VgtNDjQAtqWEN+GsBX8eqP29ZssWevD9i7a99v9cW2/QzpkbcN7S8P9UnqnzYX9pftsq+Fu7rZHu/WCSe+8cJEUa7kFsW/q+b1hu+3SWjTf3C2mH+jngfewby9jfBn3W/fjmwgYYbHaHMCkXWcpgI2mWb+RnX6ic1CA116uw8MeO4h22t0Iu3nkNd3VBjaye94yNJt7lITw6P76/N5MweSz3NV6Gx4poHj12VFtOIbb9cqVxnhNKPHCtXCXq/VmWwb1frtZr2AbP+KLMGkq5MaqihC9FqLaOOreV5k+jA9npr/Y+JAUXnXgr/KHXqn+j+cBYuhNqM280/k1Q+04g0eG3vzygKMxhmoYMKSiG4b65HuHnzd597j5ikFVu77IcR27elxhrjjrdJyhI7dkU6uxxFc3CtA4fhAhAniElfYYzC9uEUe+oFVZJM5F/Gsn2APF4kwATyr8urgIHKa4PzBV/jzzo6waOKm/vQLWNElrZDmOY9M3iMBK15I05m9udObmdHOSCtY0SdJySroSFXA1gRkx/rgVIBkfPkmLIguEtWgrHBfwOEeWw3ORiUGFtuK1Iitcuh1vTmjala1pKmxVDBbgRbykc1KbLmcJmgsf8jQrBG3JWiMrB61ZxTE8cXPihrUijQxKA0W1IjyB9ydxTuPmSeFX04dpFIGIgyCCgyyLLfBxxSpGpmXN2lmFG9BNCjlc57PIijiACHV8HLccWLCiC8s2KaJZoEs5a57BYYxRCcuKpFkLKw2TI6nFBKnPLQ3KX6f6Od3go9dKVt8wDYRJI6e5X7NGSITH3IlJhJ66ZTWYCwGBpLYIU1WJ8hRJgQKUB7SC215Eitq0VReZ7BRoXsUKzo+FbXicgMeK9I7VYE4Mz6RIyofhbqFraiWBcZHGUWCwhq26SVpGtuZ5gnNW+ag+coFBtKzwCeZ8y6oAKQ0SO6UOcMtS7s9SQ0BbTNbInMa6GhGlDj5OrLASOAAsrIET4od3ttq0EnlNyi9BODTf0HLl0ZusPm9JfIy1rEgc9H7JCnGBszZx/jC/B1adUiTL3Mow0NkY8rOSLZX7EUOHcrklXyFzeFaVrA6aGAArLat5y5qRyym9gspUlTlZGXNtKFlzQgZCkmexmHTJqtNylsvKblkLzG94HF1UhiQFU16JC6z73Zf6LYqYo/43bSUbE4cva/DAWgiBB4caorLxEC5ZMbRqYIC1KmLBnVWxBrSwCv/nkRXNisHatPLoA2tVYZK0ZoWkLH9LEZHhdb7iR58bScvqPLJC2PgujpLyKKR1zYsmK7mRfNqwtZk5Pi5tFkOxq1htWlC+rOrjuuIt9DHlGXcfw00P37KWiqirdX5XrDRk7POofGBFITMVh0uiL2ih1sJxbDKqmLwDCYr8wdYy/HQHH8+DJitNJCJXPrBmeKsoMRD/tirMgynCsM0mjItkK6sKsxapVioiw4UVUePcswqvKqodZ1kVUDo9wjWaN4qGafqPrIpBG23VVKrwq1lxlSgvI94y3OmwWid+yn2sKCbWA3K+KpqqVlsroNuSal35bTxYuUI92kodjAoKDjx5bKlKWeXzLMHWj/fMTpTfs/oW/icmm4p+hnc72L4KVpOVoud3spJT06L0MTWMmJJ5QP8FxHCDBLuJNG2qRCyQiF4hKvOVM/lc+mAunayiq8rTlGIEhCLJkRbaACED2Ick7dqUpQWJgVLXV6zaCV9WtW1dq/aBsgeLEAoj2I65UI6O/QtwQkejKlU/nDQAN/tMFf0wSRikH9xFXTDJW1s/LBq0NG00gtCzJ2mWkrxThxr7Hb0/9jZupf5crkt1qT+29P4QCLbYGjh0Smd2kHD/UXNfRL7FVNHORzcIAti48OQFmcIzMHPwFl10sBfwxUlgpetB9Su48rbyFIziBFEsNjKBb9Y7nba9mfqhTR0pk+2AILo2ebbRzzR/XKbfbDRBNVT+o0mF7lJuTzY/lspGwzS3r9Vl47f+ck2hrqnpvn8A3XsDLwTYbvwAAAAASUVORK5CYII=");
+}
+
+.bmkg-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--bmkg-logo) center / contain no-repeat;
+}
+
+.title-icon {
+
+  width: 58px;
+  height: 58px;
+
+  padding: 6px;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.title-text h1 {
+
+  margin: 0;
+
+  font-size: 25px;
+
+  line-height: 1.2;
+
+  font-weight: 750;
+}
+
+.title-text p {
+
+  margin: 5px 0 0;
+
+  font-size: 13px;
+
+  opacity: .90;
+}
+
+
+/* =====================================================
+   TOP PANEL
+   ===================================================== */
+
+.top-panel {
+
+  background: white;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 16px;
+
+  padding: 16px 18px;
+
+  box-shadow:
+    0 4px 15px
+    rgba(15,23,42,.05);
+
+  margin-bottom: 16px;
+}
+
+.top-row {
+
+  display: grid;
+
+  grid-template-columns:
+    auto 1fr auto;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+
+/* =====================================================
+   DATE
+   ===================================================== */
+
+.date-control {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.date-button {
+
+  border:
+    1px solid #d8e0ea;
+
+  background: #f8fafc;
+
+  width: 38px;
+  height: 36px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-size: 18px;
+}
+
+.date-button:hover {
+
+  background: #eef5fb;
+
+  border-color: #9fc7e5;
+}
+
+.date-display {
+
+  min-width: 190px;
+
+  text-align: center;
+
+  font-weight: 700;
+
+  color: #0f3f67;
+
+  font-size: 15px;
+}
+
+
+/* =====================================================
+   PROGRESS
+   ===================================================== */
+
+.progress-wrapper {
+  min-width: 0;
+}
+
+.progress-title-row {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 7px;
+}
+
+.progress-title {
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  color: #64748b;
+
+  text-transform: uppercase;
+
+  letter-spacing: .7px;
+}
+
+.progress-percent {
+
+  font-size: 14px;
+
+  font-weight: 800;
+}
+
+.progress-track {
+
+  width: 100%;
+
+  height: 10px;
+
+  border-radius: 99px;
+
+  background: #e5e7eb;
+
+  overflow: hidden;
+}
+
+.progress-bar {
+
+  height: 100%;
+
+  width: 0%;
+
+  border-radius: 99px;
+
+  transition:
+    width .3s ease,
+    background .3s ease;
+
+  background: #f59e0b;
+}
+
+.progress-bar.green {
+  background: #16a34a;
+}
+
+.progress-bar.yellow {
+  background: #f59e0b;
+}
+
+.progress-bar.red {
+  background: #dc2626;
+}
+
+
+/* =====================================================
+   SAVE
+   ===================================================== */
+
+.save-status {
+
+  font-size: 12px;
+
+  min-width: 150px;
+
+  text-align: right;
+
+  color: #64748b;
+
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  opacity: 1;
+}
+
+.save-status.saving {
+  color: #2563eb;
+}
+
+.save-status.saved {
+  color: #16a34a;
+}
+
+.save-status.failed {
+  color: #dc2626;
+}
+
+
+/* =====================================================
+   REMINDER
+   ===================================================== */
+
+.reminder-box {
+
+  margin-top: 15px;
+
+  border-radius: 15px;
+
+  border:
+    1px solid #f3c969;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fffaf0,
+      #fffdf7
+    );
+
+  overflow: hidden;
+
+  box-shadow:
+    0 3px 10px
+    rgba(146,93,0,.05);
+}
+
+.reminder-header {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 12px 15px;
+
+  background: #fff4d6;
+
+  border-bottom:
+    1px solid #f3d78d;
+}
+
+.reminder-icon {
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 10px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #f59e0b;
+
+  color: white;
+
+  font-size: 17px;
+
+  flex-shrink: 0;
+}
+
+.reminder-title {
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  color: #854d0e;
+}
+
+.reminder-subtitle {
+
+  font-size: 11px;
+
+  color: #a16207;
+
+  margin-top: 2px;
+}
+
+.reminder-input {
+
+  width: 100%;
+
+  min-height: 68px;
+
+  resize: vertical;
+
+  border: 0;
+
+  outline: none;
+
+  background: transparent;
+
+  padding: 13px 15px 15px;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  color: #374151;
+
+  line-height: 1.5;
+  font-weight: 700 !important;
+}
+
+.reminder-input::placeholder {
+  color: #b49a68;
+}
+
+
+/* =====================================================
+   FILTER
+   ===================================================== */
+
+.filter-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin: 16px 0 18px;
+}
+
+.filter-label {
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  color: #0f4f7a;
+
+  background: #eaf5fc;
+
+  border: 1px solid #c7e2f4;
+
+  border-radius: 999px;
+
+  padding: 8px 13px;
+
+  white-space: nowrap;
+}
+
+.filter-select {
+
+  border:
+    1px solid #d5dde7;
+
+  background: white;
+
+  border-radius: 9px;
+
+  padding: 8px 12px;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  color: #334155;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   LOADING
+   ===================================================== */
+
+.loading {
+
+  background: white;
+
+  border-radius: 16px;
+
+  border:
+    1px solid #e5e7eb;
+
+  padding: 35px;
+
+  text-align: center;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.loading-dot {
+
+  display: inline-block;
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #0072bc;
+
+  margin-right: 7px;
+
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+
+  0%,100% {
+    opacity: .3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+
+/* =====================================================
+   GRID
+   ===================================================== */
+
+.dashboard-grid {
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dashboard-row {
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+.dinas-card {
+
+  border-radius: 16px;
+
+  border: 1px solid;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 5px 16px
+    rgba(15,23,42,.05);
+
+  min-width: 0;
+}
+
+/* =====================================================
+   COLORS
+   ===================================================== */
+
+.ps1 {
+  background: #f0f7ff;
+  border-color: #c5def5;
+}
+
+.ps2 {
+  background: #f1faf5;
+  border-color: #c7e7d2;
+}
+
+.ps3 {
+  background: #f7f2ff;
+  border-color: #dcccf5;
+}
+
+.pf1 {
+  background: #fff7ed;
+  border-color: #f2d4b2;
+}
+
+.pf2 {
+  background: #effbfc;
+  border-color: #c5e8eb;
+}
+
+.ma {
+  background: #fffbed;
+  border-color: #eadca8;
+}
+
+.mb {
+  background: #fff2f7;
+  border-color: #eccbd9;
+}
+
+
+/* =====================================================
+   CARD HEADER
+   ===================================================== */
+
+.card-header {
+
+  padding: 13px 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  border-bottom:
+    1px solid
+    rgba(100,116,139,.13);
+}
+
+.dinas-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.dinas-progress-ring {
+  --progress: 0%;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 50%;
+  background: conic-gradient(#2563eb var(--progress), #e5e7eb 0);
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.dinas-progress-ring::after {
+  content: '';
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+}
+
+.dinas-progress-ring span {
+  position: relative;
+  z-index: 1;
+  font-size: 8px;
+  font-weight: 800;
+  color: #334155;
+}
+
+.card-title {
+
+  font-size: 16px;
+
+  font-weight: 800;
+
+  color: #24364a;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.fod-select {
+
+  min-width: 145px;
+
+  max-width: 190px;
+
+  border:
+    1px solid #cbd5e1;
+
+  background:
+    rgba(255,255,255,.85);
+
+  border-radius: 9px;
+
+  padding: 7px 10px;
+
+  color: #334155;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  outline: none;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+}
+
+
+.pj-fod-selects {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.pj-fod-select {
+  min-width: 105px;
+  max-width: 120px;
+}
+
+/* =====================================================
+   TASK
+   ===================================================== */
+
+.task-head {
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0,1fr) 150px;
+
+  padding: 8px 14px;
+
+  background:
+    rgba(255,255,255,.45);
+
+  border-bottom:
+    1px solid
+    rgba(100,116,139,.10);
+
+  color: #64748b;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: .8px;
+
+  text-transform: uppercase;
+}
+
+.task-head div:last-child {
+  text-align: center;
+}
+
+.task-row {
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0,1fr) 150px;
+
+  align-items: center;
+
+  min-height: 48px;
+
+  padding: 7px 14px;
+
+  border-bottom:
+    1px solid
+    rgba(100,116,139,.10);
+
+  background:
+    rgba(255,255,255,.18);
+}
+
+.task-row:last-child {
+  border-bottom: 0;
+}
+
+.task-name {
+
+  font-size: 12px;
+
+  line-height: 1.45;
+
+  color: #334155;
+
+  padding-right: 15px;
+}
+
+
+/* =====================================================
+   STATUS
+   ===================================================== */
+
+.status-select {
+
+  width: 100%;
+
+  border-radius: 8px;
+
+  padding: 7px 9px;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-align: center;
+
+  outline: none;
+
+  cursor: pointer;
+
+  border:
+    1px solid transparent;
+
+  transition:
+    background .15s ease,
+    color .15s ease,
+    border-color .15s ease;
+}
+
+.status-select.done {
+
+  background: #dcfce7;
+
+  color: #166534;
+
+  border-color: #bbf7d0;
+}
+
+.status-select.always-on {
+
+  background: #dbeafe;
+
+  color: #1d4ed8;
+
+  border-color: #bfdbfe;
+}
+
+.status-select.diluar-jadwal {
+
+  background: #fef3c7;
+
+  color: #92400e;
+
+  border-color: #fde68a;
+}
+
+.status-select.bermasalah {
+
+  background: #fee2e2;
+
+  color: #b91c1c;
+
+  border-color: #fecaca;
+}
+
+.status-select.pending {
+
+  background: #f8fafc;
+
+  color: #64748b;
+
+  border-color: #cbd5e1;
+}
+
+
+/* =====================================================
+   TUGAS PJ
+   ===================================================== */
+
+.quote-card {
+
+  border-radius: 16px;
+
+  border: 1px solid #cfe0f0;
+
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #f7fbff, #eef7fd);
+
+  box-shadow:
+    0 5px 16px
+    rgba(15,23,42,.05);
+
+  min-width: 0;
+
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.quote-header {
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 13px 14px;
+
+  background: rgba(255,255,255,.42);
+
+  border-bottom: 1px solid rgba(100,116,139,.13);
+}
+
+.quote-icon {
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #0072bc;
+  color: white;
+
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.quote-title {
+
+  font-size: 15px;
+  font-weight: 800;
+  color: #23425c;
+}
+
+.quote-subtitle {
+
+  margin-top: 2px;
+  font-size: 11px;
+  color: #64809a;
+}
+
+.quote-input {
+
+  width: 100%;
+  flex: 1;
+
+  min-height: 150px;
+
+  resize: none;
+  border: 0;
+  outline: none;
+
+  background: transparent;
+
+  padding: 20px 20px 22px;
+
+  font-family: inherit;
+  font-size: 21px;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.55;
+  text-align: center;
+  color: #31546f;
+}
+
+.quote-input::placeholder {
+  color: #8aa4b8;
+  opacity: .9;
+}
+
+.reminder-note {
+
+  margin-top: 7px;
+
+  padding: 0 2px 2px;
+
+  font-size: 10px;
+
+  line-height: 1.45;
+
+  color: #92400e;
+
+  opacity: .82;
+}
+
+
+
+/* =====================================================
+   MONTHLY ARCHIVE
+   ===================================================== */
+
+.archive-panel {
+  margin-top: 28px;
+  border: 1px solid #dbe5ef;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 4px 15px rgba(15,23,42,.05);
+  overflow: hidden;
+}
+
+.master-panel {
+  margin-top: 12px;
+}
+
+.archive-panel summary {
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #24445f;
+  background: #f7fafc;
+}
+
+.archive-body {
+  padding: 16px;
+}
+
+.archive-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.archive-select,
+.archive-year {
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 9px;
+  padding: 9px 11px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #334155;
+  outline: none;
+}
+
+.archive-year {
+  width: 90px;
+}
+
+.archive-button {
+  border: 0;
+  border-radius: 9px;
+  padding: 9px 13px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.archive-button.export {
+  background: #0072bc;
+  color: white;
+}
+
+.archive-button.delete {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.archive-button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.archive-status {
+  margin-top: 11px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.archive-note {
+  margin-top: 10px;
+  font-size: 10px;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.archive-status.ok {
+  color: #166534;
+}
+
+.archive-status.warn {
+  color: #92400e;
+}
+
+.archive-status.error {
+  color: #b91c1c;
+}
+
+.archive-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.archive-modal-box {
+  width: min(380px, 100%);
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 18px 50px rgba(15,23,42,.22);
+}
+
+.archive-modal-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #24364a;
+}
+
+.archive-modal-text {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.archive-password {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  outline: none;
+  font-family: inherit;
+}
+
+.archive-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* =====================================================
+   TASK EDITOR (tambah / hapus tugas)
+   ===================================================== */
+
+.task-head.editable,
+.task-row.editable {
+  grid-template-columns:
+    minmax(0,1fr) 150px 30px;
+}
+
+.task-del {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fee2e2;
+  color: #dc2626;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  transition: background .15s ease, color .15s ease;
+}
+
+.task-del:hover,
+.task-del:focus-visible {
+  background: #dc2626;
+  color: #fff;
+}
+
+.add-task-row {
+  padding: 8px 14px 10px;
+  border-top: 1px solid rgba(100,116,139,.10);
+}
+
+.add-task-btn {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px dashed #94a3b8;
+  background: rgba(255,255,255,.7);
+  color: #475569;
+  font-family: inherit;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.add-task-btn:hover,
+.add-task-btn:focus-visible {
+  background: #fff;
+  border-color: #475569;
+  color: #0f172a;
+}
+
+.add-task-btn::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: #1e293b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
+  z-index: 5;
+}
+
+.add-task-btn:hover::after,
+.add-task-btn:focus-visible::after {
+  opacity: 1;
+}
+
+.fod-field-label {
+  display: block;
+  margin-top: 14px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #475569;
+}
+
+.fod-text-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 6px;
+  padding: 10px 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.fod-text-input:focus {
+  border-color: #64748b;
+}
+
+.fod-days {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 12px;
+  margin-top: 8px;
+}
+
+.fod-day {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #334155;
+  cursor: pointer;
+}
+
+.fod-day input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #2563eb;
+}
+
+.fod-day.disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+#addTaskModal .archive-modal-box {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.fod-template-preview {
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #475569;
+  white-space: pre-line;
+}
+
+.fod-day-note {
+  font-weight: 500;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.fod-day.every {
+  grid-column: 1 / -1;
+  font-weight: 700;
+}
+
+.fod-modal-error {
+  min-height: 14px;
+  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #b91c1c;
+}
+
+#deleteTaskNo:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+@media (max-width: 620px) {
+  .task-head.editable,
+  .task-row.editable {
+    grid-template-columns:
+      minmax(0,1fr) 125px 28px;
+  }
+}
+
+/* urutan tugas (drag) */
+
+.task-row.editable .task-name {
+  cursor: grab;
+}
+
+body.task-dragging,
+body.task-dragging * {
+  cursor: grabbing !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.task-row.drag-shift {
+  transition: transform .14s ease;
+}
+
+.task-row.dragging {
+  position: relative;
+  z-index: 20;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(15,23,42,.18);
+}
+
+/* =====================================================
+   EMPTY / ERROR
+   ===================================================== */
+
+.empty {
+
+  padding: 30px;
+
+  text-align: center;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+.error-box {
+
+  background: #fff1f2;
+
+  border:
+    1px solid #fecdd3;
+
+  color: #be123c;
+
+  border-radius: 14px;
+
+  padding: 16px;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* SWH GIF Generator: tampil penuh karena UI-nya sudah compact. */
+.monitoring-workspace.swh-direct .monitoring-toolbar {
+  display: none;
+}
+
+.monitoring-workspace.swh-direct .monitoring-frame-wrap {
+  height: 100vh;
+  min-height: 650px;
+}
+
+.monitoring-workspace.swh-direct .monitoring-frame-swh {
+  width: 100%;
+  height: 100%;
+  transform: none;
+  transform-origin: top left;
+}
+
+.monitoring-workspace.marine-guidance-direct .monitoring-frame-wrap {
+  height: calc(100vh - 42px);
+  min-height: 650px;
+  overflow: hidden;
+}
+
+.monitoring-workspace.marine-guidance-direct .monitoring-frame-marine-guidance {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  transform: none;
+  transform-origin: top left;
+  display: block;
+}
+
+.marine-guidance-edit {
+  margin-left: 6px;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 900px) {
+
+  .top-row {
+
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .save-status {
+    text-align: left;
+  }
+
+  .dashboard-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 620px) {
+
+  .container {
+
+    width: 94%;
+
+    margin-top: 12px;
+  }
+
+  .title-box {
+
+    padding: 17px;
+
+    border-radius: 15px;
+  }
+
+  .title-icon {
+
+    width: 46px;
+    height: 46px;
+
+    padding: 5px;
+  }
+
+  .title-text h1 {
+    font-size: 19px;
+  }
+
+  .title-text p {
+    font-size: 11px;
+  }
+
+  .card-header {
+
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .fod-select {
+
+width: 100%;
+
+    max-width: none;
+  }
+
+  .task-head,
+  .task-row {
+
+    grid-template-columns:
+      minmax(0,1fr) 125px;
+  }
+
+  .quote-input {
+    font-size: 18px;
+    min-height: 130px;
+  }
+
+  .date-control {
+
+    justify-content: space-between;
+  }
+
+  .date-display {
+
+    min-width: auto;
+
+    flex: 1;
+  }
+}
+
+
+/* =====================================================
+   WORKSPACE SIDEBAR / MONITORING
+   ===================================================== */
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.app-sidebar {
+  width: 58px;
+  flex: 0 0 58px;
+  background: linear-gradient(180deg, #062a52 0%, #08376b 100%);
+  color: white;
+  padding: 14px 7px;
+  box-shadow: 3px 0 14px rgba(6,42,82,.22);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 20;
+  overflow: hidden;
+  transition: width .20s ease, flex-basis .20s ease, padding .20s ease;
+}
+
+/* Desktop: expand automatically while the mouse is over the sidebar. */
+@media (min-width: 801px) {
+  .app-sidebar:hover {
+    width: 210px;
+    flex-basis: 210px;
+    padding: 14px 10px;
+  }
+
+  .app-sidebar:hover .sidebar-brand {
+    padding-left: 9px;
+    padding-right: 9px;
+    text-align: left;
+  }
+
+  .app-sidebar:hover .sidebar-brand-short {
+    display: none;
+  }
+
+  .app-sidebar:hover .sidebar-brand-full {
+    display: inline;
+  }
+
+  .app-sidebar:hover .sidebar-brand-subtitle {
+    display: block;
+  }
+
+  .app-sidebar:hover .sidebar-menu-button {
+    justify-content: flex-start;
+    padding: 10px 9px;
+  }
+
+  .app-sidebar:hover .sidebar-menu-text {
+    opacity: 1;
+    visibility: visible;
+    width: auto;
+  }
+}
+
+.sidebar-brand {
+  padding: 8px 4px 10px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.16);
+  opacity: 1;
+  visibility: visible;
+  white-space: nowrap;
+  text-align: center;
+  transition: opacity .15s ease;
+}
+
+.sidebar-brand-short {
+  display: inline;
+}
+
+.sidebar-brand-full {
+  display: none;
+}
+
+.app-sidebar.expanded .sidebar-brand {
+  padding-left: 9px;
+  padding-right: 9px;
+  text-align: left;
+}
+
+.app-sidebar.expanded .sidebar-brand-short {
+  display: none;
+}
+
+.app-sidebar.expanded .sidebar-brand-full {
+  display: inline;
+}
+
+.sidebar-brand-title {
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+.sidebar-brand-subtitle {
+  display: none;
+  margin-top: 3px;
+  font-size: 10px;
+  line-height: 1.35;
+  color: rgba(255,255,255,.72);
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sidebar-section-title {
+  margin: 12px 4px 3px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.16);
+  color: rgba(255,255,255,.55);
+  font-size: 9px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .12s ease;
+}
+
+.app-sidebar:hover .sidebar-section-title,
+.app-sidebar.expanded .sidebar-section-title {
+  opacity: 1;
+  visibility: visible;
+}
+
+.direct-link-button {
+  color: rgba(255,255,255,.78);
+}
+
+.sidebar-menu-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 10px 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: rgba(255,255,255,.84);
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.app-sidebar.expanded .sidebar-menu-button {
+  justify-content: flex-start;
+  padding: 10px 9px;
+}
+
+.sidebar-menu-button:hover {
+  background: rgba(255,255,255,.09);
+  color: white;
+}
+
+.sidebar-menu-button.active {
+  background: rgba(255,255,255,.13);
+  border-color: rgba(255,255,255,.10);
+  color: white;
+  /* penanda aktif: garis hijau BMKG di sisi kiri */
+  box-shadow: inset 3px 0 0 #4fb82a;
+}
+
+.sidebar-menu-button.active .sidebar-menu-icon {
+  color: #8ee06a;
+}
+
+.sidebar-menu-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.80);
+  transition: color .15s ease;
+}
+
+.sidebar-menu-button:hover .sidebar-menu-icon {
+  color: #ffffff;
+}
+
+.sidebar-menu-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Logo BMKG pada brand sidebar */
+.sidebar-logo-tile {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  padding: 3px;
+  border-radius: 9px;
+  background: #ffffff;
+  vertical-align: middle;
+}
+
+.sidebar-menu-text {
+  min-width: 0;
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity .12s ease, width .20s ease;
+}
+
+.app-sidebar.expanded .sidebar-menu-text {
+  opacity: 1;
+  visibility: visible;
+  width: auto;
+}
+
+.app-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: #f4f7fb;
+}
+
+.task-workspace {
+  width: 100%;
+}
+
+.monitoring-workspace {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  background: white;
+}
+
+.monitoring-toolbar {
+  height: 42px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #f7fafc;
+  border-bottom: 1px solid #dbe5ef;
+}
+
+.monitoring-title {
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 800;
+  color: #24445f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.monitoring-refresh {
+  flex: 0 0 auto;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #334155;
+  border-radius: 7px;
+  padding: 5px 9px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.monitoring-refresh:hover {
+  background: #eef5fb;
+  border-color: #9fc7e5;
+}
+
+.monitoring-frame-wrap {
+  width: 100%;
+  height: calc(100vh - 42px);
+  min-height: 650px;
+  background: white;
+}
+
+.monitoring-frame {
+  display: block;
+  width: 133.333333%;
+  height: 133.333333%;
+  border: 0;
+  background: white;
+  transform: scale(0.75);
+  transform-origin: top left;
+}
+
+/* MFStudio: zoom 65% */
+.monitoring-frame-mfstudio {
+  width: 153.846154%;
+  height: 153.846154%;
+  transform: scale(0.65);
+  transform-origin: top left;
+}
+
+/* Rekap Kec. Kapal ditampilkan langsung tanpa toolbar tambahan. */
+.monitoring-workspace.rekap-direct .monitoring-toolbar {
+  display: none;
+}
+
+/* Rekap Kec. Kapal: zoom tampilan 75% */
+.monitoring-workspace.rekap-direct .monitoring-frame {
+  width: 133.333333%;
+  height: 133.333333%;
+  transform: scale(0.75);
+  transform-origin: top left;
+}
+
+.monitoring-workspace.rekap-direct .monitoring-frame-wrap {
+  height: 100vh;
+  min-height: 650px;
+}
+
+.monitoring-workspace.rekap-direct .monitoring-loading,
+.monitoring-workspace.rekap-direct .monitoring-error {
+  height: 100vh;
+}
+
+.monitoring-loading,
+.monitoring-error {
+  height: calc(100vh - 42px);
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+}
+
+.monitoring-loading {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.monitoring-error-box {
+  width: min(620px, 100%);
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid #fecdd3;
+  background: #fff1f2;
+  color: #be123c;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 800px) {
+  .app-shell {
+    display: block;
+  }
+
+  .app-sidebar,
+  .app-sidebar.expanded {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    flex-basis: auto;
+    height: auto;
+    padding: 8px;
+    overflow: visible;
+  }
+
+  .sidebar-brand {
+    display: none;
+  }
+
+  .sidebar-menu {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 5px;
+  }
+
+  .sidebar-menu-button {
+    width: auto;
+    min-width: max-content;
+    padding: 8px 9px;
+    justify-content: flex-start;
+  }
+
+  .sidebar-menu-text,
+  .app-sidebar.expanded .sidebar-menu-text {
+    opacity: 1;
+    visibility: visible;
+    width: auto;
+  }
+
+  .sidebar-section-title {
+    display: none;
+  }
+
+  .sidebar-menu-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .app-main {
+    min-height: calc(100vh - 52px);
+  }
+
+  .monitoring-frame-wrap {
+    min-height: calc(100vh - 52px);
+    height: calc(100vh - 94px);
+  }
+
+  .monitoring-workspace.rekap-direct .monitoring-frame-wrap {
+    min-height: calc(100vh - 52px);
+    height: calc(100vh - 52px);
+  }
+
+  .monitoring-workspace.rekap-direct .monitoring-loading,
+  .monitoring-workspace.rekap-direct .monitoring-error {
+    height: calc(100vh - 52px);
+  }
+
+  .monitoring-loading,
+  .monitoring-error {
+    height: calc(100vh - 94px);
+  }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="app-shell">
+
+  <aside class="app-sidebar">
+
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-title">
+        <span class="sidebar-brand-full">Forecaster on Duty</span>
+        <span class="sidebar-brand-short"><span class="sidebar-logo-tile"><span class="bmkg-logo" role="img" aria-label="BMKG"></span></span></span>
+      </div>
+      <div class="sidebar-brand-subtitle">
+        Marine Meteorology Operations
+      </div>
+    </div>
+
+    <nav class="sidebar-menu">
+
+      <button
+        id="menuTaskManagement"
+        class="sidebar-menu-button active"
+        title="Task Management"
+        onclick="showWorkspace('task')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
+        <span class="sidebar-menu-text">Task Management</span>
+
+      </button>
+
+      <div class="sidebar-section-title">Monitoring</div>
+
+      <button
+        id="menuSynergie"
+        class="sidebar-menu-button"
+        title="Monitoring Data Synergie"
+        onclick="showWorkspace('synergie')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16v-5"/><path d="M12 16V7"/><path d="M17 16v-8"/></svg></span>
+        <span class="sidebar-menu-text">Monitoring Data Synergie</span>
+
+      </button>
+
+      <button
+        id="menuUPT"
+        class="sidebar-menu-button"
+        title="Monitoring Produk UPT"
+        onclick="showWorkspace('upt')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></svg></span>
+        <span class="sidebar-menu-text">Monitoring Produk UPT</span>
+
+      </button>
+
+      <button
+        id="menuMFStudio"
+        class="sidebar-menu-button"
+        title="Monitoring MFStudio"
+        onclick="showWorkspace('mfstudio')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9"/><path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5"/><circle cx="12" cy="9" r="2"/><path d="M16.2 4.8c2 2 2.26 5.11.8 7.47"/><path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1"/><path d="M9.5 18h5"/><path d="m8 22 4-11 4 11"/></svg></span>
+        <span class="sidebar-menu-text">Monitoring MFStudio</span>
+
+      </button>
+
+      <button
+        id="menuDiseminasi"
+        class="sidebar-menu-button"
+        title="Monitoring Diseminasi PD"
+        onclick="showWorkspace('diseminasi')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+        <span class="sidebar-menu-text">Monitoring Diseminasi PD</span>
+
+      </button>
+
+      <button
+        id="menuLogbookRob"
+        class="sidebar-menu-button"
+        title="Logbook Kejadian ROB"
+        onclick="showWorkspace('rob')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h8"/><path d="M8 11h6"/></svg></span>
+        <span class="sidebar-menu-text">Logbook Kejadian ROB</span>
+
+      </button>
+
+      <div class="sidebar-section-title">Rekap &amp; Alat</div>
+
+      <button
+        id="menuRekapKapal"
+        class="sidebar-menu-button"
+        title="Rekap Kec. Kapal"
+        onclick="showWorkspace('rekapKapal')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/><path d="M12 10v4"/><path d="M12 2v3"/></svg></span>
+        <span class="sidebar-menu-text">Rekap Kec. Kapal</span>
+
+      </button>
+
+
+      <button
+        id="menuSwhGenerator"
+        class="sidebar-menu-button"
+        title="GIF Generator"
+        onclick="showWorkspace('swhGenerator')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg></span>
+        <span class="sidebar-menu-text">GIF Generator</span>
+
+      </button>
+
+    </nav>
+
+  </aside>
+
+  <main class="app-main">
+
+    <div id="taskWorkspace" class="task-workspace">
+
+<div class="container">
+
+
+<!-- ==================================================
+     TITLE
+     ================================================== -->
+
+<div class="title-box">
+
+  <div class="title-icon">
+    <span class="bmkg-logo" role="img" aria-label="BMKG"></span>
+  </div>
+
+  <div class="title-text">
+
+    <h1>
+      Forecaster on Duty — Task Management
+    </h1>
+
+    <p>
+      Marine Meteorology Operations • Daily Task Monitoring
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     TOP
+     ================================================== -->
+
+<div class="top-panel">
+
+  <div class="top-row">
+
+    <div class="date-control">
+
+      <button
+        class="date-button"
+        onclick="changeDate(-1)">
+        ‹
+      </button>
+
+      <div
+        id="dateDisplay"
+        class="date-display">
+        Memuat tanggal...
+      </div>
+
+      <button
+        class="date-button"
+        onclick="changeDate(1)">
+        ›
+      </button>
+
+    </div>
+
+
+    <div class="progress-wrapper">
+
+      <div class="progress-title-row">
+
+        <div class="progress-title">
+          Daily Task Completion
+        </div>
+
+        <div
+          id="progressPercent"
+          class="progress-percent">
+          0%
+        </div>
+
+      </div>
+
+      <div class="progress-track">
+
+        <div
+          id="progressBar"
+          class="progress-bar">
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="saveStatus"
+      class="save-status">
+    </div>
+
+  </div>
+
+
+  <!-- ==================================================
+       REMINDER
+       ================================================== -->
+
+  <div class="reminder-box">
+
+    <div class="reminder-header">
+
+      <div class="reminder-icon">
+        🔔
+      </div>
+
+      <div>
+
+        <div class="reminder-title">
+          Reminder / Handover
+        </div>
+
+        <div class="reminder-subtitle">
+          Catatan penting untuk Forecaster on Duty
+        </div>
+
+      </div>
+
+    </div>
+
+    <textarea
+      id="reminderInput"
+      class="reminder-input"
+      placeholder="Tulis reminder atau handover di sini..."
+      oninput="handleReminderInput()"></textarea>
+
+    <div class="reminder-note">
+      <strong>Catatan:</strong> <strong>Reminder/Handover</strong> akan terus ditampilkan pada tanggal berikutnya sampai dihapus.
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     FILTER
+     ================================================== -->
+
+<div class="filter-row">
+
+  <div class="filter-label">
+    Dinas apa hari ini?
+  </div>
+
+  <select
+    id="dinasFilter"
+    class="filter-select"
+    onchange="renderDashboard()">
+
+    <option value="ALL">
+      Semua Dinas
+    </option>
+
+    <option value="PS1">PS1</option>
+    <option value="PS2">PS2</option>
+    <option value="PS3">PS3</option>
+    <option value="PF1">PF1</option>
+    <option value="PF2">PF2</option>
+    <option value="MA">MA</option>
+    <option value="MB">MB</option>
+    <option value="PJ">PJ</option>
+
+  </select>
+
+</div>
+
+
+<div id="content">
+
+  <div class="loading">
+
+    <span class="loading-dot"></span>
+
+    Memuat data...
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     MONTHLY ARCHIVE
+     ================================================== -->
+
+<details class="archive-panel">
+
+  <summary>
+    📦 Arsip / Save Bulanan
+  </summary>
+
+  <div class="archive-body">
+
+    <div class="archive-controls">
+
+      <select
+        id="archiveMonth"
+        class="archive-select"
+        onchange="refreshArchiveStatus()">
+      </select>
+
+      <input
+        id="archiveYear"
+        class="archive-year"
+        type="number"
+        min="2020"
+        max="2100"
+        onchange="refreshArchiveStatus()">
+
+      <button
+        id="archiveExportButton"
+        class="archive-button export"
+        onclick="exportArchive()">
+        📦 Export &amp; Simpan ke Google Drive
+      </button>
+
+      <button
+        id="archiveDeleteButton"
+        class="archive-button delete"
+        onclick="openDeleteArchiveModal()"
+        disabled>
+        🗑️ Hapus Sheet Bulanan
+      </button>
+
+    </div>
+
+    <div
+      id="archiveStatus"
+      class="archive-status">
+      Memuat status archive...
+    </div>
+
+    <div class="archive-note">
+      Export dapat dilakukan kapan saja. Export tidak menghapus
+      sheet harian. Penghapusan hanya tersedia untuk bulan yang
+      sudah selesai dan archive lengkap, dengan password admin.
+    </div>
+
+  </div>
+
+</details>
+
+
+<!-- ==================================================
+     UBAH MANUAL MASTER
+     ================================================== -->
+
+<details class="archive-panel master-panel">
+
+  <summary>
+    📝 Ubah Manual (Google Sheet MASTER)
+  </summary>
+
+  <div class="archive-body">
+
+    <div class="archive-controls">
+
+      <button
+        class="archive-button export"
+        onclick="openMasterSheet()">
+        📝 Buka Sheet MASTER
+      </button>
+
+    </div>
+
+    <div class="archive-note">
+      Jobdesk (kolom Dinas, Tugas, Hari, Aktif) dan daftar Nama FoD
+      bisa diubah langsung di sheet MASTER. Isi kolom Hari dengan
+      <strong>Setiap Hari</strong>, nama hari dipisah koma
+      (mis. <strong>Senin, Rabu</strong>), atau
+      <strong>Tanggal 2026-10-31</strong> untuk tugas satu hari.
+      Perubahan berlaku mulai hari ini dan seterusnya; sheet
+      tanggal lampau tidak berubah. Setelah kembali ke halaman
+      ini, data dimuat ulang otomatis.
+    </div>
+
+  </div>
+
+</details>
+
+
+<!-- ==================================================
+     DELETE ARCHIVE MODAL
+     ================================================== -->
+
+<div
+  id="archiveDeleteModal"
+  class="archive-modal">
+
+  <div class="archive-modal-box">
+
+    <div class="archive-modal-title">
+      Hapus Sheet Bulanan
+    </div>
+
+    <div
+      id="archiveDeleteModalText"
+      class="archive-modal-text">
+      Masukkan password admin untuk melanjutkan.
+    </div>
+
+    <input
+      id="archivePassword"
+      class="archive-password"
+      type="password"
+      placeholder="Password admin"
+      onkeydown="if(event.key==='Enter') confirmDeleteArchive()">
+
+    <div class="archive-modal-actions">
+
+      <button
+        class="archive-button"
+        onclick="closeDeleteArchiveModal()">
+        Batal
+      </button>
+
+      <button
+        class="archive-button delete"
+        onclick="confirmDeleteArchive()">
+        Hapus
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+</div>
+
+    </div>
+
+    <section
+      id="monitoringWorkspace"
+      class="monitoring-workspace">
+
+      <div class="monitoring-toolbar">
+
+        <div
+          id="monitoringTitle"
+          class="monitoring-title">
+          Monitoring
+        </div>
+
+        <button
+          id="monitoringRefreshButton"
+          class="monitoring-refresh"
+          onclick="refreshMonitoring()">
+          ↻ Refresh
+        </button>
+
+      <button
+        id="marineGuidanceEditButton"
+        class="monitoring-refresh marine-guidance-edit"
+        onclick="openMarineGuidanceEdit()"
+        style="display:none;">
+        ✏️ Edit
+      </button>
+
+      </div>
+
+      <div
+        id="monitoringContent"
+        class="monitoring-frame-wrap">
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- ==================================================
+     ADD TASK MODAL
+     ================================================== -->
+
+<div
+  id="addTaskModal"
+  class="archive-modal"
+  onmousedown="if (event.target === this) closeAddTask()">
+
+  <div
+    class="archive-modal-box"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="addTaskTitle">
+
+    <div
+      id="addTaskTitle"
+      class="archive-modal-title">
+      Tambah tugas
+    </div>
+
+    <div class="archive-modal-text">
+      Tugas disimpan ke sheet MASTER dan muncul pada hari yang dipilih.
+    </div>
+
+    <label
+      class="fod-field-label"
+      for="addTaskName">
+      Nama tugas
+    </label>
+
+    <input
+      id="addTaskName"
+      class="fod-text-input"
+      type="text"
+      maxlength="300"
+      autocomplete="off"
+      placeholder="Tulis nama tugas"
+      onkeydown="if (event.key === 'Enter') saveNewTask()">
+
+    <div
+      id="addTaskTemplates"
+      style="display:none">
+
+      <div class="fod-field-label">
+        Template tugas (boleh pilih lebih dari satu)
+      </div>
+
+      <div
+        id="addTaskTemplateList"
+        class="fod-days"></div>
+
+      <div
+        id="addTaskTemplatePreview"
+        class="fod-template-preview"></div>
+
+    </div>
+
+    <div class="fod-field-label">
+      Hari
+    </div>
+
+    <div
+      id="addTaskDays"
+      class="fod-days">
+
+      <label class="fod-day every">
+        <input
+          type="checkbox"
+          id="addTaskEvery"
+          onchange="onEveryDayToggle(this)">
+        Setiap hari
+      </label>
+
+      <label class="fod-day every">
+        <input
+          type="checkbox"
+          id="addTaskToday"
+          onchange="onEveryDayToggle(this)">
+        Hari ini saja
+        <span
+          id="addTaskTodayDate"
+          class="fod-day-note"></span>
+      </label>
+
+      <label class="fod-day">
+        <input type="checkbox" class="day-opt" value="Senin">
+        Senin
+      </label>
+
+      <label class="fod-day">
+        <input type="checkbox" class="day-opt" value="Selasa">
+        Selasa
+      </label>
+
+      <label class="fod-day">
+        <input type="checkbox" class="day-opt" value="Rabu">
+        Rabu
+      </label>
+
+      <label class="fod-day">
+        <input type="checkbox" class="day-opt" value="Kamis">
+        Kamis
+      </label>
+
+      <label class="fod-day">
+        <input type="checkbox" class="day-opt" value="Jumat">
+        Jumat
+      </label>
+
+      <label class="fod-day">
+        <input type="checkbox" class="day-opt" value="Sabtu">
+        Sabtu
+      </label>
+
+      <label class="fod-day">
+        <input type="checkbox" class="day-opt" value="Minggu">
+        Minggu
+      </label>
+
+    </div>
+
+    <div
+      id="addTaskError"
+      class="fod-modal-error"></div>
+
+    <div class="archive-modal-actions">
+
+      <button
+        class="archive-button"
+        onclick="closeAddTask()">
+        Batal
+      </button>
+
+      <button
+        id="addTaskSave"
+        class="archive-button export"
+        onclick="saveNewTask()">
+        Simpan
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     DELETE TASK MODAL
+     ================================================== -->
+
+<div
+  id="deleteTaskModal"
+  class="archive-modal"
+  onmousedown="if (event.target === this) closeDeleteTask()">
+
+  <div
+    class="archive-modal-box"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="deleteTaskTitle">
+
+    <div
+      id="deleteTaskTitle"
+      class="archive-modal-title">
+      Yakin mau menghapus tugas ini?
+    </div>
+
+    <div
+      id="deleteTaskText"
+      class="archive-modal-text"></div>
+
+    <div class="archive-modal-actions">
+
+      <button
+        id="deleteTaskYes"
+        class="archive-button delete"
+        onclick="confirmDeleteTask()">
+        Ya
+      </button>
+
+      <button
+        id="deleteTaskNo"
+        class="archive-button"
+        onclick="closeDeleteTask()">
+        Tidak
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+
+/* =====================================================
+   WORKSPACE NAVIGATION
+   ===================================================== */
+
+const MONITORING_CONFIG = {
+  synergie: {
+    key: 'synergie',
+    title: 'Monitoring Data Synergie'
+  },
+  upt: {
+    key: 'upt',
+    title: 'Monitoring Produk Cuaca UPT'
+  },
+  mfstudio: {
+    key: 'mfstudio',
+    title: 'Monitoring MFStudio'
+  },
+  diseminasi: {
+    key: 'diseminasi',
+    title: 'Monitoring Diseminasi PD'
+  },
+  rob: {
+    key: 'rob',
+    title: 'Logbook Kejadian ROB'
+  },
+  rekapKapal: {
+    key: 'rekapKapal',
+    title: 'Rekap Kec. Kapal',
+    direct: true
+  },
+  swhGenerator: {
+    key: 'swhGenerator',
+    title: 'GIF Generator',
+    direct: true
+  },
+  marineGuidance: {
+    key: 'marineGuidance',
+    title: 'Marine Guidance',
+    direct: true
+  }
+};
+
+const SWH_GENERATOR_URL =
+  'https://script.google.com/macros/s/AKfycbw_AgBS8Di9iYxFpQneQ5CpVXmY_wao8qDxDx8qnOsgPXNDqPKUKN5HHPhar8pggM-rog/exec';
+
+const PPT_BRIEFING_URL =
+  'https://docs.google.com/presentation/d/19bSiu_AYQqIF3rI4JnlODNpfbVD-F4Mi/edit?usp=sharing&ouid=117535660510936955251&rtpof=true&sd=true';
+
+const MARINE_GUIDANCE_EMBED_URL =
+  'https://docs.google.com/presentation/d/19bSiu_AYQqIF3rI4JnlODNpfbVD-F4Mi/embed?start=false&loop=false&delayms=3000&rm=minimal';
+
+const MARINE_GUIDANCE_EDIT_URL =
+  'https://docs.google.com/presentation/d/19bSiu_AYQqIF3rI4JnlODNpfbVD-F4Mi/edit?usp=sharing&ouid=117535660510936955251&rtpof=true&sd=true';
+
+const PJ_FOD_OPTIONS = [
+  'Fitri',
+  'Furqon',
+  'Ryan',
+  'Wilmar'
+];
+
+const BRIEFING_URL =
+  'https://docs.google.com/presentation/d/1rt07WxfFkarKWsxxVSmUMa9XclEp4lVFe6PXQF7qSEg/edit?slide=id.g3b1c0bfed47_26_0#slide=id.g3b1c0bfed47_26_0';
+
+const REKAP_KAPAL_DIRECT_URL =
+  'https://docs.google.com/spreadsheets/d/1N2Bxn0ALkO9NaDU1ZMuxtZ11RlBsaq-5BL0yACWUfC0/edit?usp=sharing';
+
+let currentWorkspace = 'task';
+let monitoringLoaded = {};
+let monitoringLoading = {};
+let workspaceRequestId = 0;
+
+function showWorkspace(workspace) {
+
+  // Setiap perpindahan workspace membatalkan render hasil async
+  // dari workspace sebelumnya dan mengosongkan iframe lama.
+  const requestId = ++workspaceRequestId;
+
+  const taskWorkspace =
+    document.getElementById('taskWorkspace');
+
+  const monitoringWorkspace =
+    document.getElementById('monitoringWorkspace');
+
+  const taskMenu =
+    document.getElementById('menuTaskManagement');
+
+  const synergieMenu =
+    document.getElementById('menuSynergie');
+
+  const uptMenu =
+    document.getElementById('menuUPT');
+
+  const mfstudioMenu =
+    document.getElementById('menuMFStudio');
+
+  const diseminasiMenu =
+    document.getElementById('menuDiseminasi');
+
+  const robMenu =
+    document.getElementById('menuLogbookRob');
+
+  const rekapKapalMenu =
+    document.getElementById('menuRekapKapal');
+
+
+  const swhGeneratorMenu =
+    document.getElementById('menuSwhGenerator');
+
+  const briefingMenu =
+    document.getElementById('menuBriefing');
+
+  [taskMenu, synergieMenu, uptMenu, mfstudioMenu, diseminasiMenu, robMenu, rekapKapalMenu, swhGeneratorMenu, briefingMenu]
+    .forEach(function(button) {
+      if (button) {
+        button.classList.remove('active');
+      }
+    });
+
+  if (workspace === 'task') {
+
+    currentWorkspace = 'task';
+
+    taskWorkspace.style.display = 'block';
+    monitoringWorkspace.style.display = 'none';
+    monitoringWorkspace.classList.remove('rekap-direct');
+    monitoringWorkspace.classList.remove('swh-direct');
+    monitoringWorkspace.classList.remove('marine-guidance-direct');
+
+    taskMenu.classList.add('active');
+
+    return;
+  }
+
+  const config =
+    MONITORING_CONFIG[workspace];
+
+  if (!config) {
+    return;
+  }
+
+  currentWorkspace = workspace;
+
+  taskWorkspace.style.display = 'none';
+  monitoringWorkspace.style.display = 'block';
+
+  // Jangan biarkan iframe workspace sebelumnya tetap tampil
+  // ketika pindah ke workspace baru.
+  if (!monitoringLoaded[workspace]) {
+    setMonitoringMessage(`
+      <div class="monitoring-loading">
+        <span class="loading-dot"></span>
+        Menyiapkan ${escapeHtml(config.title)}...
+      </div>
+    `);
+  }
+
+  monitoringWorkspace.classList.toggle(
+    'rekap-direct',
+    workspace === 'rekapKapal'
+  );
+
+  monitoringWorkspace.classList.toggle(
+    'swh-direct',
+    workspace === 'swhGenerator'
+  );
+
+  monitoringWorkspace.classList.toggle(
+    'marine-guidance-direct',
+    workspace === 'marineGuidance'
+  );
+  const refreshButton =
+    document.getElementById('monitoringRefreshButton');
+
+  const marineGuidanceEditButton =
+    document.getElementById('marineGuidanceEditButton');
+
+  if (refreshButton) {
+    refreshButton.style.display =
+      (workspace === 'rekapKapal' ||
+       workspace === 'swhGenerator') ? 'none' : 'inline-block';
+  }
+
+  if (marineGuidanceEditButton) {
+    marineGuidanceEditButton.style.display =
+      workspace === 'marineGuidance' ? 'inline-block' : 'none';
+  }
+
+
+  if (workspace === 'synergie') {
+    synergieMenu.classList.add('active');
+  } else if (workspace === 'upt') {
+    uptMenu.classList.add('active');
+  } else if (workspace === 'mfstudio') {
+    mfstudioMenu.classList.add('active');
+  } else if (workspace === 'diseminasi') {
+    diseminasiMenu.classList.add('active');
+  } else if (workspace === 'rob') {
+    robMenu.classList.add('active');
+  } else if (workspace === 'rekapKapal') {
+    rekapKapalMenu.classList.add('active');
+  } else if (workspace === 'marineGuidance') {
+  } else if (workspace === 'swhGenerator') {
+    swhGeneratorMenu.classList.add('active');
+  }
+
+  document.getElementById('monitoringTitle').textContent =
+    config.title;
+
+  // Tampilkan hasil yang sudah pernah dimuat untuk workspace ini.
+  // Ini penting agar saat pindah UPT <-> Synergie, iframe ikut berganti.
+  if (monitoringLoaded[workspace]) {
+    renderMonitoring(workspace, monitoringLoaded[workspace]);
+    return;
+  }
+
+  if (!monitoringLoading[workspace]) {
+    loadMonitoring(workspace);
+  }
+}
+
+
+/*
+ * Iframe monitoring dibuat SEKALI per workspace lalu hanya
+ * disembunyikan / ditampilkan, sehingga berpindah menu tidak
+ * memuat ulang spreadsheet.
+ */
+const monitoringFrames = {};
+let monitoringPrefetchStarted = false;
+
+const MONITORING_DIRECT_URLS = {
+  swhGenerator: SWH_GENERATOR_URL,
+  marineGuidance: MARINE_GUIDANCE_EMBED_URL,
+  rekapKapal: REKAP_KAPAL_DIRECT_URL
+};
+
+
+function hideMonitoringFrames() {
+
+  Object.keys(monitoringFrames).forEach(function(key) {
+    monitoringFrames[key].style.display = 'none';
+  });
+}
+
+
+function dropMonitoringFrame(workspace) {
+
+  const frame = monitoringFrames[workspace];
+
+  if (frame && frame.parentNode) {
+    frame.parentNode.removeChild(frame);
+  }
+
+  delete monitoringFrames[workspace];
+}
+
+
+function setMonitoringMessage(html) {
+
+  const content = document.getElementById('monitoringContent');
+
+  hideMonitoringFrames();
+
+  let el = document.getElementById('monitoringMessage');
+
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'monitoringMessage';
+    content.insertBefore(el, content.firstChild);
+  }
+
+  /* display: contents agar tata letak sama seperti sebelumnya. */
+  el.style.display = 'contents';
+  el.innerHTML = html;
+}
+
+
+function hideMonitoringMessage() {
+
+  const el = document.getElementById('monitoringMessage');
+
+  if (el) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+  }
+}
+
+
+function showMonitoringFrame(workspace, url, extraClass, title) {
+
+  const content = document.getElementById('monitoringContent');
+
+  hideMonitoringMessage();
+  hideMonitoringFrames();
+
+  let frame = monitoringFrames[workspace];
+
+  if (!frame) {
+
+    frame = document.createElement('iframe');
+
+    frame.className =
+      'monitoring-frame' + (extraClass ? ' ' + extraClass : '');
+
+    frame.title = title;
+
+    frame.setAttribute('allow', 'fullscreen');
+
+    frame.src = url;
+
+    frame.dataset.url = url;
+
+    monitoringFrames[workspace] = frame;
+
+    content.appendChild(frame);
+
+  } else if (frame.dataset.url !== url) {
+
+    frame.src = url;
+    frame.dataset.url = url;
+  }
+
+  frame.style.display = '';
+}
+
+
+function renderMonitoring(workspace, result) {
+
+  const config = MONITORING_CONFIG[workspace];
+
+  if (!config || currentWorkspace !== workspace) {
+    return;
+  }
+
+  let url = result && result.url;
+  let extraClass = '';
+
+  if (workspace === 'marineGuidance') {
+    url = MARINE_GUIDANCE_EMBED_URL;
+    extraClass = 'monitoring-frame-marine-guidance';
+  } else if (workspace === 'swhGenerator') {
+    url = SWH_GENERATOR_URL;
+    extraClass = 'monitoring-frame-swh';
+  } else if (workspace === 'mfstudio') {
+    extraClass = 'monitoring-frame-mfstudio';
+  }
+
+  if (!url) {
+    return;
+  }
+
+  showMonitoringFrame(workspace, url, extraClass, config.title);
+}
+
+function openMarineGuidance() {
+  showWorkspace('marineGuidance');
+}
+
+function openMarineGuidanceEdit() {
+  window.open(
+    MARINE_GUIDANCE_EDIT_URL,
+    '_blank',
+    'noopener'
+  );
+}
+
+/*
+ * silent = true: dipakai untuk memuat URL di latar belakang
+ * (prefetch) tanpa mengubah tampilan.
+ */
+function loadMonitoring(workspace, silent) {
+
+  if (MONITORING_DIRECT_URLS[workspace]) {
+
+    monitoringLoaded[workspace] = {
+      success: true,
+      url: MONITORING_DIRECT_URLS[workspace]
+    };
+
+    monitoringLoading[workspace] = false;
+
+    renderMonitoring(workspace, monitoringLoaded[workspace]);
+
+    return;
+  }
+
+  const requestId = workspaceRequestId;
+
+  const config =
+    MONITORING_CONFIG[workspace];
+
+  monitoringLoading[workspace] = true;
+
+  if (!silent) {
+    setMonitoringMessage(`
+      <div class="monitoring-loading">
+        <span class="loading-dot"></span>
+        Memuat ${escapeHtml(config.title)}...
+      </div>
+    `);
+  }
+
+  const isStale = function() {
+    return !silent && (
+      requestId !== workspaceRequestId ||
+      currentWorkspace !== workspace
+    );
+  };
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      monitoringLoading[workspace] = false;
+
+      if (isStale()) {
+        return;
+      }
+
+      if (!result || !result.url) {
+        if (currentWorkspace === workspace) {
+          showMonitoringError('URL spreadsheet tidak tersedia.');
+        }
+        return;
+      }
+
+      monitoringLoaded[workspace] = result;
+
+      renderMonitoring(workspace, result);
+    })
+
+    .withFailureHandler(function(error) {
+
+      monitoringLoading[workspace] = false;
+
+      if (isStale()) {
+        return;
+      }
+
+      if (currentWorkspace === workspace) {
+        showMonitoringError(
+          (error && error.message) || String(error)
+        );
+      }
+    })
+
+    .getMonitoringEmbedUrl(
+      config.key,
+      false
+    );
+}
+
+
+/* Ambil URL monitoring di latar belakang setelah dashboard tampil. */
+function prefetchMonitoring() {
+
+  if (monitoringPrefetchStarted) {
+    return;
+  }
+
+  monitoringPrefetchStarted = true;
+
+  ['synergie', 'upt', 'mfstudio'].forEach(function(workspace, i) {
+
+    setTimeout(function() {
+
+      if (
+        !monitoringLoaded[workspace] &&
+        !monitoringLoading[workspace]
+      ) {
+        loadMonitoring(workspace, true);
+      }
+
+    }, i * 600);
+  });
+}
+
+
+function openBriefing() {
+  window.open(
+    BRIEFING_URL,
+    '_blank',
+    'noopener'
+  );
+}
+
+function openDirectLink(url) {
+  window.open(
+    url,
+    '_blank',
+    'noopener'
+  );
+}
+
+function refreshMonitoring() {
+
+  if (
+    currentWorkspace === 'task' ||
+    currentWorkspace === 'rekapKapal' ||
+    currentWorkspace === 'swhGenerator'
+  ) {
+    return;
+  }
+
+  const workspace = currentWorkspace;
+
+  if (workspace === 'marineGuidance') {
+
+    dropMonitoringFrame(workspace);
+
+    setMonitoringMessage(`
+      <div class="monitoring-loading">
+        <span class="loading-dot"></span>
+        Memuat ulang Marine Guidance...
+      </div>
+    `);
+
+    setTimeout(function() {
+      if (currentWorkspace !== workspace) return;
+      renderMonitoring(workspace, {});
+    }, 100);
+
+    return;
+  }
+
+  const refreshRequestId = ++workspaceRequestId;
+  const config = MONITORING_CONFIG[workspace];
+
+  delete monitoringLoaded[workspace];
+  monitoringLoading[workspace] = true;
+
+  dropMonitoringFrame(workspace);
+
+  setMonitoringMessage(`
+    <div class="monitoring-loading">
+      <span class="loading-dot"></span>
+      Memuat ulang ${escapeHtml(config.title)}...
+    </div>
+  `);
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+
+      monitoringLoading[workspace] = false;
+
+      if (refreshRequestId !== workspaceRequestId || currentWorkspace !== workspace) {
+        return;
+      }
+
+      if (!result || !result.url) {
+        showMonitoringError(
+          'URL spreadsheet tidak tersedia.'
+        );
+        return;
+      }
+
+      monitoringLoaded[workspace] = result;
+
+      renderMonitoring(workspace, result);
+
+    })
+    .withFailureHandler(function(error) {
+
+      monitoringLoading[workspace] = false;
+
+      if (refreshRequestId !== workspaceRequestId || currentWorkspace !== workspace) {
+        return;
+      }
+
+      showMonitoringError(
+        (error && error.message) || String(error)
+      );
+
+    })
+    .getMonitoringEmbedUrl(
+      config.key,
+      true
+    );
+}
+
+
+function showMonitoringError(message) {
+
+  setMonitoringMessage(`
+    <div class="monitoring-error">
+      <div class="monitoring-error-box">
+        <strong>Gagal memuat monitoring.</strong>
+        <br><br>
+        ${escapeHtml(message)}
+        <br><br>
+        Silakan pilih menu monitoring kembali atau tekan <strong>Refresh</strong>.
+      </div>
+    </div>
+  `);
+}
+
+
+/* =====================================================
+   STATE
+   ===================================================== */
+
+let dashboardData = null;
+
+let currentDate = '';
+
+let reminderTimer = null;
+
+let saveTimers = {};
+
+let saveSequences = {};
+
+
+
+/* =====================================================
+   INIT
+   ===================================================== */
+
+document.addEventListener(
+  'DOMContentLoaded',
+  function() {
+
+    initializeArchiveControls();
+    startLivePolling();
+    initTaskDrag();
+
+    /* Tanggal kosong: server memakai tanggal operasional. */
+    currentDate = '';
+
+    loadDashboard();
+
+  }
+);
+
+
+/* =====================================================
+   LOAD
+   ===================================================== */
+
+function loadDashboard() {
+
+  setSaveStatus(
+    'Memuat data...',
+    'saving'
+  );
+
+  document.getElementById(
+    'content'
+  ).innerHTML = `
+    <div class="loading">
+      <span class="loading-dot"></span>
+      Memuat data...
+    </div>
+  `;
+
+
+  /*
+   * SATU request saja.
+   */
+  google.script.run
+
+    .withSuccessHandler(
+      function(data) {
+
+        data =
+          normalizeViewData(data);
+
+        dashboardData =
+          data;
+
+        liveVersion =
+          data.version || '';
+
+        lastLiveKey =
+          buildLiveKey(data);
+
+        currentDate =
+          data.date;
+
+        document.getElementById(
+          'reminderInput'
+        ).value =
+          data.reminder || '';
+
+        renderDate();
+
+        renderDashboard();
+
+        onFirstDashboardLoad();
+
+        setSaveStatus(
+          '✓ Saved automatically',
+          'saved'
+        );
+
+      }
+    )
+
+    .withFailureHandler(
+      function(error) {
+
+        showError(
+          error.message ||
+          String(error)
+        );
+
+        setSaveStatus(
+          'Failed to load',
+          'failed'
+        );
+
+      }
+    )
+
+    .getDashboardData(
+      currentDate
+    );
+}
+
+
+/* =====================================================
+   DATE
+   ===================================================== */
+
+function changeDate(
+  delta
+) {
+
+  if (!currentDate) {
+    return;
+  }
+
+  const parts =
+    currentDate.split('-');
+
+  const date =
+    new Date(
+      Date.UTC(
+        Number(parts[0]),
+        Number(parts[1]) - 1,
+        Number(parts[2])
+      )
+    );
+
+  date.setUTCDate(
+    date.getUTCDate() +
+    delta
+  );
+
+  currentDate =
+    date.getUTCFullYear() +
+    '-' +
+    String(
+      date.getUTCMonth() + 1
+    ).padStart(2,'0') +
+    '-' +
+    String(
+      date.getUTCDate()
+    ).padStart(2,'0');
+
+  loadDashboard();
+}
+
+
+function renderDate() {
+
+  const parts =
+    currentDate.split('-');
+
+  const date =
+    new Date(
+      Date.UTC(
+        Number(parts[0]),
+        Number(parts[1]) - 1,
+        Number(parts[2])
+      )
+    );
+
+  const months = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember'
+  ];
+
+  document.getElementById(
+    'dateDisplay'
+  ).textContent =
+    String(
+      date.getUTCDate()
+    ).padStart(2,'0') +
+    ' ' +
+    months[
+      date.getUTCMonth()
+    ] +
+    ' ' +
+    date.getUTCFullYear();
+}
+
+
+/* =====================================================
+   RENDER DASHBOARD
+   ===================================================== */
+
+function renderDashboard() {
+
+  if (!dashboardData) {
+    return;
+  }
+
+  const filter =
+    document.getElementById(
+      'dinasFilter'
+    ).value;
+
+  const master =
+    dashboardData.master;
+
+  const dailyRows =
+    dashboardData.daily.rows || [];
+
+  const grouped = {};
+
+  DINAS_ORDER.forEach(
+    dinas => {
+      grouped[dinas] = [];
+    }
+  );
+
+
+  /*
+   * PENTING:
+   * TASK SELALU DARI MASTER.
+   *
+   * Daily hanya digunakan untuk:
+   * - status
+   * - FoD
+   * - sheetRow
+   */
+  master.activities.forEach(
+    activity => {
+
+      if (
+        !isActivityForCurrentDate(
+          activity
+        )
+      ) {
+        return;
+      }
+
+      const daily =
+        dailyRows.find(
+          row =>
+            row.dinas ===
+              activity.dinas &&
+            row.task ===
+              activity.task
+        );
+
+
+      grouped[
+        activity.dinas
+      ].push({
+
+        dinas:
+          activity.dinas,
+
+        task:
+          activity.task,
+
+        hari:
+          activity.hari,
+
+        sheetRow:
+          daily
+            ? daily.sheetRow
+            : null,
+
+        status:
+          daily
+            ? daily.status
+            : 'Bermasalah',
+
+        fod:
+          daily
+            ? daily.fod
+            : ''
+
+      });
+
+    }
+  );
+
+
+  /*
+   * FoD per dinas.
+   */
+  const fodMap = {};
+
+  DINAS_ORDER.forEach(
+    dinas => {
+
+      const row =
+        dailyRows.find(
+          r =>
+            r.dinas ===
+            dinas
+        );
+
+      fodMap[dinas] =
+        row
+          ? row.fod
+          : '';
+
+    }
+  );
+
+
+  const visibleDinas =
+    DINAS_ORDER.filter(
+      dinas =>
+        filter === 'ALL' ||
+        filter === dinas
+    );
+
+
+  let html =
+    '<div class="dashboard-grid">';
+
+  /*
+   * Susunan visual:
+   * PS1 + PS2
+   * PS3 + PJ
+   * PF1 + PF2
+   * MA + MB
+   */
+  const rows = [
+    ['PS1', 'PS2'],
+    ['PS3', 'PJ'],
+    ['PF1', 'PF2'],
+    ['MA', 'MB']
+  ];
+
+  rows.forEach(pair => {
+
+    const hasVisibleDinas = pair.some(
+      item =>
+        item !== '__QUOTE__' &&
+        visibleDinas.includes(item)
+    );
+
+    if (!hasVisibleDinas) {
+      return;
+    }
+
+    html += '<div class="dashboard-row">';
+
+    pair.forEach(item => {
+
+      if (!visibleDinas.includes(item)) {
+        return;
+      }
+
+      html += buildDinasCard(
+        item,
+        grouped[item],
+        fodMap[item],
+        master.fods,
+        dailyRows
+      );
+    });
+
+    html += '</div>';
+  });
+
+  html += '</div>';
+
+  document.getElementById(
+    'content'
+  ).innerHTML =
+    html;
+
+  updateProgress(
+    dailyRows,
+    master.activities
+  );
+}
+
+
+/* =====================================================
+   CARD
+   ===================================================== */
+
+function getDinasProgressPercent(dinas, tasks, dailyRows) {
+  const activeTasks = Array.isArray(tasks) ? tasks : [];
+  if (!activeTasks.length) return 0;
+
+  let completed = 0;
+  activeTasks.forEach(function(task) {
+    const row = (dailyRows || []).find(function(r) {
+      return r.dinas === dinas && r.task === task.task;
+    });
+    if (row && ['Done', 'Always On', 'Diluar Jadwal'].includes(row.status)) {
+      completed++;
+    }
+  });
+
+  return Math.round(completed / activeTasks.length * 100);
+}
+
+
+function buildDinasCard(
+  dinas,
+  tasks,
+  fod,
+  fods,
+  dailyRows
+) {
+
+  const className =
+    dinas.toLowerCase();
+
+  let html = `
+
+    <div
+      class="dinas-card
+             ${className}">
+
+      <div class="card-header">
+
+        <div class="dinas-title-wrap">
+          <div class="dinas-progress-ring" style="--progress:${getDinasProgressPercent(dinas, tasks, dailyRows)}%;" title="Progress pekerjaan ${getDinasProgressPercent(dinas, tasks, dailyRows)}%">
+            <span>${getDinasProgressPercent(dinas, tasks, dailyRows)}%</span>
+          </div>
+
+          <div class="card-title">
+            ${escapeHtml(dinas)}
+            <span style="font-weight:500;">—</span>
+            <span style="font-weight:700;">${escapeHtml(fod || 'Belum dipilih')}</span>
+          </div>
+        </div>
+  `;
+
+  if (dinas === 'PJ') {
+    const pjNames = String(fod || '')
+      .split(',')
+      .map(function(x) { return x.trim(); })
+      .filter(Boolean);
+
+    const pj1 = pjNames[0] || '';
+    const pj2 = pjNames[1] || '';
+
+    html += `
+        <div class="pj-fod-selects">
+          <select class="fod-select pj-fod-select" onchange="handlePJFoDChange(1, this.value)">
+            <option value="">PJ1</option>
+            ${PJ_FOD_OPTIONS.map(function(name) {
+              return `<option value="${escapeHtml(name)}" ${name === pj1 ? 'selected' : ''}>${escapeHtml(name)}</option>`;
+            }).join('')}
+          </select>
+
+          <select class="fod-select pj-fod-select" onchange="handlePJFoDChange(2, this.value)">
+            <option value="">PJ2</option>
+            ${PJ_FOD_OPTIONS.map(function(name) {
+              return `<option value="${escapeHtml(name)}" ${name === pj2 ? 'selected' : ''}>${escapeHtml(name)}</option>`;
+            }).join('')}
+          </select>
+        </div>
+      </div>
+    `;
+
+  } else {
+
+    html += `
+        <select
+          class="fod-select"
+          onchange="
+            handleFoDChange(
+              '${escapeJs(dinas)}',
+              this.value
+            )
+          ">
+
+          <option value="">
+            Select FoD
+          </option>
+    `;
+
+    fods.forEach(function(name) {
+      html += `
+        <option
+          value="${escapeHtml(name)}"
+          ${name === fod ? 'selected' : ''}>
+          ${escapeHtml(name)}
+        </option>
+      `;
+    });
+
+    html += `
+        </select>
+      </div>
+    `;
+  }
+
+  html += `
+      <div class="task-head${isEditableDinas(dinas) ? ' editable' : ''}">
+        <div>Tugas</div>
+        <div>Status</div>
+      </div>
+  `;
+
+  if (!tasks.length) {
+    html += `
+      <div class="empty">
+        ${isPjHoliday(dinas) ? 'Libur (Sabtu &amp; Minggu).' : 'Tidak ada tugas aktif untuk hari ini.'}
+      </div>
+    `;
+  } else {
+    tasks.forEach(function(task, index) {
+      html += buildTaskRow(task, dinas, index);
+    });
+  }
+
+  if (isEditableDinas(dinas)) {
+    html += `
+      <div class="add-task-row">
+        <button
+          type="button"
+          class="add-task-btn"
+          data-tip="Menambahkan tugas untuk ${escapeHtml(dinas)}"
+          aria-label="Menambahkan tugas untuk ${escapeHtml(dinas)}"
+          onclick="openAddTask('${escapeJs(dinas)}')">+</button>
+      </div>
+    `;
+  }
+
+  html += `
+    </div>
+  `;
+
+  return html;
+}
+
+
+/* =====================================================
+   TUGAS PJ
+   ===================================================== */
+
+function buildPJCard_UNUSED() {
+
+  return `
+    <div class="quote-card">
+
+      <div class="quote-header">
+
+        <div class="quote-icon">
+          💬
+        </div>
+
+        <div>
+          <div class="quote-title">
+            Tugas PJ
+          </div>
+
+          <div class="quote-subtitle">
+            Penanggung jawab tugas PJ
+          </div>
+        </div>
+
+      </div>
+
+      <textarea
+        id="quoteInput"
+        class="quote-input"
+        placeholder="Pilih PJ"
+        oninput="kataHariIni = this.value"></textarea>
+
+    </div>
+  `;
+}
+
+/* =====================================================
+   TASK ROW
+   ===================================================== */
+
+function buildTaskRow(
+  task,
+  dinas,
+  index
+) {
+
+  const status =
+    task.status ||
+    '';
+
+  const statusClass =
+    getStatusClass(
+      status
+    );
+
+  const editable =
+    isEditableDinas(dinas);
+
+  const options =
+    [
+      ['', 'Pilih status'],
+      ['Done', 'Done'],
+      ['Always On', 'Always On'],
+      ['Diluar Jadwal', 'Diluar Jadwal'],
+      ['Bermasalah', 'Bermasalah']
+    ]
+    .map(function(o) {
+      return `
+          <option
+            value="${escapeHtml(o[0])}"
+            ${status === o[0] ? 'selected' : ''}>
+            ${escapeHtml(o[1])}
+          </option>`;
+    })
+    .join('');
+
+  return `
+
+    <div class="task-row${editable ? ' editable' : ''}">
+
+      <div class="task-name">
+        ${escapeHtml(
+          task.task
+        )}
+      </div>
+
+
+      <div>
+
+        <select
+          class="
+            status-select
+            ${statusClass}
+          "
+          data-row="${task.sheetRow}"
+          data-status="${escapeHtml(status)}"
+          data-dinas="${escapeHtml(dinas)}"
+          data-task="${escapeHtml(task.task)}"
+          onchange="
+            handleStatusChange(
+              '${escapeJs(dinas)}',
+              ${task.sheetRow},
+              this.value,
+              this
+            )
+          ">
+          ${options}
+        </select>
+
+      </div>
+
+      ${
+        editable
+          ? `<button
+               type="button"
+               class="task-del"
+               title="Hapus tugas"
+               aria-label="Hapus tugas"
+               data-dinas="${escapeHtml(dinas)}"
+               data-task="${escapeHtml(task.task)}"
+               data-hari="${escapeHtml(task.hari || '')}"
+               onclick="openDeleteTask(this)">&times;</button>`
+          : ''
+      }
+
+    </div>
+
+  `;
+}
+
+
+/* =====================================================
+   LIVE DINAS PROGRESS RING
+   ===================================================== */
+
+function refreshDinasProgressRing(dinas) {
+
+  if (!dashboardData || !dashboardData.master) return;
+
+  const tasks =
+    dashboardData.master.activities.filter(
+      function(activity) {
+        return activity.dinas === dinas &&
+          isActivityForCurrentDate(activity);
+      }
+    );
+
+  const percent =
+    getDinasProgressPercent(
+      dinas,
+      tasks,
+      dashboardData.daily.rows || []
+    );
+
+  document
+    .querySelectorAll('.dinas-card')
+    .forEach(function(card) {
+
+      const title =
+        card.querySelector('.card-title');
+
+      if (!title) return;
+
+      const titleDinas =
+        title.childNodes[0]
+          ? title.childNodes[0].textContent.trim()
+          : '';
+
+      if (titleDinas !== dinas) return;
+
+      const ring =
+        card.querySelector('.dinas-progress-ring');
+
+      if (!ring) return;
+
+      ring.style.setProperty(
+        '--progress',
+        percent + '%'
+      );
+
+      const text =
+        ring.querySelector('span');
+
+      if (text) {
+        text.textContent = percent + '%';
+      }
+
+      ring.title =
+        'Progress pekerjaan ' +
+        percent + '%';
+    });
+}
+
+
+/* =====================================================
+   STATUS CHANGE
+   ===================================================== */
+
+function handleStatusChange(
+  dinas,
+  rowNumber,
+  status,
+  element
+) {
+
+  /*
+   * FIX WARNA:
+   * elemen yang DIUBAH langsung diberi
+   * class baru.
+   */
+  element.classList.remove(
+    'done',
+    'always-on',
+    'diluar-jadwal',
+    'bermasalah',
+    'pending'
+  );
+
+  element.classList.add(
+    getStatusClass(status)
+  );
+
+
+  element.dataset.status =
+    status;
+
+  const taskName =
+    element.dataset.task || '';
+
+  /*
+   * Lepas fokus supaya live sync tidak menunda
+   * pembaruan data dari komputer lain.
+   */
+  if (element.blur) {
+    element.blur();
+  }
+
+
+  /*
+   * Update local data.
+   */
+  const row =
+    dashboardData.daily.rows.find(
+      r =>
+        r.sheetRow ===
+        Number(rowNumber)
+    );
+
+  if (row) {
+    row.status =
+      status;
+  }
+
+
+  updateProgress(
+    dashboardData.daily.rows,
+    dashboardData.master.activities
+  );
+
+  // Update ring progress Dinas secara langsung tanpa reload halaman.
+  refreshDinasProgressRing(dinas);
+
+
+  /*
+   * Sequence.
+   */
+  const key =
+    currentDate +
+    '|' +
+    rowNumber;
+
+
+  if (
+    !saveSequences[key]
+  ) {
+    saveSequences[key] = 0;
+  }
+
+  saveSequences[key]++;
+
+
+  const seq =
+    saveSequences[key];
+
+
+  clearTimeout(
+    saveTimers[key]
+  );
+
+
+  setSaveStatus(
+    'Saving...',
+    'saving'
+  );
+
+
+  markLocalWrite();
+
+  saveTimers[key] =
+    setTimeout(
+      function() {
+
+        saveTaskWithRetry(
+          key,
+          seq,
+          Number(rowNumber),
+          status,
+          0,
+          dinas,
+          taskName
+        );
+
+      },
+      250
+    );
+}
+
+
+/* =====================================================
+   SAVE STATUS
+   ===================================================== */
+
+function saveTaskWithRetry(
+  key,
+  seq,
+  rowNumber,
+  status,
+  retry,
+  dinas,
+  task
+) {
+
+  if (
+    saveSequences[key] !==
+    seq
+  ) {
+    return;
+  }
+
+
+  google.script.run
+
+    .withSuccessHandler(
+      function() {
+
+        if (
+          saveSequences[key] !==
+          seq
+        ) {
+          return;
+        }
+
+        markLocalWrite(2500);
+
+        setSaveStatus(
+          '✓ Saved automatically',
+          'saved'
+        );
+
+      }
+    )
+
+    .withFailureHandler(
+      function() {
+
+        if (
+          saveSequences[key] !==
+          seq
+        ) {
+          return;
+        }
+
+
+        if (
+          retry < 3
+        ) {
+
+          setSaveStatus(
+            'Failed, retrying...',
+            'failed'
+          );
+
+
+          setTimeout(
+            function() {
+
+              saveTaskWithRetry(
+                key,
+                seq,
+                rowNumber,
+                status,
+                retry + 1,
+                dinas,
+                task
+              );
+
+            },
+            500 *
+            Math.pow(
+              2,
+              retry
+            )
+          );
+
+        } else {
+
+          setSaveStatus(
+            'Failed to save',
+            'failed'
+          );
+        }
+
+      }
+    )
+
+    .updateTaskStatus(
+      currentDate,
+      rowNumber,
+      status,
+      dinas,
+      task
+    );
+}
+
+
+/* =====================================================
+   FOD
+   ===================================================== */
+
+function handlePJFoDChange(slot, value) {
+  if (!dashboardData) return;
+  markLocalWrite();
+
+  const pjRows = (dashboardData.daily.rows || [])
+    .filter(function(r) { return r.dinas === 'PJ'; });
+
+  let current = '';
+  if (pjRows.length) current = pjRows[0].fod || '';
+
+  const names = current.split(',').map(function(x) { return x.trim(); }).filter(Boolean);
+  let fod1 = names[0] || '';
+  let fod2 = names[1] || '';
+
+  if (slot === 1) fod1 = String(value || '').trim();
+  if (slot === 2) fod2 = String(value || '').trim();
+
+  if (fod1 && fod2 && fod1 === fod2) {
+    setSaveStatus('PJ1 dan PJ2 tidak boleh sama', 'failed');
+    renderDashboard();
+    return;
+  }
+
+  const combined = [fod1, fod2].filter(Boolean).join(', ');
+  pjRows.forEach(function(r) { r.fod = combined; });
+  renderDashboard();
+  setSaveStatus('Saving...', 'saving');
+
+  google.script.run
+    .withSuccessHandler(function() {
+      setSaveStatus('✓ Saved automatically', 'saved');
+      renderDashboard();
+    })
+    .withFailureHandler(function(error) {
+      setSaveStatus('Failed to save', 'failed');
+      renderDashboard();
+      alert(error.message || String(error));
+    })
+    .updatePJFoD(currentDate, fod1, fod2);
+}
+
+function handleFoDChange(
+  dinas,
+  fod
+) {
+
+  markLocalWrite();
+
+  setSaveStatus(
+    'Saving...',
+    'saving'
+  );
+
+
+  google.script.run
+
+    .withSuccessHandler(
+      function() {
+
+        dashboardData.daily.rows
+          .filter(
+            r =>
+              r.dinas ===
+              dinas
+          )
+          .forEach(
+            r =>
+              r.fod = fod
+          );
+
+
+        setSaveStatus(
+          '✓ Saved automatically',
+          'saved'
+        );
+
+
+        renderDashboard();
+
+      }
+    )
+
+    .withFailureHandler(
+      function() {
+
+        setSaveStatus(
+          'Failed, retrying...',
+          'failed'
+        );
+
+        retryFoD(
+          dinas,
+          fod,
+          1
+        );
+
+      }
+    )
+
+    .updateFoD(
+      currentDate,
+      dinas,
+      fod
+    );
+}
+
+
+function retryFoD(
+  dinas,
+  fod,
+  retry
+) {
+
+  if (
+    retry > 3
+  ) {
+
+    setSaveStatus(
+      'Failed to save',
+      'failed'
+    );
+
+    return;
+  }
+
+
+  setTimeout(
+    function() {
+
+      google.script.run
+
+        .withSuccessHandler(
+          function() {
+
+            dashboardData.daily.rows
+              .filter(
+                r =>
+                  r.dinas ===
+                  dinas
+              )
+              .forEach(
+                r =>
+                  r.fod = fod
+              );
+
+
+            setSaveStatus(
+              '✓ Saved automatically',
+              'saved'
+            );
+
+
+            renderDashboard();
+
+          }
+        )
+
+        .withFailureHandler(
+          function() {
+
+            retryFoD(
+              dinas,
+              fod,
+              retry + 1
+            );
+
+          }
+        )
+
+        .updateFoD(
+          currentDate,
+          dinas,
+          fod
+        );
+
+    },
+    500 *
+    Math.pow(
+      2,
+      retry - 1
+    )
+  );
+}
+
+
+/* =====================================================
+   REMINDER
+   ===================================================== */
+
+function handleReminderInput() {
+
+  clearTimeout(
+    reminderTimer
+  );
+
+
+  setSaveStatus(
+    'Saving...',
+    'saving'
+  );
+
+
+  reminderTimer =
+    setTimeout(
+      function() {
+
+        saveReminderWithRetry(
+          document.getElementById(
+            'reminderInput'
+          ).value,
+          0
+        );
+
+      },
+      600
+    );
+}
+
+
+function saveReminderWithRetry(
+  text,
+  retry
+) {
+
+  google.script.run
+
+    .withSuccessHandler(
+      function() {
+
+        setSaveStatus(
+          '✓ Saved automatically',
+          'saved'
+        );
+
+      }
+    )
+
+    .withFailureHandler(
+      function() {
+
+        if (
+          retry < 3
+        ) {
+
+          setSaveStatus(
+            'Failed, retrying...',
+            'failed'
+          );
+
+
+          setTimeout(
+            function() {
+
+              saveReminderWithRetry(
+                text,
+                retry + 1
+              );
+
+            },
+            500 *
+            Math.pow(
+              2,
+              retry
+            )
+          );
+
+        } else {
+
+          setSaveStatus(
+            'Failed to save',
+            'failed'
+          );
+        }
+
+      }
+    )
+
+    .updateReminder(
+      currentDate,
+      text
+    );
+}
+
+
+/* =====================================================
+   PROGRESS
+   ===================================================== */
+
+function updateProgress(
+  dailyRows,
+  activities
+) {
+
+  let total = 0;
+  let completed = 0;
+
+
+  activities.forEach(
+    activity => {
+
+      if (
+        !isActivityForCurrentDate(
+          activity
+        )
+      ) {
+        return;
+      }
+
+
+      total++;
+
+
+      const row =
+        dailyRows.find(
+          r =>
+            r.dinas ===
+              activity.dinas &&
+            r.task ===
+              activity.task
+        );
+
+
+      if (
+        row &&
+        (
+          row.status === 'Done' ||
+          row.status === 'Always On' ||
+          row.status === 'Diluar Jadwal'
+        )
+      ) {
+
+        completed++;
+
+      }
+
+    }
+  );
+
+
+  const percent =
+    total === 0
+      ? 0
+      : Math.round(
+          completed /
+          total *
+          100
+        );
+
+
+  const bar =
+    document.getElementById(
+      'progressBar'
+    );
+
+  const percentEl =
+    document.getElementById(
+      'progressPercent'
+    );
+
+
+  percentEl.textContent =
+    percent + '%';
+
+
+  bar.style.width =
+    percent + '%';
+
+
+  bar.className =
+    'progress-bar';
+
+
+  if (
+    percent === 100
+  ) {
+
+    bar.classList.add(
+      'green'
+    );
+
+    percentEl.style.color =
+      '#16a34a';
+
+  }
+
+  else if (
+    percent <= 50
+  ) {
+
+    bar.classList.add(
+      'red'
+    );
+
+    percentEl.style.color =
+      '#dc2626';
+
+  }
+
+  else {
+
+    bar.classList.add(
+      'yellow'
+    );
+
+    percentEl.style.color =
+      '#d97706';
+  }
+}
+
+
+/* =====================================================
+   DAY LOGIC
+   ===================================================== */
+
+function isTaskForCurrentDate(
+  hari
+) {
+
+  const value =
+    String(hari || '').trim();
+
+
+  if (!value) {
+    return true;
+  }
+
+
+  if (
+    value.toLowerCase() ===
+    'setiap hari'
+  ) {
+    return true;
+  }
+
+
+  /* Tugas "hari ini saja": "Tanggal yyyy-MM-dd". */
+  const specific =
+    value.match(
+      /^tanggal\s+(\d{4}-\d{2}-\d{2})$/i
+    );
+
+  if (specific) {
+    return specific[1] === currentDate;
+  }
+
+
+  const parts =
+    currentDate.split('-');
+
+
+  const date =
+    new Date(
+      Date.UTC(
+        Number(parts[0]),
+        Number(parts[1]) - 1,
+        Number(parts[2])
+      )
+    );
+
+
+  const names = [
+    'minggu',
+    'senin',
+    'selasa',
+    'rabu',
+    'kamis',
+    'jumat',
+    'sabtu'
+  ];
+
+
+  const today =
+    names[
+      date.getUTCDay()
+    ];
+
+
+  const allowed =
+    value
+      .split(',')
+      .map(
+        x =>
+          x.trim().toLowerCase()
+      );
+
+
+  return allowed.includes(
+    today
+  );
+}
+
+
+/* =====================================================
+   STATUS CLASS
+   ===================================================== */
+
+function getStatusClass(
+  status
+) {
+
+  switch (status) {
+
+    case 'Done':
+      return 'done';
+
+    case 'Always On':
+      return 'always-on';
+
+    case 'Diluar Jadwal':
+      return 'diluar-jadwal';
+
+    case 'Bermasalah':
+      return 'bermasalah';
+
+    default:
+      return 'pending';
+  }
+}
+
+
+/* =====================================================
+   SAVE STATUS
+   ===================================================== */
+
+function setSaveStatus(
+  text,
+  type
+) {
+
+  const el =
+    document.getElementById(
+      'saveStatus'
+    );
+
+  if (!el) {
+    return;
+  }
+
+
+  el.textContent =
+    text;
+
+  el.className =
+    'save-status ' +
+    (type || '');
+}
+
+
+
+/* =====================================================
+   LIVE SYNC
+   =====================================================
+
+   Browser mengecek "versi" data di server tiap
+   LIVE_POLL_MS (ringan, hanya baca cache). Jika berubah
+   karena ada pengguna lain, data diambil ulang dan
+   tampilan diperbarui otomatis.
+
+   Pembaruan ditunda bila:
+   - tab tidak terlihat / bukan workspace Task Management
+   - pengguna sedang menyimpan perubahan sendiri
+   - pengguna sedang memegang dropdown atau dialog terbuka
+   ===================================================== */
+
+const LIVE_POLL_MS = 8000;
+const LIVE_FOCUS_GRACE_MS = 15000;
+
+const TASK_EDITABLE_DINAS = [
+  'PS1',
+  'PS2',
+  'PS3',
+  'PF1',
+  'PF2',
+  'MA',
+  'MB',
+  'PJ'
+];
+
+let liveVersion = '';
+let liveTimer = null;
+let liveBusy = false;
+let localWriteUntil = 0;
+let lastLiveKey = '';
+let lastSelectFocusAt = 0;
+
+
+/* PJ libur Sabtu & Minggu: tugasnya tidak ditampilkan (tanggal lampau tetap apa adanya). */
+function isWeekendCurrentDate() {
+
+  if (!currentDate) {
+    return false;
+  }
+
+  const p = currentDate.split('-');
+
+  const day =
+    new Date(
+      Date.UTC(Number(p[0]), Number(p[1]) - 1, Number(p[2]))
+    ).getUTCDay();
+
+  return day === 0 || day === 6;
+}
+
+
+function isPjHoliday(dinas) {
+
+  return dinas === 'PJ' &&
+    !(dashboardData && dashboardData.isPast) &&
+    isWeekendCurrentDate();
+}
+
+
+function isActivityForCurrentDate(activity) {
+
+  if (isPjHoliday(activity.dinas)) {
+    return false;
+  }
+
+  return isTaskForCurrentDate(activity.hari);
+}
+
+
+function isEditableDinas(dinas) {
+
+  if (isPjHoliday(dinas)) {
+    return false;
+  }
+
+  /* Tanggal lampau hanya dibaca: tombol tambah / hapus / geser urutan disembunyikan. */
+  if (dashboardData && dashboardData.isPast) {
+    return false;
+  }
+
+  return TASK_EDITABLE_DINAS.indexOf(dinas) !== -1;
+}
+
+
+/*
+ * Untuk tanggal lampau, daftar tugas diambil dari sheet harian
+ * (apa adanya saat itu), bukan dari MASTER yang sekarang.
+ */
+function normalizeViewData(data) {
+
+  if (data && data.isPast && data.master && data.daily) {
+
+    data.master.activities =
+      (data.daily.rows || [])
+        .filter(function(r) {
+          return r.task && DINAS_ORDER.indexOf(r.dinas) !== -1;
+        })
+        .map(function(r) {
+          return {
+            masterRow: 0,
+            dinas: r.dinas,
+            task: r.task,
+            hari: ''
+          };
+        });
+  }
+
+  return data;
+}
+
+
+function markLocalWrite(ms) {
+
+  localWriteUntil =
+    Date.now() + (ms || 8000);
+}
+
+
+function buildLiveKey(data) {
+
+  return JSON.stringify([
+    data.master.activities,
+    data.master.fods,
+    data.daily.rows
+  ]);
+}
+
+
+function isAnyModalOpen() {
+
+  return [
+    'addTaskModal',
+    'deleteTaskModal',
+    'archiveDeleteModal'
+  ].some(function(id) {
+
+    const el = document.getElementById(id);
+
+    return !!el && el.style.display === 'flex';
+  });
+}
+
+
+function isUserBusyWithControl() {
+
+  if (dragState) {
+    return true;
+  }
+
+  const active = document.activeElement;
+
+  if (
+    active &&
+    active.tagName === 'SELECT' &&
+    Date.now() - lastSelectFocusAt < LIVE_FOCUS_GRACE_MS
+  ) {
+    return true;
+  }
+
+  return isAnyModalOpen();
+}
+
+
+let masterEditOpened = false;
+
+function openMasterSheet() {
+
+  const url =
+    dashboardData && dashboardData.masterUrl;
+
+  if (!url) {
+    alert('Link sheet MASTER belum tersedia. Coba lagi sebentar.');
+    return;
+  }
+
+  masterEditOpened = true;
+
+  window.open(url, '_blank', 'noopener');
+}
+
+
+function startLivePolling() {
+
+  if (liveTimer) {
+    return;
+  }
+
+  document.addEventListener(
+    'focusin',
+    function(e) {
+      if (e.target && e.target.tagName === 'SELECT') {
+        lastSelectFocusAt = Date.now();
+      }
+    }
+  );
+
+  document.addEventListener(
+    'keydown',
+    function(e) {
+      if (e.key === 'Escape') {
+        closeAddTask();
+        closeDeleteTask();
+      }
+    }
+  );
+
+  document.addEventListener(
+    'visibilitychange',
+    function() {
+
+      if (document.hidden) {
+        return;
+      }
+
+      if (masterEditOpened) {
+
+        masterEditOpened = false;
+
+        google.script.run
+          .withSuccessHandler(function() {
+            refreshLiveNow();
+          })
+          .withFailureHandler(function() {})
+          .notifyMasterEdited();
+
+        return;
+      }
+
+      pollLive();
+    }
+  );
+
+  liveTimer =
+    setInterval(pollLive, LIVE_POLL_MS);
+}
+
+
+function pollLive() {
+
+  if (document.hidden || currentWorkspace !== 'task') {
+    return;
+  }
+
+  if (!dashboardData || !currentDate || liveBusy) {
+    return;
+  }
+
+  if (Date.now() < localWriteUntil) {
+    return;
+  }
+
+  if (isUserBusyWithControl()) {
+    return;
+  }
+
+  liveBusy = true;
+
+  const requestedDate = currentDate;
+
+  google.script.run
+
+    .withSuccessHandler(
+      function(version) {
+
+        if (!version || version === liveVersion) {
+          liveBusy = false;
+          return;
+        }
+
+        fetchLiveData(requestedDate);
+      }
+    )
+
+    .withFailureHandler(
+      function() {
+        liveBusy = false;
+      }
+    )
+
+    .getLiveVersion();
+}
+
+
+function fetchLiveData(requestedDate) {
+
+  google.script.run
+
+    .withSuccessHandler(
+      function(data) {
+        liveBusy = false;
+        applyLiveData(data, requestedDate);
+      }
+    )
+
+    .withFailureHandler(
+      function() {
+        liveBusy = false;
+      }
+    )
+
+    .getLiveData(requestedDate);
+}
+
+
+function applyLiveData(data, requestedDate) {
+
+  if (
+    !data ||
+    data.date !== currentDate ||
+    requestedDate !== currentDate
+  ) {
+    return;
+  }
+
+  /*
+   * Pengguna mulai mengubah sesuatu saat data dimuat:
+   * jangan timpa, versi belum dicatat sehingga polling
+   * berikutnya mencoba lagi.
+   */
+  if (
+    Date.now() < localWriteUntil ||
+    isUserBusyWithControl()
+  ) {
+    return;
+  }
+
+  data = normalizeViewData(data);
+
+  const key = buildLiveKey(data);
+
+  liveVersion = data.version || liveVersion;
+
+  const reminderEl =
+    document.getElementById('reminderInput');
+
+  if (
+    reminderEl &&
+    document.activeElement !== reminderEl &&
+    reminderEl.value !== (data.reminder || '')
+  ) {
+    reminderEl.value = data.reminder || '';
+  }
+
+  dashboardData = data;
+
+  if (key === lastLiveKey) {
+    return;
+  }
+
+  lastLiveKey = key;
+
+  renderDashboard();
+
+  setSaveStatus(
+    '↻ Diperbarui otomatis',
+    'saved'
+  );
+}
+
+
+/* Data lengkap hasil tambah / hapus tugas. */
+function applyFullData(data) {
+
+  if (!data || data.date !== currentDate) {
+    return;
+  }
+
+  data = normalizeViewData(data);
+
+  dashboardData = data;
+
+  liveVersion = data.version || liveVersion;
+
+  lastLiveKey = buildLiveKey(data);
+
+  markLocalWrite(2500);
+
+  renderDashboard();
+}
+
+
+function refreshLiveNow() {
+
+  if (liveBusy || !currentDate) {
+    return;
+  }
+
+  localWriteUntil = 0;
+
+  liveBusy = true;
+
+  fetchLiveData(currentDate);
+}
+
+
+/* =====================================================
+   TAMBAH TUGAS
+   ===================================================== */
+
+let addTaskDinas = '';
+let addTaskSaving = false;
+
+/*
+ * Template tugas sesekali. Tiap centang membuat satu tugas;
+ * hari mengikuti pilihan di bawahnya (mis. "Hari ini saja").
+ */
+const TASK_TEMPLATES = {
+  MA: [
+    {
+      label: 'PCM 5 Lokasi',
+      task: 'Mengerjakan PCM 5 Lokasi sebelum jam 06.00 WIB'
+    }
+  ],
+  MB: [
+    {
+      label: 'Bunyu',
+      task: 'Mengerjakan SKK Pertamina Bunyu sebelum jam 21.00 WIB'
+    },
+    {
+      label: 'Sekong',
+      task: 'Mengerjakan SKK Pertamina Tj.Sekong sebelum jam 21.00 WIB'
+    },
+    {
+      label: 'Tarakan',
+      task: 'Mengerjakan SKK Pertamina Tarakan sebelum jam 21.00 WIB'
+    }
+  ]
+};
+
+
+function renderTaskTemplates(dinas) {
+
+  const box = document.getElementById('addTaskTemplates');
+  const list = document.getElementById('addTaskTemplateList');
+
+  const templates = TASK_TEMPLATES[dinas];
+
+  list.innerHTML = '';
+  document.getElementById('addTaskTemplatePreview').textContent = '';
+
+  if (!templates) {
+    box.style.display = 'none';
+    return;
+  }
+
+  templates.forEach(function(t, i) {
+
+    const label = document.createElement('label');
+    label.className = 'fod-day';
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'tpl-opt';
+    cb.value = String(i);
+    cb.onchange = updateTemplatePreview;
+
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode(' ' + t.label));
+
+    list.appendChild(label);
+  });
+
+  box.style.display = 'block';
+}
+
+
+function getSelectedTemplateTasks() {
+
+  const templates = TASK_TEMPLATES[addTaskDinas] || [];
+
+  return Array.from(
+    document.querySelectorAll(
+      '#addTaskTemplateList input.tpl-opt:checked'
+    )
+  ).map(function(cb) {
+    return templates[Number(cb.value)].task;
+  });
+}
+
+
+function updateTemplatePreview() {
+
+  const tasks = getSelectedTemplateTasks();
+
+  document.getElementById('addTaskTemplatePreview').textContent =
+    tasks.length
+      ? 'Akan dibuat ' + tasks.length + ' tugas:\n' +
+        tasks.map(function(t) { return '• ' + t; }).join('\n')
+      : '';
+}
+
+function openAddTask(dinas) {
+
+  addTaskDinas = dinas;
+  addTaskSaving = false;
+
+  document.getElementById('addTaskTitle').textContent =
+    'Tambah tugas ' + dinas;
+
+  document.getElementById('addTaskName').value = '';
+  document.getElementById('addTaskError').textContent = '';
+  renderTaskTemplates(dinas);
+
+  document.getElementById('addTaskEvery').checked = false;
+  document.getElementById('addTaskToday').checked = false;
+
+  document.getElementById('addTaskTodayDate').textContent =
+    currentDate
+      ? '(' + currentDate.split('-').reverse().join('/') + ')'
+      : '';
+
+  document
+    .querySelectorAll('#addTaskDays input.day-opt')
+    .forEach(function(cb) {
+      cb.checked = false;
+    });
+
+  onEveryDayToggle();
+
+  document.getElementById('addTaskSave').disabled = false;
+
+  document.getElementById('addTaskModal').style.display = 'flex';
+
+  document.getElementById('addTaskName').focus();
+}
+
+
+function closeAddTask() {
+
+  const modal = document.getElementById('addTaskModal');
+
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+
+function onEveryDayToggle(source) {
+
+  const every =
+    document.getElementById('addTaskEvery');
+
+  const today =
+    document.getElementById('addTaskToday');
+
+  /* "Setiap hari" dan "Hari ini saja" saling meniadakan. */
+  if (source === every && every.checked) {
+    today.checked = false;
+  }
+
+  if (source === today && today.checked) {
+    every.checked = false;
+  }
+
+  every.disabled = today.checked;
+  today.disabled = every.checked;
+
+  every.parentElement.classList.toggle('disabled', every.disabled);
+  today.parentElement.classList.toggle('disabled', today.disabled);
+
+  const lockDays = every.checked || today.checked;
+
+  document
+    .querySelectorAll('#addTaskDays input.day-opt')
+    .forEach(function(cb) {
+
+      if (lockDays) {
+        cb.checked = false;
+      }
+
+      cb.disabled = lockDays;
+
+      cb.parentElement.classList.toggle(
+        'disabled',
+        lockDays
+      );
+    });
+}
+
+
+function saveNewTask() {
+
+  if (addTaskSaving) {
+    return;
+  }
+
+  const errorEl =
+    document.getElementById('addTaskError');
+
+  const name =
+    document
+      .getElementById('addTaskName')
+      .value
+      .replace(/\s+/g, ' ')
+      .trim();
+
+  const every =
+    document.getElementById('addTaskEvery').checked;
+
+  const todayOnly =
+    document.getElementById('addTaskToday').checked;
+
+  const days =
+    every
+      ? ['Setiap Hari']
+      : todayOnly
+      ? ['Hari ini saja']
+      : Array.from(
+          document.querySelectorAll(
+            '#addTaskDays input.day-opt:checked'
+          )
+        ).map(function(cb) {
+          return cb.value;
+        });
+
+  const names =
+    getSelectedTemplateTasks().concat(name ? [name] : []);
+
+  if (!names.length) {
+    errorEl.textContent = 'Nama tugas belum diisi (atau pilih template).';
+    document.getElementById('addTaskName').focus();
+    return;
+  }
+
+  if (!days.length) {
+    errorEl.textContent = 'Pilih minimal satu hari.';
+    return;
+  }
+
+  errorEl.textContent = '';
+
+  addTaskSaving = true;
+
+  const saveBtn =
+    document.getElementById('addTaskSave');
+
+  saveBtn.disabled = true;
+
+  markLocalWrite(20000);
+
+  setSaveStatus('Saving...', 'saving');
+
+  google.script.run
+
+    .withSuccessHandler(
+      function(data) {
+
+        addTaskSaving = false;
+
+        closeAddTask();
+
+        applyFullData(data);
+
+        setSaveStatus(
+          '✓ Saved automatically',
+          'saved'
+        );
+      }
+    )
+
+    .withFailureHandler(
+      function(error) {
+
+        addTaskSaving = false;
+
+        saveBtn.disabled = false;
+
+        errorEl.textContent =
+          (error && error.message) || String(error);
+
+        setSaveStatus('Failed to save', 'failed');
+      }
+    )
+
+    .addTask(
+      currentDate,
+      addTaskDinas,
+      names,
+      days
+    );
+}
+
+
+/* =====================================================
+   HAPUS TUGAS
+   ===================================================== */
+
+let pendingDelete = null;
+let deleteTaskSaving = false;
+
+function openDeleteTask(button) {
+
+  pendingDelete = {
+    dinas: button.dataset.dinas || '',
+    task: button.dataset.task || '',
+    hari: button.dataset.hari || ''
+  };
+
+  deleteTaskSaving = false;
+
+  document.getElementById('deleteTaskText').textContent =
+    '"' + pendingDelete.task + '" (' + pendingDelete.dinas +
+    (/^tanggal\s/i.test(pendingDelete.hari)
+      ? ') akan dihapus (tugas ini hanya untuk satu hari).'
+      : ') akan dihapus dari semua hari.');
+
+  document.getElementById('deleteTaskYes').disabled = false;
+
+  document.getElementById('deleteTaskModal').style.display = 'flex';
+
+  /* Pilihan default: Tidak. */
+  document.getElementById('deleteTaskNo').focus();
+}
+
+
+function closeDeleteTask() {
+
+  const modal = document.getElementById('deleteTaskModal');
+
+  if (modal) {
+    modal.style.display = 'none';
+  }
+
+  pendingDelete = null;
+}
+
+
+function confirmDeleteTask() {
+
+  if (!pendingDelete || deleteTaskSaving) {
+    return;
+  }
+
+  const target = pendingDelete;
+
+  deleteTaskSaving = true;
+
+  document.getElementById('deleteTaskYes').disabled = true;
+
+  markLocalWrite(20000);
+
+  setSaveStatus('Saving...', 'saving');
+
+  google.script.run
+
+    .withSuccessHandler(
+      function(data) {
+
+        deleteTaskSaving = false;
+
+        closeDeleteTask();
+
+        applyFullData(data);
+
+        setSaveStatus(
+          '✓ Saved automatically',
+          'saved'
+        );
+      }
+    )
+
+    .withFailureHandler(
+      function(error) {
+
+        deleteTaskSaving = false;
+
+        closeDeleteTask();
+
+        setSaveStatus('Failed to save', 'failed');
+
+        alert(
+          (error && error.message) || String(error)
+        );
+
+        refreshLiveNow();
+      }
+    )
+
+    .deleteTask(
+      currentDate,
+      target.dinas,
+      target.task
+    );
+}
+
+
+/* =====================================================
+   ATUR URUTAN TUGAS (DRAG)
+   =====================================================
+
+   Tanpa ikon: tekan nama tugas dengan mouse lalu geser ke
+   atas / bawah di dalam kartu dinas yang sama. Urutan
+   disimpan ke MASTER; hanya tugas yang sedang tampil yang
+   ditukar posisinya.
+   ===================================================== */
+
+let dragState = null;
+let taskOrderSaving = false;
+
+function initTaskDrag() {
+
+  const content = document.getElementById('content');
+
+  content.addEventListener(
+    'pointerdown',
+    function(e) {
+
+      if (
+        e.pointerType !== 'mouse' ||
+        e.button !== 0 ||
+        dragState ||
+        taskOrderSaving
+      ) {
+        return;
+      }
+
+      const nameEl =
+        e.target.closest
+          ? e.target.closest('.task-name')
+          : null;
+
+      if (!nameEl) {
+        return;
+      }
+
+      const row = nameEl.closest('.task-row.editable');
+
+      if (!row) {
+        return;
+      }
+
+      const card = row.closest('.dinas-card');
+
+      const rows =
+        Array.from(
+          card.querySelectorAll('.task-row.editable')
+        );
+
+      if (rows.length < 2) {
+        return;
+      }
+
+      e.preventDefault();
+
+      dragState = {
+        row: row,
+        card: card,
+        rows: rows,
+        index: rows.indexOf(row),
+        target: rows.indexOf(row),
+        startY: e.clientY,
+        started: false,
+        rects: null,
+        height: 0,
+        scrollY0: window.scrollY
+      };
+    }
+  );
+
+  document.addEventListener('pointermove', onTaskDragMove);
+  document.addEventListener('pointerup', onTaskDragEnd);
+  document.addEventListener('pointercancel', cancelTaskDrag);
+  window.addEventListener('blur', cancelTaskDrag);
+}
+
+
+function onTaskDragMove(e) {
+
+  const s = dragState;
+
+  if (!s) {
+    return;
+  }
+
+  const dy = e.clientY - s.startY;
+
+  if (!s.started) {
+
+    if (Math.abs(dy) < 5) {
+      return;
+    }
+
+    s.started = true;
+
+    s.rects =
+      s.rows.map(function(r) {
+        return r.getBoundingClientRect();
+      });
+
+    s.height = s.rects[s.index].height;
+    s.scrollY0 = window.scrollY;
+
+    document.body.classList.add('task-dragging');
+
+    s.row.classList.add('dragging');
+
+    s.rows.forEach(function(r) {
+      if (r !== s.row) {
+        r.classList.add('drag-shift');
+      }
+    });
+
+    markLocalWrite(60000);
+  }
+
+  const own = s.rects[s.index];
+
+  let move = dy + (window.scrollY - s.scrollY0);
+
+  const minMove = s.rects[0].top - own.top;
+  const maxMove = s.rects[s.rects.length - 1].bottom - own.bottom;
+
+  move = Math.max(minMove, Math.min(maxMove, move));
+
+  s.row.style.transform = 'translateY(' + move + 'px)';
+
+  const center = own.top + own.height / 2 + move;
+
+  let target = s.index;
+
+  s.rects.forEach(function(r, k) {
+
+    const mid = r.top + r.height / 2;
+
+    if (k > s.index && center > mid) {
+      target = Math.max(target, k);
+    }
+
+    if (k < s.index && center < mid) {
+      target = Math.min(target, k);
+    }
+  });
+
+  s.target = target;
+
+  s.rows.forEach(function(r, k) {
+
+    if (k === s.index) {
+      return;
+    }
+
+    let shift = 0;
+
+    if (k > s.index && k <= target) {
+      shift = -s.height;
+    } else if (k < s.index && k >= target) {
+      shift = s.height;
+    }
+
+    r.style.transform =
+      shift ? 'translateY(' + shift + 'px)' : '';
+  });
+}
+
+
+function resetTaskDragVisual(s) {
+
+  document.body.classList.remove('task-dragging');
+
+  s.rows.forEach(function(r) {
+    r.classList.remove('drag-shift');
+    r.classList.remove('dragging');
+    r.style.transform = '';
+  });
+}
+
+
+function cancelTaskDrag() {
+
+  const s = dragState;
+
+  if (!s) {
+    return;
+  }
+
+  dragState = null;
+
+  if (s.started) {
+    resetTaskDragVisual(s);
+    markLocalWrite(1000);
+  }
+}
+
+
+function onTaskDragEnd() {
+
+  const s = dragState;
+
+  if (!s) {
+    return;
+  }
+
+  dragState = null;
+
+  if (!s.started) {
+    return;
+  }
+
+  resetTaskDragVisual(s);
+
+  if (s.target === s.index) {
+    markLocalWrite(1000);
+    return;
+  }
+
+  const ref =
+    s.target > s.index
+      ? s.rows[s.target].nextSibling
+      : s.rows[s.target];
+
+  s.row.parentNode.insertBefore(s.row, ref);
+
+  const dinas =
+    s.row.querySelector('.status-select').dataset.dinas;
+
+  const names =
+    Array.from(
+      s.card.querySelectorAll('.task-row.editable .status-select')
+    ).map(function(sel) {
+      return sel.dataset.task;
+    });
+
+  saveTaskOrder(dinas, names);
+}
+
+
+function applyLocalReorder(dinas, names) {
+
+  if (!dashboardData) {
+    return;
+  }
+
+  const acts = dashboardData.master.activities;
+
+  const idxs = [];
+
+  acts.forEach(function(a, i) {
+    if (
+      a.dinas === dinas &&
+      names.indexOf(a.task) !== -1 &&
+      isTaskForCurrentDate(a.hari)
+    ) {
+      idxs.push(i);
+    }
+  });
+
+  if (idxs.length !== names.length) {
+    return;
+  }
+
+  const byTask = {};
+
+  idxs.forEach(function(i) {
+    byTask[acts[i].task] = acts[i];
+  });
+
+  names.forEach(function(n, k) {
+    acts[idxs[k]] = byTask[n];
+  });
+
+  lastLiveKey = buildLiveKey(dashboardData);
+}
+
+
+function saveTaskOrder(dinas, names) {
+
+  applyLocalReorder(dinas, names);
+
+  taskOrderSaving = true;
+
+  markLocalWrite(20000);
+
+  setSaveStatus('Saving...', 'saving');
+
+  google.script.run
+
+    .withSuccessHandler(
+      function(data) {
+
+        taskOrderSaving = false;
+
+        applyFullData(data);
+
+        setSaveStatus(
+          '✓ Saved automatically',
+          'saved'
+        );
+      }
+    )
+
+    .withFailureHandler(
+      function(error) {
+
+        taskOrderSaving = false;
+
+        setSaveStatus('Failed to save', 'failed');
+
+        alert(
+          (error && error.message) || String(error)
+        );
+
+        refreshLiveNow();
+      }
+    )
+
+    .reorderTasks(
+      currentDate,
+      dinas,
+      names
+    );
+}
+
+
+/* =====================================================
+   LOAD AWAL
+   ===================================================== */
+
+let firstLoadDone = false;
+
+function onFirstDashboardLoad() {
+
+  if (firstLoadDone) {
+    return;
+  }
+
+  firstLoadDone = true;
+
+  /* Status arsip & monitoring tidak lagi berebut dengan load dashboard. */
+  refreshArchiveStatus();
+
+  setTimeout(prefetchMonitoring, 800);
+}
+
+
+/* =====================================================
+   MONTHLY ARCHIVE
+   ===================================================== */
+
+const ARCHIVE_MONTH_NAMES = [
+  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+];
+
+function initializeArchiveControls() {
+  const month = document.getElementById('archiveMonth');
+  const year = document.getElementById('archiveYear');
+
+  if (!month || !year) return;
+
+  month.innerHTML = '';
+
+  ARCHIVE_MONTH_NAMES.forEach(function(name, index) {
+    const option = document.createElement('option');
+    option.value = String(index + 1);
+    option.textContent = String(index + 1).padStart(2, '0') + '. ' + name;
+    month.appendChild(option);
+  });
+
+  const now = new Date();
+  month.value = String(now.getMonth() + 1);
+  year.value = String(now.getFullYear());
+}
+
+function getArchiveSelection() {
+  return {
+    year: Number(document.getElementById('archiveYear').value),
+    month: Number(document.getElementById('archiveMonth').value)
+  };
+}
+
+function refreshArchiveStatus() {
+  const selection = getArchiveSelection();
+  const statusEl = document.getElementById('archiveStatus');
+  const deleteButton = document.getElementById('archiveDeleteButton');
+
+  if (!selection.year || !selection.month) return;
+
+  statusEl.className = 'archive-status';
+  statusEl.textContent = 'Memuat status archive...';
+  deleteButton.disabled = true;
+
+  google.script.run
+    .withSuccessHandler(function(status) {
+      let text =
+        'Sheet tersedia: ' + status.sheetCount +
+        ' / ' + status.expectedDays + ' hari.';
+
+      if (status.archiveExists) {
+        text += ' Archive sudah pernah disimpan.';
+        if (status.latestFileName) {
+          text += ' File terakhir: ' + status.latestFileName + '.';
+        }
+        if (status.lastExportedAt) {
+          const d = new Date(status.lastExportedAt);
+          if (!isNaN(d.getTime())) {
+            text += ' Terakhir export: ' + d.toLocaleString('id-ID') + '.';
+          }
+        }
+        statusEl.className = 'archive-status ok';
+      } else {
+        text += ' Archive belum pernah disimpan.';
+        statusEl.className = 'archive-status warn';
+      }
+
+      if (status.completedMonth &&
+          status.sheetCount === status.expectedDays) {
+        text += ' Bulan sudah lengkap.';
+      } else if (status.completedMonth) {
+        text += ' Bulan selesai, tetapi sheet belum lengkap.';
+      }
+
+      statusEl.textContent = text;
+
+      deleteButton.style.display = 'inline-block';
+      deleteButton.disabled = !status.canDelete;
+      deleteButton.title = status.canDelete
+        ? 'Hapus seluruh sheet harian bulan ini'
+        : 'Belum dapat dihapus: bulan harus selesai dan archive lengkap.';
+    })
+    .withFailureHandler(function(error) {
+      statusEl.className = 'archive-status error';
+      statusEl.textContent =
+        'Gagal membaca status: ' +
+        (error.message || String(error));
+    })
+    .getArchiveStatus(
+      selection.year,
+      selection.month
+    );
+}
+
+function exportArchive() {
+  const selection = getArchiveSelection();
+  const button = document.getElementById('archiveExportButton');
+  const statusEl = document.getElementById('archiveStatus');
+
+  button.disabled = true;
+  statusEl.className = 'archive-status';
+  statusEl.textContent =
+    'Sedang membuat file Excel archive...';
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      button.disabled = false;
+      statusEl.className = 'archive-status ok';
+      statusEl.textContent =
+        '✓ Berhasil disimpan: ' +
+        result.fileName +
+        ' (' + result.sheetCount + ' sheet).';
+      setTimeout(refreshArchiveStatus, 300);
+    })
+    .withFailureHandler(function(error) {
+      button.disabled = false;
+      statusEl.className = 'archive-status error';
+      statusEl.textContent =
+        '✕ Export gagal: ' +
+        (error.message || String(error));
+    })
+    .exportMonthlyArchive(
+      selection.year,
+      selection.month
+    );
+}
+
+function openDeleteArchiveModal() {
+  const selection = getArchiveSelection();
+  document.getElementById('archiveDeleteModalText').textContent =
+    'Hapus seluruh sheet harian ' +
+    ARCHIVE_MONTH_NAMES[selection.month - 1] +
+    ' ' + selection.year +
+    ' dari spreadsheet utama. Pastikan archive sudah benar.';
+  document.getElementById('archivePassword').value = '';
+  document.getElementById('archiveDeleteModal').style.display = 'flex';
+  document.getElementById('archivePassword').focus();
+}
+
+function closeDeleteArchiveModal() {
+  document.getElementById('archiveDeleteModal').style.display = 'none';
+}
+
+function confirmDeleteArchive() {
+  const selection = getArchiveSelection();
+  const password = document.getElementById('archivePassword').value;
+  const statusEl = document.getElementById('archiveStatus');
+
+  if (!password) {
+    return;
+  }
+
+  closeDeleteArchiveModal();
+  statusEl.className = 'archive-status';
+  statusEl.textContent = 'Memeriksa archive dan menghapus sheet...';
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      statusEl.className = 'archive-status ok';
+      statusEl.textContent =
+        '✓ Berhasil menghapus ' +
+        result.deletedCount +
+        ' sheet bulanan. Archive tetap tersimpan di Google Drive.';
+      refreshArchiveStatus();
+    })
+    .withFailureHandler(function(error) {
+      statusEl.className = 'archive-status error';
+      statusEl.textContent =
+        '✕ Penghapusan dibatalkan: ' +
+        (error.message || String(error));
+      refreshArchiveStatus();
+    })
+    .deleteMonthlySheets(
+      selection.year,
+      selection.month,
+      password
+    );
+}
+
+/* =====================================================
+   ERROR
+   ===================================================== */
+
+function showError(
+  message
+) {
+
+  document.getElementById(
+    'content'
+  ).innerHTML = `
+
+    <div class="error-box">
+
+      <strong>
+        Gagal memuat dashboard.
+      </strong>
+
+      <br><br>
+
+      ${escapeHtml(message)}
+
+      <br><br>
+
+      Coba refresh halaman.
+
+    </div>
+  `;
+}
+
+
+/* =====================================================
+   ESCAPE
+   ===================================================== */
+
+function escapeHtml(
+  value
+) {
+
+  return String(
+    value || ''
+  )
+  .replace(
+    /&/g,
+    '&amp;'
+  )
+  .replace(
+    /</g,
+    '&lt;'
+  )
+  .replace(
+    />/g,
+    '&gt;'
+  )
+  .replace(
+    /"/g,
+    '&quot;'
+  )
+  .replace(
+    /'/g,
+    '&#039;'
+  );
+}
+
+
+function escapeJs(
+  value
+) {
+
+  return String(
+    value || ''
+  )
+  .replace(
+    /\\/g,
+    '\\\\'
+  )
+  .replace(
+    /'/g,
+    "\\'"
+  );
+}
+
+
+/* =====================================================
+   ORDER
+   ===================================================== */
+
+const DINAS_ORDER = [
+  'PS1',
+  'PS2',
+  'PS3',
+  'PF1',
+  'PF2',
+  'MA',
+  'MB',
+  'PJ'
+];
+
+</script>
+
+</body>
+</html>

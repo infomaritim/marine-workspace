@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagnosa koneksi Apps Script</title>
+<style>
+body{font:15px/1.5 system-ui,Segoe UI,Arial,sans-serif;margin:0;padding:24px;background:#F3F7FA;color:#102232}
+main{max-width:980px;margin:0 auto}
+h1{font-size:1.3rem;margin:0 0 4px}
+p{margin:6px 0 14px;color:#51667A}
+button{font:inherit;font-weight:600;padding:9px 18px;border-radius:8px;border:0;background:#0E7C86;color:#fff;cursor:pointer;margin-right:8px}
+button.sec{background:#fff;color:#0B2E4F;border:1px solid #D5E0E8}
+button:disabled{opacity:.5}
+table{width:100%;border-collapse:collapse;background:#fff;margin-top:16px;border:1px solid #D5E0E8}
+th,td{padding:8px 10px;border-bottom:1px solid #E5ECF1;text-align:left;vertical-align:top;font-size:.9rem}
+th{background:#EAF1F6}
+.ok{color:#0A7A3B;font-weight:700}.bad{color:#B3261E;font-weight:700}.wait{color:#8A6A00}
+code{font-size:.82rem;word-break:break-all}
+</style></head><body><main>
+<h1>Diagnosa koneksi Apps Script</h1>
+<p>Klik <b>Mulai tes</b>, tunggu sampai semua baris terisi (bisa 1 sampai 2 menit), lalu klik <b>Salin hasil</b> dan kirim ke saya.</p>
+<button id="go">Mulai tes</button><button id="copy" class="sec" disabled>Salin hasil</button>
+<table><thead><tr><th>Modul</th><th>Tes</th><th>Hasil</th><th>Waktu</th></tr></thead><tbody id="rows"></tbody></table>
+<script src="assets/config.js"></script>
+<script>
+var rows=document.getElementById('rows'), report=[];
+function add(app,test){var tr=document.createElement('tr');tr.innerHTML='<td>'+app+'</td><td>'+test+'</td><td class="wait">berjalan...</td><td></td>';rows.appendChild(tr);return tr;}
+function done(tr,ok,msg,ms,app,test){tr.children[2].className=ok?'ok':'bad';tr.children[2].textContent=msg;tr.children[3].textContent=ms+' ms';report.push(app+' | '+test+' | '+(ok?'OK':'GAGAL')+' | '+msg+' | '+ms+' ms');}
+function short(u){return u.replace(/(macros\/(?:a\/[^/]+\/)?s\/.{6}).*(\/exec)/,'$1...$2');}
+async function t(app,test,fn){var tr=add(app,test),t0=Date.now();
+  try{var m=await fn();done(tr,true,m,Date.now()-t0,app,test);}catch(e){done(tr,false,(e.name||'Error')+': '+e.message,Date.now()-t0,app,test);}}
+function post(url,fn,args,mode){return fetch(url,{method:'POST',mode:mode||'cors',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args||[]})});}
+async function cors(url,fn,args){var r=await post(url,fn,args);var txt=await r.text();var j;try{j=JSON.parse(txt)}catch(e){throw new Error('HTTP '+r.status+', bukan JSON: '+txt.slice(0,80).replace(/\s+/g,' '))}
+  if(!j.ok)throw new Error('server membalas galat: '+j.error);return 'JSON ok ('+JSON.stringify(j.result).slice(0,70)+')';}
+async function nocors(url,fn,args){await post(url,fn,args,'no-cors');return 'permintaan terkirim (jawaban tidak terbaca, normal)';}
+document.getElementById('go').onclick=async function(){
+  this.disabled=true;rows.innerHTML='';report=['Browser: '+navigator.userAgent,'Halaman: '+location.href];
+  var cfg=window.MIW_CONFIG,apps=Object.keys(cfg);
+  for(var i=0;i<apps.length;i++){var a=apps[i],u=cfg[a];
+    report.push('URL '+a+': '+short(u));
+    if(/^ISI_URL/.test(u)){await t(a,'URL di config.js',async function(){throw new Error('belum diisi')});continue;}
+    await t(a,'Buka alamat (GET)',async function(){await fetch(u,{mode:'no-cors'});return 'alamat terjangkau';});
+    await t(a,'bridgePing (baca JSON)',function(){return cors(u,'bridgePing')});
+    await t(a,'bridgePing (tanpa CORS)',function(){return nocors(u,'bridgePing')});
+  }
+  if(cfg.fod&&!/^ISI_URL/.test(cfg.fod)){var f=cfg.fod;
+    await t('fod','getOperationalDate',function(){return cors(f,'getOperationalDate')});
+    var types=['synergie','upt','mfstudio','diseminasi','rob'];
+    for(var k=0;k<types.length;k++){var ty=types[k];
+      await t('fod','monitoring: '+ty,(function(x){return function(){return cors(f,'getMonitoringEmbedUrl',[x,false])}})(ty));
+    }
+  }
+  document.getElementById('copy').disabled=false;this.disabled=false;
+};
+document.getElementById('copy').onclick=function(){var s=report.join('\n');
+  (navigator.clipboard?navigator.clipboard.writeText(s):Promise.reject()).then(function(){alert('Hasil tersalin.')},function(){prompt('Salin teks ini:',s)});};
+</script></main></body></html>
