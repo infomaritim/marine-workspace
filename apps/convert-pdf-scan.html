@@ -273,6 +273,12 @@ function fixWords(ws){
     m=t.match(/^([SNEW$85])\/(\d{1,3}\.\d{2}\.\d{2,3})$/); if(m) t=(/[$85]/.test(m[1])?'S':m[1])+' / '+m[2];
     m=t.match(/^(\d{1,3}\.\d{2}\.\d{2,3})([EW])$/); if(m) t=m[1]+' '+m[2];
     if(n && /^\//.test(n.text) && (m=t.match(/^(NNE|ENE|ESE|SSE|SSW|WSW|WNW|NNW|NE|SE|SW|NW|N|E|S|W)(S|\$)$/))) t=m[1]+'5';
+    // --- tambahan: koordinat derajat-menit desimal & DMS bertanda hubung (mis. 02° 06.350' S, 05°-29'-012" S)
+    if(p && /^\d{1,3}\u00B0$/.test(p.text) && /^\d{1,2}\.\d{3}["\u201C\u201D]$/.test(t)) t=t.slice(0,-1)+"'";   // tanda menit terbaca "
+    m=t.match(/^(\d{1,3})[^\d\s-]{1,2}-(\d{1,2})[^\d\s-]{0,2}-(\d{1,3})(["'\u2019\u201D\u00B4`]{1,3})([SNEW5$8])?$/);
+    if(m) t=m[1]+'\u00B0-'+m[2]+"'-"+m[3]+'"'+(m[5]?(/[NEW]/.test(m[5])?m[5]:'S'):'');
+    if(/^[5$8]$/.test(t) && p && (!n||/^\/$/.test(n.text)) &&
+       (/^\d{1,2}\.\d{3}['"\u2019\u201D]?$/.test(p.text) || /^\d{1,3}\u00B0-\d{1,2}'-\d{1,3}"$/.test(p.text))) t='S';   // huruf S terbaca 5/$/8
     w.text=t;
   }
 }
@@ -472,7 +478,7 @@ async function processPage(page,worker,idx,total,say){
 
   // OCR tabel per sel
   if(tb){
-    const cells=gridCells(tb);
+    const cells=gridCells(tb); let subId=0;
     const meanConf=a=>a.length?a.reduce((s,w)=>s+w.conf,0)/a.length:-1;
     for(let i=0;i<cells.length;i++){
       const c=cells[i]; if(c.x2-c.x1<20||c.y2-c.y1<10) continue;
@@ -491,6 +497,34 @@ async function processPage(page,worker,idx,total,say){
         if(best && best.m>=70) break;
       }
       if(best) best.ws.forEach(w=>{ w.cell={r:c.r,c:c.c,rowTop:c.rowTop-yb0}; words.push(w); });
+      // pemulihan: sel tinggi yang dilintasi garis sekat baris (mis. kolom nomor/tanggal saat kolom rute digabung)
+      // OCR sel utuh sering melewatkan baris yang terhimpit garis. Baca per sub-baris, hanya untuk sub-baris yang masih kosong.
+      {
+        const cw0=c.x2-c.x1, inner=[];
+        tb.hs.filter(h=>h.y>c.y1+12&&h.y<c.y2-12&&Math.min(h.x2,c.x2)-Math.max(h.x1,c.x1)>=cw0*0.6).map(h=>h.y).sort((u,v)=>u-v)
+          .forEach(y=>{ if(!inner.length||y-inner[inner.length-1]>8) inner.push(y); });
+        if(inner.length){
+          const edges=[c.y1,...inner,c.y2], mine=words.filter(w=>w.cell&&w.cell.r===c.r&&w.cell.c===c.c);
+          const numeric=mine.length>0&&mine.every(w=>/^\(?\d{1,2}[.)]?$/.test(w.text));
+          for(let q=0;q<edges.length-1;q++){
+            const ya=Math.round(edges[q])+6, yb=Math.round(edges[q+1])-6, xa=c.x1+6, xe=c.x2-6, cw=xe-xa, ch=yb-ya;
+            if(cw<10||ch<12) continue;
+            if(mine.some(w=>{ const cy=yb0+w.y+w.h/2; return cy>=ya&&cy<=yb; })) continue;
+            const sc=2, lc=newCanvas(cw*sc+24,ch*sc+24), g=lc.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,lc.width,lc.height);
+            g.drawImage(cv,xa,ya,cw,ch,12,12,cw*sc,ch*sc);
+            await worker.setParameters({tessedit_pageseg_mode:'7',tessedit_char_whitelist:numeric?'0123456789':''});
+            const nw=parseTsv((await worker.recognize(lc,{},{tsv:true})).data.tsv).filter(w=>!/^[|\[\]{}]+$/.test(w.text));
+            await worker.setParameters({tessedit_char_whitelist:''});
+            if(!nw.length) continue;
+            const mc=nw.reduce((u,w)=>u+w.conf,0)/nw.length;
+            if(!numeric&&mc<50) continue;
+            subId++;
+            nw.forEach(w=>{ w.x=(w.x-12)/sc+xa-xb0; w.y=(w.y-12)/sc+ya-yb0; w.w/=sc; w.h/=sc; w.b=9000+subId; w.p=1; w.l=1;
+              if(numeric) w.conf=Math.max(w.conf,90);
+              w.cell={r:c.r,c:c.c,rowTop:c.rowTop-yb0}; words.push(w); });
+          }
+        }
+      }
     }
     await worker.setParameters({tessedit_pageseg_mode:'3'});
   }
