@@ -10,8 +10,36 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="assets/shell.css?v=8">
+<style>
+  html.locked body > main,
+  html.locked body > section,
+  html.locked .bar-show { display: none !important; }
+  #gate { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center;
+          background: #0b3a5b; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; padding: 16px; }
+  #gate form { background: #fff; width: 100%; max-width: 360px; padding: 28px 24px; border-radius: 16px;
+               box-shadow: 0 10px 40px rgba(0,0,0,.3); text-align: center; }
+  #gate h1 { font-size: 18px; margin: 0 0 4px; color: #0b3a5b; }
+  #gate p { font-size: 13px; color: #667; margin: 0 0 16px; }
+  #gate input { width: 100%; box-sizing: border-box; padding: 12px 14px; font: inherit;
+                border: 1px solid #c8d3dc; border-radius: 10px; margin-bottom: 10px; }
+  #gate button { width: 100%; padding: 12px; font: inherit; font-weight: 700; color: #fff;
+                 background: #0b6fa8; border: 0; border-radius: 10px; cursor: pointer; }
+  #gate .err { color: #c0392b; font-size: 13px; min-height: 18px; margin-top: 8px; }
+</style>
+<script>document.documentElement.classList.add('locked');</script>
 </head>
 <body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <form id="gate-form" autocomplete="off">
+    <h1>Maritime Information Workspace</h1>
+    <p>Masukkan password untuk melanjutkan</p>
+    <input type="password" id="gate-pass" placeholder="Password" autofocus required>
+    <button type="submit">Masuk</button>
+    <div class="err" id="gate-err" role="alert"></div>
+  </form>
+</div>
 
 <!-- BERANDA -->
 <main id="view-home" class="view" aria-labelledby="home-title">
@@ -176,6 +204,45 @@
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
 </button>
 
-<script src="assets/shell.js?v=8"></script>
+<script>
+(function () {
+  var HASH = "ae5befed0070c213ee6377b7dbcc54124beebffe37b8b29935503fd98fee3f10";   // hash SHA-256 dari password kamu
+  var KEY  = "mw_auth";
+
+  function sha256(str) {
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+      return Array.from(new Uint8Array(buf)).map(function (b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    });
+  }
+
+  function unlock() {
+    var g = document.getElementById('gate');
+    if (g) g.remove();
+    document.documentElement.classList.remove('locked');
+    var s = document.createElement('script');
+    s.src = 'assets/shell.js?v=8';
+    document.body.appendChild(s);
+  }
+
+  if (sessionStorage.getItem(KEY) === HASH) { unlock(); return; }
+
+  document.getElementById('gate-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var input = document.getElementById('gate-pass');
+    sha256(input.value).then(function (h) {
+      if (h === HASH) {
+        sessionStorage.setItem(KEY, HASH);
+        unlock();
+      } else {
+        document.getElementById('gate-err').textContent = 'Password salah.';
+        input.value = '';
+        input.focus();
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
