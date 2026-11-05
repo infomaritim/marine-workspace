@@ -2064,6 +2064,28 @@ width: 100%;
 
       </button>
 
+      <button
+        id="menuLogbookBencana"
+        class="sidebar-menu-button"
+        title="Logbook Kejadian Bencana Dan Insiden Maritim"
+        onclick="showWorkspace('bencanaMaritim')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h8"/><path d="M8 11h6"/></svg></span>
+        <span class="sidebar-menu-text">Logbook Kejadian Bencana Dan Insiden Maritim</span>
+
+      </button>
+
+      <button
+        id="menuLogbookIsu"
+        class="sidebar-menu-button"
+        title="Logbook Isu Kemaritiman"
+        onclick="showWorkspace('isuMaritim')">
+
+        <span class="sidebar-menu-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h8"/><path d="M8 11h6"/></svg></span>
+        <span class="sidebar-menu-text">Logbook Isu Kemaritiman</span>
+
+      </button>
+
       <div class="sidebar-section-title">Rekap &amp; Alat</div>
 
       <button
@@ -2696,6 +2718,16 @@ const MONITORING_CONFIG = {
     key: 'rob',
     title: 'Logbook Kejadian ROB'
   },
+  bencanaMaritim: {
+    key: 'bencanaMaritim',
+    title: 'Logbook Monitoring Harian Kejadian Bencana Dan Insiden Maritim',
+    direct: true
+  },
+  isuMaritim: {
+    key: 'isuMaritim',
+    title: 'Logbook Monitoring Isu Kemaritiman',
+    direct: true
+  },
   rekapKapal: {
     key: 'rekapKapal',
     title: 'Rekap Kec. Kapal',
@@ -2734,6 +2766,12 @@ const PJ_FOD_OPTIONS = [
 
 const BRIEFING_URL =
   'https://docs.google.com/presentation/d/1rt07WxfFkarKWsxxVSmUMa9XclEp4lVFe6PXQF7qSEg/edit?slide=id.g3b1c0bfed47_26_0#slide=id.g3b1c0bfed47_26_0';
+
+const LOGBOOK_BENCANA_URL =
+  'https://docs.google.com/spreadsheets/d/11uRlrEfIKaVPuYHXLYJ1ISZ11pM_Jw5txdXgYUxhy7A/edit?usp=sharing';
+
+const LOGBOOK_ISU_URL =
+  'https://docs.google.com/spreadsheets/d/1W3Jv7D15MSFIkUEpYRIcV8w4imnvXkc3cNv9N15Nlzg/edit?usp=sharing';
 
 const REKAP_KAPAL_DIRECT_URL =
   'https://docs.google.com/spreadsheets/d/1N2Bxn0ALkO9NaDU1ZMuxtZ11RlBsaq-5BL0yACWUfC0/edit?usp=sharing';
@@ -2776,6 +2814,12 @@ function showWorkspace(workspace) {
   const rekapKapalMenu =
     document.getElementById('menuRekapKapal');
 
+  const bencanaMenu =
+    document.getElementById('menuLogbookBencana');
+
+  const isuMenu =
+    document.getElementById('menuLogbookIsu');
+
 
   const swhGeneratorMenu =
     document.getElementById('menuSwhGenerator');
@@ -2783,7 +2827,7 @@ function showWorkspace(workspace) {
   const briefingMenu =
     document.getElementById('menuBriefing');
 
-  [taskMenu, synergieMenu, uptMenu, mfstudioMenu, diseminasiMenu, robMenu, rekapKapalMenu, swhGeneratorMenu, briefingMenu]
+  [taskMenu, synergieMenu, uptMenu, mfstudioMenu, diseminasiMenu, robMenu, bencanaMenu, isuMenu, rekapKapalMenu, swhGeneratorMenu, briefingMenu]
     .forEach(function(button) {
       if (button) {
         button.classList.remove('active');
@@ -2830,7 +2874,9 @@ function showWorkspace(workspace) {
 
   monitoringWorkspace.classList.toggle(
     'rekap-direct',
-    workspace === 'rekapKapal'
+    (workspace === 'rekapKapal' ||
+     workspace === 'bencanaMaritim' ||
+     workspace === 'isuMaritim')
   );
 
   monitoringWorkspace.classList.toggle(
@@ -2851,6 +2897,8 @@ function showWorkspace(workspace) {
   if (refreshButton) {
     refreshButton.style.display =
       (workspace === 'rekapKapal' ||
+       workspace === 'bencanaMaritim' ||
+       workspace === 'isuMaritim' ||
        workspace === 'swhGenerator') ? 'none' : 'inline-block';
   }
 
@@ -2870,6 +2918,10 @@ function showWorkspace(workspace) {
     diseminasiMenu.classList.add('active');
   } else if (workspace === 'rob') {
     robMenu.classList.add('active');
+  } else if (workspace === 'bencanaMaritim') {
+    bencanaMenu.classList.add('active');
+  } else if (workspace === 'isuMaritim') {
+    isuMenu.classList.add('active');
   } else if (workspace === 'rekapKapal') {
     rekapKapalMenu.classList.add('active');
   } else if (workspace === 'marineGuidance') {
@@ -2904,7 +2956,9 @@ let monitoringPrefetchStarted = false;
 const MONITORING_DIRECT_URLS = {
   swhGenerator: SWH_GENERATOR_URL,
   marineGuidance: MARINE_GUIDANCE_EMBED_URL,
-  rekapKapal: REKAP_KAPAL_DIRECT_URL
+  rekapKapal: REKAP_KAPAL_DIRECT_URL,
+  bencanaMaritim: LOGBOOK_BENCANA_URL,
+  isuMaritim: LOGBOOK_ISU_URL
 };
 
 
@@ -3170,6 +3224,8 @@ function refreshMonitoring() {
   if (
     currentWorkspace === 'task' ||
     currentWorkspace === 'rekapKapal' ||
+    currentWorkspace === 'bencanaMaritim' ||
+    currentWorkspace === 'isuMaritim' ||
     currentWorkspace === 'swhGenerator'
   ) {
     return;
