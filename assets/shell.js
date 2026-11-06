@@ -8,7 +8,7 @@
     { id: 'skk',   label: 'SKK Migas',        src: 'apps/skk-migas.html' }
   ];
   var TOOLS = {
-    'format-lama': { label: 'Format Lama PTSP', src: 'apps/format-lama-ptsp.html' },
+    'format-lama': { label: 'Format Lama PTSP', src: 'apps/format-baru-ptsp.html' },
     'convert-pdf': { label: 'Convert PDF Scan', src: 'apps/convert-pdf-scan.html' },
     'satelit-ptsp': { label: 'Satelit PTSP', src: 'apps/satelit-ptsp.html' }
   };
