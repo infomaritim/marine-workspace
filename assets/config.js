@@ -8,5 +8,5 @@ window.MIW_CONFIG = {
   kapal: 'https://script.google.com/macros/s/AKfycbxiFgyVp-f-2zjRc_hp3G6AspCQAhgTRPRDflGQKRrNoZva7Mp_vBXM0RDo6eJK1fxTtw/exec',  // Dashboard Kecelakaan Kapal
   rob:   'https://script.google.com/macros/s/AKfycbyxkeGreB61pENneXCVbbgnUCgTtz0-OW51LQqiK9xDRrA-DI0kDJLad1mN1Q9hEZjF4Q/exec',        // Dashboard Banjir Rob
   ptsp:  'https://script.google.com/macros/s/AKfycbza_2GFCEXodnXHOW_qKXtf5n4Cs0nsaooxPeHgySXpZB_kXb6cRMTewKBAQ50fK81WPw/exec',       // Dashboard Kinerja PTSP
-  skk:   'https://script.google.com/macros/s/AKfycbwtqkPYBdNUDVLYQ_gM-VBNhAda3P6-oyOlFHGIgwSSg2tgoY6IyikyvCPzP7rb-pRZ/exec'   // Dashboard SKK Migas
+  skk:   'https://script.google.com/macros/s/AKfycbyHgJRAflm449sJU8I2tBaJQla5NuyzGO96ahrUwd0EfqPbwzFD-77-sWI4ocAwErR25Q/exec'   // Dashboard SKK Migas
 };
