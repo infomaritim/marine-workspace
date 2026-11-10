@@ -5,7 +5,7 @@
     { id: 'kapal', label: 'Kecelakaan Kapal', src: 'apps/kecelakaan-kapal.html' },
     { id: 'rob',   label: 'Banjir Rob',       src: 'apps/banjir-rob.html' },
     { id: 'ptsp',  label: 'PTSP',             src: 'apps/ptsp.html' },
-    { id: 'skk',   label: 'SKK Migas',        src: 'apps/skk-migas.html' }
+    { id: 'skk',   label: 'SKK Migas',        src: 'apps/skk-migas-new.html' }
   ];
   var TOOLS = {
     'format-lama': { label: 'Format Lama PTSP', src: 'apps/format-baru-ptsp.html' },
