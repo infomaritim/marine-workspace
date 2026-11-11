@@ -12,7 +12,7 @@
     'convert-pdf': { label: 'Convert PDF Scan', src: 'apps/convert-pdf-scan.html' },
     'satelit-ptsp': { label: 'Satelit PTSP', src: 'apps/satelit-ptsp.html' }
   };
-  var V = '10';
+  var V = '11';
   function bust(u) { return u + (u.indexOf('?') < 0 ? '?' : '&') + 'v=' + V; }
   var ROUTINE = { task: { label: 'Task Management', src: 'apps/fod.html' } };
 
@@ -68,7 +68,10 @@
     f.dataset.id = id;
     f.title = title;
     f.setAttribute('allow', 'clipboard-write; fullscreen');
-    f.addEventListener('load', function () { loader.remove(); });
+    f.addEventListener('load', function () {
+      loader.remove();
+      try { f.contentWindow.document.addEventListener('keydown', onKey); } catch (err) { /* lintas-origin: abaikan */ }
+    });
     stage.appendChild(loader);
     stage.appendChild(f);
     f.src = bust(src);
@@ -92,8 +95,8 @@
     if (location.hash.replace(/^#/, '') === (h || '')) return;
     var url = h ? '#' + h : location.pathname + location.search;
     try {
-      if (replace) history.replaceState(null, '', url);
-      else history.pushState(null, '', url);
+      if (replace) history.replaceState(history.state, '', url);
+      else history.pushState({ miw: 1 }, '', url);
     } catch (err) { /* abaikan */ }
   }
 
@@ -130,7 +133,7 @@
     rBack.hidden = true;
     rTitle.textContent = 'Operational Routine';
   }
-  function openRoutine() { show('routine'); resetRoutine(); }
+  function openRoutine() { show('routine'); resetRoutine(); colorRows(); }
   function openRoutineItem(key) {
     var t = ROUTINE[key];
     rMenu.hidden = true;
@@ -141,7 +144,7 @@
     frameFor(stages.routine, key, t.src, t.label);
     showOnly(stages.routine, key);
   }
-  rBack.addEventListener('click', function () { resetRoutine(); setHash('routine'); });
+  rBack.addEventListener('click', function () { resetRoutine(); setHash('routine'); colorRows(); });
 
   /* Dashboard */
   function openDashboard(id) {
@@ -229,8 +232,69 @@
   /* tombol Back / Forward browser */
   window.addEventListener('popstate', restoreFromHash);
 
+
+  /* ---------- warna kotak Operational Routine per baris ---------- */
+  /* Jumlah kolom bergantung pada lebar layar, jadi baris dihitung ulang setiap ukuran berubah. */
+  function colorRows() {
+    if (rMenu.hidden || !rMenu.children.length) return;
+    var cols = getComputedStyle(rMenu).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+    Array.prototype.forEach.call(rMenu.children, function (el, i) {
+      el.dataset.row = String(Math.floor(i / cols) % 4);
+    });
+  }
+  window.addEventListener('resize', colorRows);
+  if (window.ResizeObserver) new ResizeObserver(colorRows).observe(rMenu);
+
+  /* ---------- tema terang / gelap ---------- */
+  var THEME_KEY = 'miw-theme';
+  function currentTheme() { return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; }
+  function syncThemeButtons() {
+    document.querySelectorAll('[data-theme-set]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.themeSet === currentTheme()));
+    });
+  }
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem(THEME_KEY, t); } catch (err) { /* abaikan */ }
+    syncThemeButtons();
+  }
+  syncThemeButtons();
+
+  /* ---------- tombol Backspace = kembali ke laman sebelumnya ---------- */
+  function isEditable(el) {
+    if (!el || !el.tagName) return false;
+    var tag = el.tagName;
+    if (tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable) return true;
+    if (tag === 'INPUT') {
+      var type = (el.type || 'text').toLowerCase();
+      return ['button', 'checkbox', 'radio', 'submit', 'reset', 'file', 'image', 'range', 'color'].indexOf(type) < 0;
+    }
+    return false;
+  }
+  /* Dipakai bila riwayat browser tidak punya laman sebelumnya di situs ini (mis. dibuka langsung lewat link #routine/task). */
+  function goUp() {
+    if (current === 'routine' && !stages.routine.hidden) { resetRoutine(); setHash('routine', true); colorRows(); return; }
+    if (current === 'layanan' && !stages.layanan.hidden) { resetLayanan(); setHash('layanan', true); return; }
+    show('home', true);
+    try { history.replaceState({ miw: 1 }, '', location.pathname + location.search); } catch (err) { /* abaikan */ }
+  }
+  function goBack() {
+    if (current === 'home') return;
+    if (history.state && history.state.miw) history.back(); else goUp();
+  }
+  function onKey(e) {
+    if (e.key !== 'Backspace' || e.defaultPrevented) return;
+    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+    if (isEditable(e.target)) return;      /* sedang mengetik: Backspace tetap menghapus huruf */
+    e.preventDefault();
+    goBack();
+  }
+  document.addEventListener('keydown', onKey);
+
   /* ---------- event ---------- */
   document.addEventListener('click', function (e) {
+    var th = e.target.closest('[data-theme-set]');
+    if (th) { setTheme(th.dataset.themeSet); return; }
     var bar = e.target.closest('[data-bar]');
     if (bar) { setBar(bar.dataset.bar === 'hide'); return; }
     var go = e.target.closest('[data-go]');
