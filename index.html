@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="assets/shell.css?v=9">
+<link rel="stylesheet" href="assets/shell.css?v=10">
 <style>
   html.locked body > main,
   html.locked body > section,
@@ -33,102 +33,6 @@
   html[data-theme="dark"] #logout { background: rgba(18,33,46,.92); color: #CFE3F5; border-color: #24384A; }
   #logout:hover { background: #fff; color: #c0392b; border-color: #c0392b; }
   #logout svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-</style>
-
-<style id="tweaks-v10">
-  /* ===== 1. Operational Routine: kartu horizontal, pas dengan isi, terbaca jelas ===== */
-  #routine-menu.menu-routine {
-    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: clamp(10px, 1.8vh, 16px); align-content: start; align-items: stretch;
-    width: 100%; max-width: 1240px; margin: 0 auto;
-    padding: clamp(16px, 4vh, 40px) clamp(14px, 3vw, 32px); box-sizing: border-box;
-  }
-  #routine-menu.menu-routine[hidden] { display: none !important; }
-  #routine-menu .tool {
-    --c: #2563EB; --cbg: #DBE8FF;
-    display: grid !important; grid-template-columns: auto 1fr; grid-template-rows: auto auto;
-    column-gap: 14px; row-gap: 2px; align-items: center; align-content: center;
-    min-height: 0; height: auto; margin: 0; box-sizing: border-box; text-align: left;
-    padding: clamp(12px, 2.2vh, 20px) 16px;
-    border-left: 5px solid var(--c) !important;
-  }
-  #routine-menu .tool .entry-icon {
-    grid-row: 1 / span 2; grid-column: 1; margin: 0; flex: none;
-    width: 46px; height: 46px; border-radius: 12px;
-    display: inline-grid; place-items: center;
-    background: var(--cbg) !important; color: var(--c) !important;
-  }
-  #routine-menu .tool .entry-icon svg { width: 24px; height: 24px; stroke: currentColor; }
-  #routine-menu .tool .entry-title { grid-column: 2; grid-row: 1; font-size: 16.5px; line-height: 1.25; align-self: end; }
-  #routine-menu .tool .entry-desc  { grid-column: 2; grid-row: 2; font-size: 13px; line-height: 1.35; margin: 0; align-self: start; }
-  #routine-menu .tool:hover { border-color: var(--c) !important; box-shadow: 0 6px 18px color-mix(in srgb, var(--c) 28%, transparent) !important; }
-
-  /* warna per baris (desktop: 4 kolom = 3 baris) */
-  #routine-menu .tool:nth-child(n+1):nth-child(-n+4)  { --c: #2563EB; --cbg: #DBE8FF; } /* biru */
-  #routine-menu .tool:nth-child(n+5):nth-child(-n+8)  { --c: #E8590C; --cbg: #FFE4D2; } /* oranye */
-  #routine-menu .tool:nth-child(n+9):nth-child(-n+12) { --c: #9333EA; --cbg: #EEDDFD; } /* ungu */
-  html[data-theme="dark"] #routine-menu .tool:nth-child(n+1):nth-child(-n+4)  { --c: #6EA8FF; --cbg: rgba(110,168,255,.18); }
-  html[data-theme="dark"] #routine-menu .tool:nth-child(n+5):nth-child(-n+8)  { --c: #FF9A5C; --cbg: rgba(255,154,92,.18); }
-  html[data-theme="dark"] #routine-menu .tool:nth-child(n+9):nth-child(-n+12) { --c: #C48BFF; --cbg: rgba(196,139,255,.18); }
-
-  /* tablet: 3 kolom = 4 baris (biru, oranye, ungu, merah muda) */
-  @media (max-width: 960px) {
-    #routine-menu.menu-routine { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    #routine-menu .tool:nth-child(n+1):nth-child(-n+3)   { --c: #2563EB; --cbg: #DBE8FF; }
-    #routine-menu .tool:nth-child(n+4):nth-child(-n+6)   { --c: #E8590C; --cbg: #FFE4D2; }
-    #routine-menu .tool:nth-child(n+7):nth-child(-n+9)   { --c: #9333EA; --cbg: #EEDDFD; }
-    #routine-menu .tool:nth-child(n+10):nth-child(-n+12) { --c: #DB2777; --cbg: #FDDDEB; }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+1):nth-child(-n+3)   { --c: #6EA8FF; --cbg: rgba(110,168,255,.18); }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+4):nth-child(-n+6)   { --c: #FF9A5C; --cbg: rgba(255,154,92,.18); }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+7):nth-child(-n+9)   { --c: #C48BFF; --cbg: rgba(196,139,255,.18); }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+10):nth-child(-n+12) { --c: #FF7FB5; --cbg: rgba(255,127,181,.18); }
-  }
-  /* HP: 2 kolom = 6 baris (biru, oranye, ungu, merah muda, biru, oranye) */
-  @media (max-width: 620px) {
-    #routine-menu.menu-routine { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px; gap: 8px; }
-    #routine-menu .tool { padding: 10px 10px; column-gap: 10px; }
-    #routine-menu .tool .entry-icon { width: 38px; height: 38px; }
-    #routine-menu .tool .entry-icon svg { width: 20px; height: 20px; }
-    #routine-menu .tool .entry-title { font-size: 14px; }
-    #routine-menu .tool .entry-desc  { font-size: 11.5px; }
-    #routine-menu .tool:nth-child(n+1):nth-child(-n+2)   { --c: #2563EB; --cbg: #DBE8FF; }
-    #routine-menu .tool:nth-child(n+3):nth-child(-n+4)   { --c: #E8590C; --cbg: #FFE4D2; }
-    #routine-menu .tool:nth-child(n+5):nth-child(-n+6)   { --c: #9333EA; --cbg: #EEDDFD; }
-    #routine-menu .tool:nth-child(n+7):nth-child(-n+8)   { --c: #DB2777; --cbg: #FDDDEB; }
-    #routine-menu .tool:nth-child(n+9):nth-child(-n+10)  { --c: #2563EB; --cbg: #DBE8FF; }
-    #routine-menu .tool:nth-child(n+11):nth-child(-n+12) { --c: #E8590C; --cbg: #FFE4D2; }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+1):nth-child(-n+2)   { --c: #6EA8FF; --cbg: rgba(110,168,255,.18); }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+3):nth-child(-n+4)   { --c: #FF9A5C; --cbg: rgba(255,154,92,.18); }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+5):nth-child(-n+6)   { --c: #C48BFF; --cbg: rgba(196,139,255,.18); }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+7):nth-child(-n+8)   { --c: #FF7FB5; --cbg: rgba(255,127,181,.18); }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+9):nth-child(-n+10)  { --c: #6EA8FF; --cbg: rgba(110,168,255,.18); }
-    html[data-theme="dark"] #routine-menu .tool:nth-child(n+11):nth-child(-n+12) { --c: #FF9A5C; --cbg: rgba(255,154,92,.18); }
-  }
-
-  /* ===== 3. Tombol tema: icon saja, interaktif ===== */
-  .theme-switch { gap: 4px; padding: 4px; }
-  .theme-switch button {
-    width: 34px; height: 34px; padding: 0; gap: 0; border-radius: 50%;
-    display: inline-grid; place-items: center; cursor: pointer;
-    transition: transform .18s ease, background-color .2s ease, box-shadow .2s ease, color .2s ease;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .theme-switch button span { display: none !important; }
-  .theme-switch button svg {
-    width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2;
-    stroke-linecap: round; stroke-linejoin: round;
-    transition: transform .45s cubic-bezier(.34, 1.56, .64, 1);
-  }
-  .theme-switch button:hover { transform: scale(1.12); background: rgba(255, 255, 255, .22); }
-  .theme-switch button:hover svg { transform: rotate(25deg); }
-  .theme-switch button:active { transform: scale(.88); }
-  .theme-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-  html[data-theme="light"] .theme-switch [data-theme-set="light"],
-  html[data-theme="dark"]  .theme-switch [data-theme-set="dark"] {
-    background: #fff; color: #0b3a5b; box-shadow: 0 2px 10px rgba(0, 0, 0, .28);
-  }
-  html[data-theme="light"] .theme-switch [data-theme-set="light"] svg { transform: rotate(90deg); }
-  html[data-theme="dark"]  .theme-switch [data-theme-set="dark"]  svg { transform: rotate(-20deg); }
 </style>
 <script>
 document.documentElement.classList.add('locked');
@@ -360,7 +264,7 @@ document.documentElement.classList.add('locked');
     if (g) g.remove();
     document.documentElement.classList.remove('locked');
     var s = document.createElement('script');
-    s.src = 'assets/shell.js?v=9';
+    s.src = 'assets/shell.js?v=10';
     document.body.appendChild(s);
   }
 
