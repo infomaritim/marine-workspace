@@ -34,6 +34,63 @@
   #logout:hover { background: #fff; color: #c0392b; border-color: #c0392b; }
   #logout svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 </style>
+
+<style id="tweaks-v10">
+  /* ===== 1. Operational Routine: ringkas, semua menu terlihat tanpa scroll ===== */
+  #routine-menu.menu-routine {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(8px, 1.6vh, 14px); align-content: start;
+    width: 100%; max-width: 940px; margin: 0 auto;
+    padding: clamp(12px, 3vh, 28px) 16px; box-sizing: border-box;
+  }
+  #routine-menu.menu-routine[hidden] { display: none !important; }
+  #routine-menu .tool {
+    min-height: 0; height: auto; margin: 0; box-sizing: border-box;
+    padding: clamp(8px, 1.6vh, 14px) 12px; gap: 3px;
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
+  }
+  #routine-menu .tool .entry-icon {
+    width: clamp(30px, 5vh, 38px); height: clamp(30px, 5vh, 38px); margin: 0 0 4px; flex: none;
+    display: inline-grid; place-items: center;
+  }
+  #routine-menu .tool .entry-icon svg { width: 56%; height: 56%; }
+  #routine-menu .tool .entry-title { font-size: 14px; line-height: 1.25; }
+  #routine-menu .tool .entry-desc  { font-size: 11.5px; line-height: 1.35; margin: 0;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  @media (max-width: 900px) { #routine-menu.menu-routine { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { #routine-menu.menu-routine { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px; } }
+
+  /* ===== 2. Warna Task Management dibedakan dari biru (teal/hijau -> oranye) ===== */
+  #routine-menu .tool.tool-teal { border-color: rgba(234, 120, 12, .55) !important; }
+  #routine-menu .tool.tool-teal .entry-icon { background: #FFE8CC !important; color: #C2570C !important; }
+  #routine-menu .tool.tool-teal:hover { border-color: #EA780C !important; box-shadow: 0 6px 18px rgba(234, 120, 12, .25) !important; }
+  html[data-theme="dark"] #routine-menu .tool.tool-teal .entry-icon { background: rgba(251, 146, 60, .18) !important; color: #FDBA74 !important; }
+
+  /* ===== 3. Tombol tema: icon saja, interaktif ===== */
+  .theme-switch { gap: 4px; padding: 4px; }
+  .theme-switch button {
+    width: 34px; height: 34px; padding: 0; gap: 0; border-radius: 50%;
+    display: inline-grid; place-items: center; cursor: pointer;
+    transition: transform .18s ease, background-color .2s ease, box-shadow .2s ease, color .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-switch button span { display: none !important; }
+  .theme-switch button svg {
+    width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+    transition: transform .45s cubic-bezier(.34, 1.56, .64, 1);
+  }
+  .theme-switch button:hover { transform: scale(1.12); background: rgba(255, 255, 255, .22); }
+  .theme-switch button:hover svg { transform: rotate(25deg); }
+  .theme-switch button:active { transform: scale(.88); }
+  .theme-switch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  html[data-theme="light"] .theme-switch [data-theme-set="light"],
+  html[data-theme="dark"]  .theme-switch [data-theme-set="dark"] {
+    background: #fff; color: #0b3a5b; box-shadow: 0 2px 10px rgba(0, 0, 0, .28);
+  }
+  html[data-theme="light"] .theme-switch [data-theme-set="light"] svg { transform: rotate(90deg); }
+  html[data-theme="dark"]  .theme-switch [data-theme-set="dark"]  svg { transform: rotate(-20deg); }
+</style>
 <script>
 document.documentElement.classList.add('locked');
 (function () {
