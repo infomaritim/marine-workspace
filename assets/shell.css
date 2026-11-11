@@ -118,38 +118,44 @@ body.in-app.bar-hidden .bar-show{display:grid}
 a.btn-ghost{text-decoration:none}
 
 
-/* ---------- pilihan tema di beranda ---------- */
-.theme-switch{position:absolute;top:clamp(12px,2.4vh,22px);right:clamp(14px,2vw,28px);z-index:2;display:inline-flex;padding:3px;gap:2px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;backdrop-filter:blur(4px)}
-.theme-switch button{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:#fff;padding:6px 12px;border-radius:999px;font-weight:600;font-size:.82rem;opacity:.85}
-.theme-switch button svg{width:1rem;height:1rem}
-.theme-switch button:hover{opacity:1;background:rgba(255,255,255,.12)}
-.theme-switch button[aria-pressed="true"]{background:#fff;color:var(--navy);opacity:1}
-@media (max-width:560px){.theme-switch button span{display:none}.theme-switch button{padding:7px 9px}}
+/* ---------- pilihan tema di beranda (icon saja) ---------- */
+.theme-switch{position:absolute;top:clamp(12px,2.4vh,22px);right:clamp(14px,2vw,28px);z-index:2;display:inline-flex;padding:4px;gap:4px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;backdrop-filter:blur(4px)}
+.theme-switch button{display:inline-grid;place-items:center;width:2.2rem;height:2.2rem;padding:0;border:0;background:transparent;color:#fff;border-radius:50%;opacity:.8;-webkit-tap-highlight-color:transparent;transition:transform .18s ease,background-color .2s ease,box-shadow .2s ease,opacity .2s ease,color .2s ease}
+.theme-switch button span{display:none}
+.theme-switch button svg{width:1.15rem;height:1.15rem;transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+.theme-switch button:hover{opacity:1;background:rgba(255,255,255,.2);transform:scale(1.12)}
+.theme-switch button:hover svg{transform:rotate(25deg)}
+.theme-switch button:active{transform:scale(.86)}
+.theme-switch button[aria-pressed="true"]{background:#fff;color:var(--navy);opacity:1;box-shadow:0 2px 10px rgba(0,0,0,.28)}
+.theme-switch button[data-theme-set="light"][aria-pressed="true"] svg{transform:rotate(90deg)}
+.theme-switch button[data-theme-set="dark"][aria-pressed="true"] svg{transform:rotate(-20deg)}
 
-/* ---------- Operational Routine: semua kotak selalu terlihat, ukuran mengikuti layar ---------- */
+/* ---------- Operational Routine: semua kotak terlihat saat dibuka, kotak pas dengan isinya ---------- */
 .menu-routine{
-  max-width:none;margin:0;
-  padding:clamp(12px,2.2vh,30px) clamp(14px,2vw,40px) clamp(46px,6.5vh,60px);   /* ruang bawah agar tombol Keluar tidak menutup kotak */
-  gap:clamp(10px,2vh,24px) clamp(10px,1.4vw,24px);
+  /* skala huruf mengikuti lebar DAN tinggi layar (mana yang lebih sempit) supaya 3 baris selalu muat */
+  font-size:clamp(13px,min(1.3vw,2.5vh),21px);
+  max-width:min(88em,100%);margin:0 auto;
+  padding:clamp(12px,2.5vh,32px) clamp(14px,2vw,40px) clamp(52px,7vh,70px);   /* ruang bawah agar tombol Keluar tidak menutup kotak */
+  gap:.9em 1em;
   grid-template-columns:repeat(4,minmax(0,1fr));
-  grid-template-rows:repeat(3,minmax(0,1fr));
-  align-content:stretch;min-height:0;overflow:auto;
-  /* skala huruf mengikuti lebar DAN tinggi layar, mana yang lebih sempit */
-  font-size:clamp(12px,min(1.25vw,2.7vh),24px);
+  grid-template-rows:none;grid-auto-rows:auto;
+  align-content:center;               /* blok menu di tengah, tidak ditarik memenuhi layar */
+  min-height:0;overflow:auto;
 }
 .menu-routine .tool{
-  min-height:0;overflow:hidden;justify-content:center;
-  padding:clamp(10px,2vh,26px) clamp(12px,1.4vw,26px);gap:.4em;
-  --tc-rgb:14,124,134;
-  border-left-width:.35em;
+  min-height:0;justify-content:center;
+  padding:.95em 1.1em;gap:.35em;
+  --tc-rgb:76,154,42;
+  border-left-width:.3em;
 }
-.menu-routine .entry-icon{width:2.8em;height:2.8em;border-radius:.7em;margin-bottom:.1em}
-.menu-routine .entry-icon svg{width:1.55em;height:1.55em}
+.menu-routine .entry-icon{width:2.6em;height:2.6em;border-radius:.7em;margin-bottom:.1em}
+.menu-routine .entry-icon svg{width:1.45em;height:1.45em}
 .menu-routine .entry-title{font-size:1.2em;line-height:1.2}
 .menu-routine .entry-desc{font-size:.92em;line-height:1.35;max-width:none}
 
-/* warna per baris (diatur lewat data-row oleh shell.js sesuai jumlah kolom yang tampil) */
-.menu-routine .tool[data-row="0"]{--tc-rgb:14,124,134}
+/* warna per baris (diatur lewat data-row oleh shell.js sesuai jumlah kolom yang tampil)
+   hijau - biru - oranye - ungu: sengaja berjauhan agar tiap baris mudah dibedakan */
+.menu-routine .tool[data-row="0"]{--tc-rgb:76,154,42}
 .menu-routine .tool[data-row="1"]{--tc-rgb:43,108,176}
 .menu-routine .tool[data-row="2"]{--tc-rgb:217,132,10}
 .menu-routine .tool[data-row="3"]{--tc-rgb:124,77,186}
@@ -159,16 +165,16 @@ a.btn-ghost{text-decoration:none}
   border-left-color:rgb(var(--tc-rgb));
   background:linear-gradient(rgba(var(--tc-rgb),.07),rgba(var(--tc-rgb),.07)),var(--surface);
 }
-html[data-theme="dark"] .menu-routine .tool[data-row="0"]{--tc-rgb:38,174,185}
+html[data-theme="dark"] .menu-routine .tool[data-row="0"]{--tc-rgb:124,198,84}
 html[data-theme="dark"] .menu-routine .tool[data-row="1"]{--tc-rgb:106,174,234}
 html[data-theme="dark"] .menu-routine .tool[data-row="2"]{--tc-rgb:240,185,74}
 html[data-theme="dark"] .menu-routine .tool[data-row="3"]{--tc-rgb:176,140,234}
 
 @media (max-width:900px){
-  .menu-routine{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}
+  .menu-routine{font-size:clamp(13px,min(1.9vw,2.3vh),19px);grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (max-width:640px),(max-height:480px){
-  .menu-routine{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(7.5em,auto);font-size:14px}
+  .menu-routine{grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;font-size:14px}
 }
 
 /* beranda: kartu menu ikut tinggi layar supaya tidak ada ruang kosong besar di PC besar */
