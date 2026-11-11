@@ -1019,58 +1019,64 @@ function layananCall() {
   return o;
 }
 
+var CACHE_KEY = 'miw_ptsp_layanan_v1';
+var FILTER_IDS = ['yearFilter', 'monthFilter', 'serviceFilter', 'searchFilter'];
+
+function cacheRead() {
+  try { return localStorage.getItem(CACHE_KEY); } catch (e) { return null; }
+}
+function cacheWrite(str) {
+  try { localStorage.setItem(CACHE_KEY, str); } catch (e) { /* kuota penuh / diblokir: abaikan */ }
+}
+
+function renderLayanan(result) {
+  allData = ((result && result.data) || []).sort(byNewest);
+
+  if (!allData.length) {
+    var info = document.querySelector('#view-layanan .page-banner-sub');
+    info.style.color = '#fecaca';
+    info.textContent = !result
+      ? 'Server mengembalikan data kosong (null). Cek Executions/log di Apps Script.'
+      : 'Server mengembalikan 0 data. Spreadsheet: ' + (result.ssName || '?') +
+        ' | Sheet ditemukan: ' + ((result.sheetsFound || []).join(', ') || '-');
+  }
+
+  /* simpan pilihan filter, bangun ulang, lalu kembalikan (dipakai saat data segar menggantikan cache) */
+  var keep = {};
+  FILTER_IDS.forEach(function (id) { var el = document.getElementById(id); if (el) keep[id] = el.value; });
+  buildFilters();
+  FILTER_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el && keep[id] != null && keep[id] !== '') el.value = keep[id];
+  });
+  applyFilters();
+
+  document.getElementById('loading').style.display = 'none';
+}
+
 function loadDashboard() {
+  /* 1) Tampilkan data tersimpan dari kunjungan sebelumnya SEGERA (bila ada). */
+  var cachedStr = cacheRead(), shownFromCache = false;
+  if (cachedStr) {
+    try { renderLayanan(JSON.parse(cachedStr)); shownFromCache = true; }
+    catch (e) { shownFromCache = false; }
+  }
 
+  /* 2) Ambil data terbaru di latar belakang; tampilan hanya diperbarui kalau datanya berubah. */
   layananCall()
-
-    .withSuccessHandler(
-      function(result) {
-
-        allData = ((result && result.data) || []).sort(byNewest);
-
-        if (!allData.length) {
-          var info = document.querySelector('#view-layanan .page-banner-sub');
-          info.style.color = '#fecaca';
-          info.textContent = !result
-            ? 'Server mengembalikan data kosong (null). Cek Executions/log di Apps Script.'
-            : 'Server mengembalikan 0 data. Spreadsheet: ' + (result.ssName || '?') +
-              ' | Sheet ditemukan: ' + ((result.sheetsFound || []).join(', ') || '-');
-        }
-
-        buildFilters();
-
-        applyFilters();
-
-        document
-          .getElementById(
-            'loading'
-          )
-          .style.display =
-            'none';
-
-      }
-    )
-
-    .withFailureHandler(
-      function(error) {
-
-        document
-          .getElementById(
-            'loading'
-          )
-          .style.display =
-            'none';
-
-        window.markViewFailed('layanan');
-        alert('Gagal memuat dashboard:\n' +
-          error.message
-        );
-
-      }
-    )
-
+    .withSuccessHandler(function (result) {
+      var fresh = JSON.stringify(result || null);
+      if (shownFromCache && fresh === cachedStr) return;
+      if (result && result.data && result.data.length) cacheWrite(fresh);
+      renderLayanan(result);
+    })
+    .withFailureHandler(function (error) {
+      document.getElementById('loading').style.display = 'none';
+      if (shownFromCache) { console.warn('Data terbaru gagal dimuat, memakai data tersimpan:', error); return; }
+      window.markViewFailed('layanan');
+      alert('Gagal memuat dashboard:\n' + error.message);
+    })
     .getLayananData();
-
 }
 
 
@@ -1079,6 +1085,12 @@ function loadDashboard() {
 ===================================================== */
 
 function buildFilters() {
+
+  ['yearFilter', 'monthFilter', 'serviceFilter'].forEach(function (id) {
+    var sel = document.getElementById(id);
+    while (sel.options.length > 1) sel.remove(sel.options.length - 1);
+  });
+
 
   const years =
     [
@@ -1198,6 +1210,8 @@ function buildFilters() {
   );
 
 
+  if (!buildFilters._bound) {
+  buildFilters._bound = true;
   yearFilter.addEventListener(
     'change',
     applyFilters
@@ -1237,7 +1251,7 @@ function buildFilters() {
       'click',
       resetFilters
     );
-
+  }
 }
 
 
