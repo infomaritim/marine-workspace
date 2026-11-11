@@ -3,6 +3,20 @@
 <head>
 <script src="../assets/config.js?v=4"></script>
 <script src="../assets/gas-bridge.js?v=8" data-app="ptsp"></script>
+<script>
+/* Mulai ambil data Layanan SEKARANG, paralel dengan pengunduhan library (jQuery, DataTables, Chart.js).
+   Hasilnya dipakai oleh loadDashboard() lewat layananCall(). */
+(function(){
+  var s = window.__layananPrefetch = { done: false, res: null, err: null, waiters: [], used: false };
+  function flush(){ s.waiters.splice(0).forEach(function(w){ s.err ? w.fail(s.err) : w.ok(s.res); }); }
+  try {
+    google.script.run
+      .withSuccessHandler(function(r){ s.done = true; s.res = r; flush(); })
+      .withFailureHandler(function(e){ s.done = true; s.err = e || new Error('Gagal memuat data'); flush(); })
+      .getLayananData();
+  } catch (e) { s.done = true; s.err = e; }
+})();
+</script>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -858,11 +872,32 @@ body{
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+/* jszip + pdfmake + vfs_fonts + buttons.html5 (sekitar 1 MB) hanya dipakai tombol Excel/PDF di tab Kinerja,
+   jadi dimuat belakangan, bukan menghalangi tampilnya dashboard Layanan. */
+window.loadExportLibs = function(){
+  if (window.__exportLibs) return window.__exportLibs;
+  var urls = [
+    'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js',
+    'https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js'
+  ];
+  window.__exportLibs = new Promise(function(resolve){
+    var left = urls.length;
+    urls.forEach(function(u){
+      var el = document.createElement('script');
+      el.src = u; el.async = false;          /* async=false: urutan eksekusi tetap sesuai daftar */
+      el.onload = el.onerror = function(){ if (--left === 0) resolve(); };
+      document.head.appendChild(el);
+    });
+  });
+  return window.__exportLibs;
+};
+/* Mulai unduh saat browser menganggur, supaya tab Kinerja tetap cepat dibuka. */
+(window.requestIdleCallback || function(f){ setTimeout(f, 3000); })(function(){ window.loadExportLibs(); });
+</script>
 
 <!-- ===================== SHELL JS ===================== -->
 <script>
@@ -906,7 +941,8 @@ body{
     b.addEventListener('click', function(){ showView(b.getAttribute('data-view')); });
   });
 
-  window.addEventListener('load', function(){ showView('layanan'); });
+  function start(){ showView('layanan'); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
 </script>
 
@@ -964,9 +1000,28 @@ const MONTHS = [
 window.LayananApp = { init: loadDashboard };
 
 
+/* Pengganti google.script.run untuk getLayananData: pakai hasil prefetch di <head> bila ada. */
+function layananCall() {
+  var ok, fail, o = {
+    withSuccessHandler: function(f){ ok = f; return o; },
+    withFailureHandler: function(f){ fail = f; return o; },
+    getLayananData: function(){
+      var s = window.__layananPrefetch;
+      if (s && !s.used) {
+        s.used = true;
+        if (s.done) { s.err ? fail(s.err) : ok(s.res); }
+        else s.waiters.push({ ok: ok, fail: fail });
+        return;
+      }
+      google.script.run.withSuccessHandler(ok).withFailureHandler(fail).getLayananData();
+    }
+  };
+  return o;
+}
+
 function loadDashboard() {
 
-  google.script.run
+  layananCall()
 
     .withSuccessHandler(
       function(result) {
@@ -2773,7 +2828,11 @@ function debounce(
     function loadKinerja() {
         document.getElementById('kpiTotal').innerText = "-";
         google.script.run
-            .withSuccessHandler(function(d) { setLoading(false); initDashboard(d); })
+            .withSuccessHandler(function(d) {
+                (window.loadExportLibs ? window.loadExportLibs() : Promise.resolve()).then(function() {
+                    setLoading(false); initDashboard(d);
+                });
+            })
             .withFailureHandler(function(err) {
                 setLoading(false);
                 window.markViewFailed('kinerja');
