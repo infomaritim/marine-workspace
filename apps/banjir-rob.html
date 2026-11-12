@@ -467,6 +467,15 @@ window.addEventListener('resize',()=>{clearTimeout(timer);timer=setTimeout(drawC
 
 $('msg').textContent='Memuat data…';initMap();
 google.script.run.withSuccessHandler(p=>{init(p);geoLoop();sync();}).withFailureHandler(e=>{$('msg').textContent='Gagal memuat: '+(e.message||e);}).getData();
+<script>
+(function () {
+  var img = document.querySelector('.header-logo');
+  if (!img) return;
+  fetch('ptsp.html').then(function (r) { return r.text(); }).then(function (t) {
+    var m = t.match(/class="brand-logo"[^>]*?src="(data:image\/[^"]+)"/);
+    if (m) img.src = m[1];
+  }).catch(function () {});
+})();
 </script>
 </body>
 </html>
