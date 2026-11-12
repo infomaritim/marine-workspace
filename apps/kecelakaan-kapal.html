@@ -2316,5 +2316,16 @@
   *Rekapitulasi kecelakaan kapal yang ditampilkan dalam dashboard ini merupakan kejadian yang telah dilakukan analisis oleh BMKG. Data yang disajikan tidak mencakup seluruh kejadian kecelakaan kapal yang terjadi di Perairan Indonesia.
 </div>
 
+<script>
+(function () {
+  var img = document.querySelector('.header-logo');
+  if (!img) return;
+  fetch('ptsp.html').then(function (r) { return r.text(); }).then(function (t) {
+    var m = t.match(/class="brand-logo"[^>]*?src="(data:image\/[^"]+)"/);
+    if (m) img.src = m[1];
+  }).catch(function () {});
+})();
+</script>
+  
 </body>
 </html>
