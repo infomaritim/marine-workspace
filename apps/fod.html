@@ -39,9 +39,7 @@ body {
 }
 
 
-/* =====================================================
-   TITLE
-   ===================================================== */
+ 
 
 .title-box {
 
@@ -59,7 +57,7 @@ body {
 
   padding: 20px 26px 22px;
 
-  /* aksen hijau BMKG di sisi bawah */
+   
   box-shadow:
     inset 0 -4px 0 #309900,
     0 8px 22px
@@ -127,9 +125,7 @@ body {
 }
 
 
-/* =====================================================
-   TOP PANEL
-   ===================================================== */
+ 
 
 .top-panel {
 
@@ -161,9 +157,7 @@ body {
 }
 
 
-/* =====================================================
-   DATE
-   ===================================================== */
+ 
 
 .date-control {
 
@@ -212,9 +206,7 @@ body {
 }
 
 
-/* =====================================================
-   PROGRESS
-   ===================================================== */
+ 
 
 .progress-wrapper {
   min-width: 0;
@@ -292,9 +284,7 @@ body {
 }
 
 
-/* =====================================================
-   SAVE
-   ===================================================== */
+ 
 
 .save-status {
 
@@ -326,9 +316,7 @@ body {
 }
 
 
-/* =====================================================
-   REMINDER
-   ===================================================== */
+ 
 
 .reminder-box {
 
@@ -439,9 +427,7 @@ body {
 }
 
 
-/* =====================================================
-   FILTER
-   ===================================================== */
+ 
 
 .filter-row {
 
@@ -496,9 +482,7 @@ body {
 }
 
 
-/* =====================================================
-   LOADING
-   ===================================================== */
+ 
 
 .loading {
 
@@ -546,9 +530,7 @@ body {
 }
 
 
-/* =====================================================
-   GRID
-   ===================================================== */
+ 
 
 .dashboard-grid {
 
@@ -580,9 +562,7 @@ body {
   min-width: 0;
 }
 
-/* =====================================================
-   COLORS
-   ===================================================== */
+ 
 
 .ps1 {
   background: #f0f7ff;
@@ -620,9 +600,7 @@ body {
 }
 
 
-/* =====================================================
-   CARD HEADER
-   ===================================================== */
+ 
 
 .card-header {
 
@@ -736,9 +714,7 @@ body {
   max-width: 120px;
 }
 
-/* =====================================================
-   TASK
-   ===================================================== */
+ 
 
 .task-head {
 
@@ -808,9 +784,7 @@ body {
 }
 
 
-/* =====================================================
-   STATUS
-   ===================================================== */
+ 
 
 .status-select {
 
@@ -887,9 +861,7 @@ body {
 }
 
 
-/* =====================================================
-   TUGAS PJ
-   ===================================================== */
+ 
 
 .quote-card {
 
@@ -1004,9 +976,7 @@ body {
 
 
 
-/* =====================================================
-   MONTHLY ARCHIVE
-   ===================================================== */
+ 
 
 .archive-panel {
   margin-top: 28px;
@@ -1157,9 +1127,7 @@ body {
   margin-top: 14px;
 }
 
-/* =====================================================
-   TASK EDITOR (tambah / hapus tugas)
-   ===================================================== */
+ 
 
 .task-head.editable,
 .task-row.editable {
@@ -1342,7 +1310,7 @@ body {
   }
 }
 
-/* urutan tugas (drag) */
+ 
 
 .task-row.editable .task-name {
   cursor: grab;
@@ -1367,9 +1335,7 @@ body.task-dragging * {
   box-shadow: 0 8px 22px rgba(15,23,42,.18);
 }
 
-/* =====================================================
-   EMPTY / ERROR
-   ===================================================== */
+ 
 
 .empty {
 
@@ -1401,7 +1367,7 @@ body.task-dragging * {
 }
 
 
-/* SWH GIF Generator: tampil penuh karena UI-nya sudah compact. */
+ 
 .monitoring-workspace.swh-direct .monitoring-toolbar {
   display: none;
 }
@@ -1437,9 +1403,7 @@ body.task-dragging * {
   margin-left: 6px;
 }
 
-/* =====================================================
-   RESPONSIVE
-   ===================================================== */
+ 
 
 @media (max-width: 900px) {
 
@@ -1531,9 +1495,7 @@ width: 100%;
 }
 
 
-/* =====================================================
-   WORKSPACE SIDEBAR / MONITORING
-   ===================================================== */
+ 
 
 .app-shell {
   display: flex;
@@ -1556,7 +1518,7 @@ width: 100%;
   transition: width .20s ease, flex-basis .20s ease, padding .20s ease;
 }
 
-/* Desktop: expand automatically while the mouse is over the sidebar. */
+ 
 @media (min-width: 801px) {
   .app-sidebar:hover {
     width: 210px;
@@ -1708,7 +1670,7 @@ width: 100%;
   background: rgba(255,255,255,.13);
   border-color: rgba(255,255,255,.10);
   color: white;
-  /* penanda aktif: garis hijau BMKG di sisi kiri */
+   
   box-shadow: inset 3px 0 0 #4fb82a;
 }
 
@@ -1741,7 +1703,7 @@ width: 100%;
   stroke-linejoin: round;
 }
 
-/* Logo BMKG pada brand sidebar */
+ 
 .sidebar-logo-tile {
   display: inline-block;
   width: 34px;
@@ -1841,7 +1803,7 @@ width: 100%;
   transform-origin: top left;
 }
 
-/* MFStudio: zoom 65% */
+ 
 .monitoring-frame-mfstudio {
   width: 153.846154%;
   height: 153.846154%;
@@ -1849,12 +1811,12 @@ width: 100%;
   transform-origin: top left;
 }
 
-/* Rekap Kec. Kapal ditampilkan langsung tanpa toolbar tambahan. */
+ 
 .monitoring-workspace.rekap-direct .monitoring-toolbar {
   display: none;
 }
 
-/* Rekap Kec. Kapal: zoom tampilan 75% */
+ 
 .monitoring-workspace.rekap-direct .monitoring-frame {
   width: 133.333333%;
   height: 133.333333%;
@@ -1973,6 +1935,45 @@ width: 100%;
   }
 }
 
+
+ 
+.date-control { position: relative; }
+.date-display { cursor: pointer; user-select: none; }
+.date-display::after { content: " \25BE"; font-size: 11px; opacity: .6; }
+.cal-popup {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  width: 292px;
+  max-width: calc(100vw - 24px);
+  background: #fff;
+  border: 1px solid #d5dde7;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(15,63,103,.18);
+  padding: 12px;
+}
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.cal-title { font-weight: 800; color: #0f3f67; font-size: 14px; }
+.cal-nav { border: 1px solid #d5dde7; background: #fff; border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 16px; color: #0f3f67; }
+.cal-nav:hover { background: #eaf5fc; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dow { text-align: center; font-size: 11px; font-weight: 700; color: #64748b; padding: 4px 0; }
+.cal-day { height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 13px; border: 1px solid transparent; font-family: inherit; padding: 0; }
+.cal-day.on { background: #fff; color: #000; font-weight: 800; cursor: pointer; border-color: #cbd5e1; }
+.cal-day.on:hover { background: #eaf5fc; }
+.cal-day.off { background: #f1f5f9; color: #c3cad4; font-weight: 500; cursor: default; }
+.cal-day.today { box-shadow: 0 0 0 2px #7cc4ee inset; }
+.cal-day.on.sel { background: #0f3f67; color: #fff; border-color: #0f3f67; }
+.cal-legend { margin-top: 10px; font-size: 11px; color: #64748b; display: flex; gap: 12px; align-items: center; }
+.cal-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+.cal-legend .dot.on { background: #fff; border: 1px solid #000; }
+.cal-legend .dot.off { background: #f1f5f9; border: 1px solid #dbe2ea; }
+@media (max-width: 600px) {
+  .cal-popup { left: 0; transform: none; }
+}
 </style>
 
 </head>
@@ -2101,7 +2102,7 @@ width: 100%;
 
 
       <button
-        id="menuSwhGenerator"
+        id="menuGIFGenerator"
         class="sidebar-menu-button"
         title="GIF Generator"
         onclick="showWorkspace('swhGenerator')">
@@ -2122,9 +2123,7 @@ width: 100%;
 <div class="container">
 
 
-<!-- ==================================================
-     TITLE
-     ================================================== -->
+
 
 <div class="title-box">
 
@@ -2147,9 +2146,7 @@ width: 100%;
 </div>
 
 
-<!-- ==================================================
-     TOP
-     ================================================== -->
+
 
 <div class="top-panel">
 
@@ -2165,7 +2162,9 @@ width: 100%;
 
       <div
         id="dateDisplay"
-        class="date-display">
+        class="date-display"
+        title="Pilih tanggal"
+        onclick="toggleCalendar(event)">
         Memuat tanggal...
       </div>
 
@@ -2174,6 +2173,7 @@ width: 100%;
         onclick="changeDate(1)">
         ›
       </button>
+      <div id="calPopup" class="cal-popup" onclick="event.stopPropagation()"></div>
 
     </div>
 
@@ -2214,9 +2214,7 @@ width: 100%;
   </div>
 
 
-  <!-- ==================================================
-       REMINDER
-       ================================================== -->
+  
 
   <div class="reminder-box">
 
@@ -2255,9 +2253,7 @@ width: 100%;
 </div>
 
 
-<!-- ==================================================
-     FILTER
-     ================================================== -->
+
 
 <div class="filter-row">
 
@@ -2268,7 +2264,7 @@ width: 100%;
   <select
     id="dinasFilter"
     class="filter-select"
-    onchange="renderDashboard()">
+    onchange="onDinasFilterChange()">
 
     <option value="ALL">
       Semua Dinas
@@ -2282,7 +2278,13 @@ width: 100%;
     <option value="MA">MA</option>
     <option value="MB">MB</option>
     <option value="PJ">PJ</option>
-
+  </select>
+  <select
+    id="fodFilter"
+    class="filter-select"
+    style="display:none"
+    onchange="onFodFilterChange()">
+    <option value="ALL">Semua FoD</option>
   </select>
 
 </div>
@@ -2301,9 +2303,7 @@ width: 100%;
 </div>
 
 
-<!-- ==================================================
-     MONTHLY ARCHIVE
-     ================================================== -->
+
 
 <details class="archive-panel">
 
@@ -2363,9 +2363,7 @@ width: 100%;
 </details>
 
 
-<!-- ==================================================
-     UBAH MANUAL MASTER
-     ================================================== -->
+
 
 <details class="archive-panel master-panel">
 
@@ -2401,9 +2399,7 @@ width: 100%;
 </details>
 
 
-<!-- ==================================================
-     DELETE ARCHIVE MODAL
-     ================================================== -->
+
 
 <div
   id="archiveDeleteModal"
@@ -2494,9 +2490,7 @@ width: 100%;
 </div>
 
 
-<!-- ==================================================
-     ADD TASK MODAL
-     ================================================== -->
+
 
 <div
   id="addTaskModal"
@@ -2642,9 +2636,7 @@ width: 100%;
 </div>
 
 
-<!-- ==================================================
-     DELETE TASK MODAL
-     ================================================== -->
+
 
 <div
   id="deleteTaskModal"
@@ -2693,9 +2685,8 @@ width: 100%;
 <script>
 
 
-/* =====================================================
-   WORKSPACE NAVIGATION
-   ===================================================== */
+
+
 
 const MONITORING_CONFIG = {
   synergie: {
@@ -2783,8 +2774,8 @@ let workspaceRequestId = 0;
 
 function showWorkspace(workspace) {
 
-  // Setiap perpindahan workspace membatalkan render hasil async
-  // dari workspace sebelumnya dan mengosongkan iframe lama.
+  
+  
   const requestId = ++workspaceRequestId;
 
   const taskWorkspace =
@@ -2861,8 +2852,8 @@ function showWorkspace(workspace) {
   taskWorkspace.style.display = 'none';
   monitoringWorkspace.style.display = 'block';
 
-  // Jangan biarkan iframe workspace sebelumnya tetap tampil
-  // ketika pindah ke workspace baru.
+  
+  
   if (!monitoringLoaded[workspace]) {
     setMonitoringMessage(`
       <div class="monitoring-loading">
@@ -2932,10 +2923,11 @@ function showWorkspace(workspace) {
   document.getElementById('monitoringTitle').textContent =
     config.title;
 
-  // Tampilkan hasil yang sudah pernah dimuat untuk workspace ini.
-  // Ini penting agar saat pindah UPT <-> Synergie, iframe ikut berganti.
+  
+  
   if (monitoringLoaded[workspace]) {
     renderMonitoring(workspace, monitoringLoaded[workspace]);
+    recheckLatestSheet(workspace);
     return;
   }
 
@@ -2945,11 +2937,8 @@ function showWorkspace(workspace) {
 }
 
 
-/*
- * Iframe monitoring dibuat SEKALI per workspace lalu hanya
- * disembunyikan / ditampilkan, sehingga berpindah menu tidak
- * memuat ulang spreadsheet.
- */
+
+
 const monitoringFrames = {};
 let monitoringPrefetchStarted = false;
 
@@ -2996,7 +2985,7 @@ function setMonitoringMessage(html) {
     content.insertBefore(el, content.firstChild);
   }
 
-  /* display: contents agar tata letak sama seperti sebelumnya. */
+   
   el.style.display = 'contents';
   el.innerHTML = html;
 }
@@ -3091,10 +3080,40 @@ function openMarineGuidanceEdit() {
   );
 }
 
-/*
- * silent = true: dipakai untuk memuat URL di latar belakang
- * (prefetch) tanpa mengubah tampilan.
- */
+
+
+const monitoringCheckedAt = {};
+
+
+
+function recheckLatestSheet(workspace) {
+
+  if (workspace !== 'diseminasi' && workspace !== 'rob') {
+    return;
+  }
+
+  if (Date.now() - (monitoringCheckedAt[workspace] || 0) < 30000) {
+    return;
+  }
+
+  monitoringCheckedAt[workspace] = Date.now();
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      if (!result || !result.url) {
+        return;
+      }
+      const prev = monitoringLoaded[workspace];
+      if (prev && prev.url === result.url) {
+        return;
+      }
+      monitoringLoaded[workspace] = result;
+      renderMonitoring(workspace, result);
+    })
+    .withFailureHandler(function() {})
+    .getMonitoringEmbedUrl(workspace, false);
+}
+
 function loadMonitoring(workspace, silent) {
 
   if (MONITORING_DIRECT_URLS[workspace]) {
@@ -3178,7 +3197,7 @@ function loadMonitoring(workspace, silent) {
 }
 
 
-/* Ambil URL monitoring di latar belakang setelah dashboard tampil. */
+ 
 function prefetchMonitoring() {
 
   if (monitoringPrefetchStarted) {
@@ -3324,9 +3343,8 @@ function showMonitoringError(message) {
 }
 
 
-/* =====================================================
-   STATE
-   ===================================================== */
+
+
 
 let dashboardData = null;
 
@@ -3340,9 +3358,8 @@ let saveSequences = {};
 
 
 
-/* =====================================================
-   INIT
-   ===================================================== */
+
+
 
 document.addEventListener(
   'DOMContentLoaded',
@@ -3350,9 +3367,10 @@ document.addEventListener(
 
     initializeArchiveControls();
     startLivePolling();
+    startRolloverWatch();
     initTaskDrag();
 
-    /* Tanggal kosong: server memakai tanggal operasional. */
+     
     currentDate = '';
 
     loadDashboard();
@@ -3361,9 +3379,8 @@ document.addEventListener(
 );
 
 
-/* =====================================================
-   LOAD
-   ===================================================== */
+
+
 
 function loadDashboard() {
 
@@ -3382,9 +3399,8 @@ function loadDashboard() {
   `;
 
 
-  /*
-   * SATU request saja.
-   */
+  
+
   google.script.run
 
     .withSuccessHandler(
@@ -3404,6 +3420,9 @@ function loadDashboard() {
 
         currentDate =
           data.date;
+
+        followOperationalDay =
+          (data.date === todayUtcString());
 
         document.getElementById(
           'reminderInput'
@@ -3446,9 +3465,8 @@ function loadDashboard() {
 }
 
 
-/* =====================================================
-   DATE
-   ===================================================== */
+
+
 
 function changeDate(
   delta
@@ -3534,9 +3552,271 @@ function renderDate() {
 }
 
 
-/* =====================================================
-   RENDER DASHBOARD
-   ===================================================== */
+
+
+
+
+
+
+
+function splitFodNames(value) {
+  return String(value || '')
+    .split(',')
+    .map(function(x) { return x.trim(); })
+    .filter(Boolean);
+}
+
+ 
+function onDinasFilterChange() {
+  const f = document.getElementById('fodFilter');
+  if (f) {
+    f.value = 'ALL';
+  }
+  renderDashboard();
+}
+
+function onFodFilterChange() {
+  document.getElementById('dinasFilter').value = 'ALL';
+  renderDashboard();
+}
+
+let fodFilterKey = '';
+
+ 
+function syncFodFilter(fodMap) {
+
+  const sel = document.getElementById('fodFilter');
+
+  if (!sel) {
+    return;
+  }
+
+  const names = [];
+
+  DINAS_ORDER.forEach(function(dinas) {
+    splitFodNames(fodMap[dinas]).forEach(function(n) {
+      if (names.indexOf(n) === -1) {
+        names.push(n);
+      }
+    });
+  });
+
+  names.sort(function(a, b) {
+    return a.localeCompare(b, 'id');
+  });
+
+  const key = names.join('|');
+  const current = sel.value;
+
+  if (key !== fodFilterKey) {
+    fodFilterKey = key;
+    sel.innerHTML =
+      '<option value="ALL">Semua FoD</option>' +
+      names.map(function(n) {
+        return '<option value="' + escapeHtml(n) + '">' +
+          escapeHtml(n) + '</option>';
+      }).join('');
+  }
+
+  sel.value = names.indexOf(current) !== -1 ? current : 'ALL';
+
+   
+  sel.style.display = names.length ? '' : 'none';
+}
+
+
+
+
+
+let followOperationalDay = true;
+
+function todayUtcString() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+ 
+function checkOperationalRollover() {
+
+  if (
+    !followOperationalDay ||
+    !currentDate ||
+    currentWorkspace !== 'task'
+  ) {
+    return;
+  }
+
+  const today = todayUtcString();
+
+  if (currentDate === today || isUserBusyWithControl()) {
+    return;
+  }
+
+  currentDate = today;
+  loadDashboard();
+}
+
+function startRolloverWatch() {
+  setInterval(checkOperationalRollover, 30000);
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+      checkOperationalRollover();
+    }
+  });
+}
+
+
+
+
+
+const CAL_MONTHS = [
+  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+];
+
+let calState = { y: 0, m: 0 };
+let calAvailable = {};
+let calLoaded = false;
+let calFailed = false;
+
+function toggleCalendar(ev) {
+
+  if (ev) {
+    ev.stopPropagation();
+  }
+
+  const pop = document.getElementById('calPopup');
+
+  if (!pop) {
+    return;
+  }
+
+  if (pop.style.display === 'block') {
+    closeCalendar();
+    return;
+  }
+
+  const p = (currentDate || todayUtcString()).split('-');
+
+  calState = { y: Number(p[0]), m: Number(p[1]) - 1 };
+
+  pop.style.display = 'block';
+
+  renderCalendar();
+  loadAvailableDates();
+}
+
+function closeCalendar() {
+  const pop = document.getElementById('calPopup');
+  if (pop) {
+    pop.style.display = 'none';
+  }
+}
+
+document.addEventListener('click', closeCalendar);
+
+function loadAvailableDates() {
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      calAvailable = {};
+      ((res && res.dates) || []).forEach(function(d) {
+        calAvailable[d] = true;
+      });
+      if (res && res.today) {
+        calAvailable[res.today] = true;
+      }
+      calLoaded = true;
+      calFailed = false;
+      renderCalendar();
+    })
+    .withFailureHandler(function() {
+       
+      calLoaded = true;
+      calFailed = true;
+      renderCalendar();
+    })
+    .getAvailableDates();
+}
+
+function calShift(delta) {
+  calState.m += delta;
+  if (calState.m < 0) {
+    calState.m = 11;
+    calState.y--;
+  } else if (calState.m > 11) {
+    calState.m = 0;
+    calState.y++;
+  }
+  renderCalendar();
+}
+
+function pickDate(iso) {
+  closeCalendar();
+  if (iso === currentDate) {
+    return;
+  }
+  currentDate = iso;
+  loadDashboard();
+}
+
+function renderCalendar() {
+
+  const pop = document.getElementById('calPopup');
+
+  if (!pop) {
+    return;
+  }
+
+  const y = calState.y;
+  const m = calState.m;
+  const pad = function(n) { return String(n).padStart(2, '0'); };
+
+  const lead = (new Date(Date.UTC(y, m, 1)).getUTCDay() + 6) % 7;
+  const days = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+  const today = todayUtcString();
+
+  let html =
+    '<div class="cal-head">' +
+    '<button type="button" class="cal-nav" onclick="calShift(-1)">‹</button>' +
+    '<div class="cal-title">' + CAL_MONTHS[m] + ' ' + y + '</div>' +
+    '<button type="button" class="cal-nav" onclick="calShift(1)">›</button>' +
+    '</div><div class="cal-grid">';
+
+  ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].forEach(function(n) {
+    html += '<div class="cal-dow">' + n + '</div>';
+  });
+
+  for (let i = 0; i < lead; i++) {
+    html += '<div></div>';
+  }
+
+  for (let d = 1; d <= days; d++) {
+
+    const iso = y + '-' + pad(m + 1) + '-' + pad(d);
+    const ok = calFailed || !!calAvailable[iso] || iso === currentDate;
+
+    const cls =
+      'cal-day ' + (ok ? 'on' : 'off') +
+      (iso === currentDate ? ' sel' : '') +
+      (iso === today ? ' today' : '');
+
+    html += ok
+      ? '<button type="button" class="' + cls +
+        '" onclick="pickDate(\'' + iso + '\')">' + d + '</button>'
+      : '<div class="' + cls + '">' + d + '</div>';
+  }
+
+  html +=
+    '</div><div class="cal-legend">' +
+    (calLoaded
+      ? '<span><span class="dot on"></span>Ada data</span>' +
+        '<span><span class="dot off"></span>Tidak ada</span>'
+      : 'Memuat tanggal tersedia...') +
+    '</div>';
+
+  pop.innerHTML = html;
+}
+
 
 function renderDashboard() {
 
@@ -3564,15 +3844,8 @@ function renderDashboard() {
   );
 
 
-  /*
-   * PENTING:
-   * TASK SELALU DARI MASTER.
-   *
-   * Daily hanya digunakan untuk:
-   * - status
-   * - FoD
-   * - sheetRow
-   */
+  
+
   master.activities.forEach(
     activity => {
 
@@ -3628,9 +3901,8 @@ function renderDashboard() {
   );
 
 
-  /*
-   * FoD per dinas.
-   */
+  
+
   const fodMap = {};
 
   DINAS_ORDER.forEach(
@@ -3652,30 +3924,44 @@ function renderDashboard() {
   );
 
 
+  syncFodFilter(fodMap);
+
+  const fodSelected =
+    document.getElementById('fodFilter').value;
+
   const visibleDinas =
     DINAS_ORDER.filter(
-      dinas =>
-        filter === 'ALL' ||
-        filter === dinas
+      dinas => {
+        if (fodSelected !== 'ALL') {
+           
+          return splitFodNames(fodMap[dinas])
+            .indexOf(fodSelected) !== -1;
+        }
+        return filter === 'ALL' || filter === dinas;
+      }
     );
 
 
   let html =
     '<div class="dashboard-grid">';
 
-  /*
-   * Susunan visual:
-   * PS1 + PS2
-   * PS3 + PJ
-   * PF1 + PF2
-   * MA + MB
-   */
-  const rows = [
+  
+
+  let rows = [
     ['PS1', 'PS2'],
     ['PS3', 'PJ'],
     ['PF1', 'PF2'],
     ['MA', 'MB']
   ];
+
+  
+
+  if (fodSelected !== 'ALL') {
+    rows = [];
+    for (let i = 0; i < visibleDinas.length; i += 2) {
+      rows.push(visibleDinas.slice(i, i + 2));
+    }
+  }
 
   rows.forEach(pair => {
 
@@ -3723,9 +4009,8 @@ function renderDashboard() {
 }
 
 
-/* =====================================================
-   CARD
-   ===================================================== */
+
+
 
 function getDinasProgressPercent(dinas, tasks, dailyRows) {
   const activeTasks = Array.isArray(tasks) ? tasks : [];
@@ -3915,9 +4200,8 @@ function buildPJCard_UNUSED() {
   `;
 }
 
-/* =====================================================
-   TASK ROW
-   ===================================================== */
+
+
 
 function buildTaskRow(
   task,
@@ -4010,9 +4294,8 @@ function buildTaskRow(
 }
 
 
-/* =====================================================
-   LIVE DINAS PROGRESS RING
-   ===================================================== */
+
+
 
 function refreshDinasProgressRing(dinas) {
 
@@ -4073,9 +4356,8 @@ function refreshDinasProgressRing(dinas) {
 }
 
 
-/* =====================================================
-   STATUS CHANGE
-   ===================================================== */
+
+
 
 function handleStatusChange(
   dinas,
@@ -4084,11 +4366,8 @@ function handleStatusChange(
   element
 ) {
 
-  /*
-   * FIX WARNA:
-   * elemen yang DIUBAH langsung diberi
-   * class baru.
-   */
+  
+
   element.classList.remove(
     'done',
     'always-on',
@@ -4108,18 +4387,15 @@ function handleStatusChange(
   const taskName =
     element.dataset.task || '';
 
-  /*
-   * Lepas fokus supaya live sync tidak menunda
-   * pembaruan data dari komputer lain.
-   */
+  
+
   if (element.blur) {
     element.blur();
   }
 
 
-  /*
-   * Update local data.
-   */
+  
+
   const row =
     dashboardData.daily.rows.find(
       r =>
@@ -4138,13 +4414,12 @@ function handleStatusChange(
     dashboardData.master.activities
   );
 
-  // Update ring progress Dinas secara langsung tanpa reload halaman.
+  
   refreshDinasProgressRing(dinas);
 
 
-  /*
-   * Sequence.
-   */
+  
+
   const key =
     currentDate +
     '|' +
@@ -4197,9 +4472,8 @@ function handleStatusChange(
 }
 
 
-/* =====================================================
-   SAVE STATUS
-   ===================================================== */
+
+
 
 function saveTaskWithRetry(
   key,
@@ -4304,9 +4578,8 @@ function saveTaskWithRetry(
 }
 
 
-/* =====================================================
-   FOD
-   ===================================================== */
+
+
 
 function handlePJFoDChange(slot, value) {
   if (!dashboardData) return;
@@ -4493,9 +4766,8 @@ function retryFoD(
 }
 
 
-/* =====================================================
-   REMINDER
-   ===================================================== */
+
+
 
 function handleReminderInput() {
 
@@ -4592,9 +4864,8 @@ function saveReminderWithRetry(
 }
 
 
-/* =====================================================
-   PROGRESS
-   ===================================================== */
+
+
 
 function updateProgress(
   dailyRows,
@@ -4718,13 +4989,26 @@ function updateProgress(
 }
 
 
-/* =====================================================
-   DAY LOGIC
-   ===================================================== */
+
+
 
 function isTaskForCurrentDate(
-  hari
+  hari,
+  task
 ) {
+
+   
+  if (
+    task &&
+    currentDate &&
+    /rekap.*hcml|hcml.*rekap/i.test(String(task))
+  ) {
+    const dd = Number(currentDate.split('-')[2]);
+    if (dd !== 1 && dd !== 2) {
+      return false;
+    }
+  }
+
 
   const value =
     String(hari || '').trim();
@@ -4743,14 +5027,17 @@ function isTaskForCurrentDate(
   }
 
 
-  /* Tugas "hari ini saja": "Tanggal yyyy-MM-dd". */
+   
   const specific =
     value.match(
-      /^tanggal\s+(\d{4}-\d{2}-\d{2})$/i
+      /^tanggal\s+(\d{4}-\d{2}-\d{2}(?:\s*,\s*\d{4}-\d{2}-\d{2})*)$/i
     );
 
   if (specific) {
-    return specific[1] === currentDate;
+    return specific[1]
+      .split(',')
+      .map(function(s) { return s.trim(); })
+      .indexOf(currentDate) !== -1;
   }
 
 
@@ -4800,9 +5087,8 @@ function isTaskForCurrentDate(
 }
 
 
-/* =====================================================
-   STATUS CLASS
-   ===================================================== */
+
+
 
 function getStatusClass(
   status
@@ -4828,9 +5114,8 @@ function getStatusClass(
 }
 
 
-/* =====================================================
-   SAVE STATUS
-   ===================================================== */
+
+
 
 function setSaveStatus(
   text,
@@ -4857,20 +5142,8 @@ function setSaveStatus(
 
 
 
-/* =====================================================
-   LIVE SYNC
-   =====================================================
 
-   Browser mengecek "versi" data di server tiap
-   LIVE_POLL_MS (ringan, hanya baca cache). Jika berubah
-   karena ada pengguna lain, data diambil ulang dan
-   tampilan diperbarui otomatis.
 
-   Pembaruan ditunda bila:
-   - tab tidak terlihat / bukan workspace Task Management
-   - pengguna sedang menyimpan perubahan sendiri
-   - pengguna sedang memegang dropdown atau dialog terbuka
-   ===================================================== */
 
 const LIVE_POLL_MS = 8000;
 const LIVE_FOCUS_GRACE_MS = 15000;
@@ -4894,7 +5167,7 @@ let lastLiveKey = '';
 let lastSelectFocusAt = 0;
 
 
-/* PJ libur Sabtu & Minggu: tugasnya tidak ditampilkan (tanggal lampau tetap apa adanya). */
+ 
 function isWeekendCurrentDate() {
 
   if (!currentDate) {
@@ -4926,7 +5199,7 @@ function isActivityForCurrentDate(activity) {
     return false;
   }
 
-  return isTaskForCurrentDate(activity.hari);
+  return isTaskForCurrentDate(activity.hari, activity.task);
 }
 
 
@@ -4936,7 +5209,7 @@ function isEditableDinas(dinas) {
     return false;
   }
 
-  /* Tanggal lampau hanya dibaca: tombol tambah / hapus / geser urutan disembunyikan. */
+   
   if (dashboardData && dashboardData.isPast) {
     return false;
   }
@@ -4945,10 +5218,8 @@ function isEditableDinas(dinas) {
 }
 
 
-/*
- * Untuk tanggal lampau, daftar tugas diambil dari sheet harian
- * (apa adanya saat itu), bukan dari MASTER yang sekarang.
- */
+
+
 function normalizeViewData(data) {
 
   if (data && data.isPast && data.master && data.daily) {
@@ -5175,11 +5446,8 @@ function applyLiveData(data, requestedDate) {
     return;
   }
 
-  /*
-   * Pengguna mulai mengubah sesuatu saat data dimuat:
-   * jangan timpa, versi belum dicatat sehingga polling
-   * berikutnya mencoba lagi.
-   */
+  
+
   if (
     Date.now() < localWriteUntil ||
     isUserBusyWithControl()
@@ -5221,7 +5489,7 @@ function applyLiveData(data, requestedDate) {
 }
 
 
-/* Data lengkap hasil tambah / hapus tugas. */
+ 
 function applyFullData(data) {
 
   if (!data || data.date !== currentDate) {
@@ -5256,17 +5524,14 @@ function refreshLiveNow() {
 }
 
 
-/* =====================================================
-   TAMBAH TUGAS
-   ===================================================== */
+
+
 
 let addTaskDinas = '';
 let addTaskSaving = false;
 
-/*
- * Template tugas sesekali. Tiap centang membuat satu tugas;
- * hari mengikuti pilihan di bawahnya (mis. "Hari ini saja").
- */
+
+
 const TASK_TEMPLATES = {
   MA: [
     {
@@ -5406,7 +5671,7 @@ function onEveryDayToggle(source) {
   const today =
     document.getElementById('addTaskToday');
 
-  /* "Setiap hari" dan "Hari ini saja" saling meniadakan. */
+   
   if (source === every && every.checked) {
     today.checked = false;
   }
@@ -5544,9 +5809,8 @@ function saveNewTask() {
 }
 
 
-/* =====================================================
-   HAPUS TUGAS
-   ===================================================== */
+
+
 
 let pendingDelete = null;
 let deleteTaskSaving = false;
@@ -5564,14 +5828,16 @@ function openDeleteTask(button) {
   document.getElementById('deleteTaskText').textContent =
     '"' + pendingDelete.task + '" (' + pendingDelete.dinas +
     (/^tanggal\s/i.test(pendingDelete.hari)
-      ? ') akan dihapus (tugas ini hanya untuk satu hari).'
+      ? (pendingDelete.hari.indexOf(',') !== -1
+          ? ') akan dihapus hanya untuk tanggal ini.'
+          : ') akan dihapus (tugas ini hanya untuk satu hari).')
       : ') akan dihapus dari semua hari.');
 
   document.getElementById('deleteTaskYes').disabled = false;
 
   document.getElementById('deleteTaskModal').style.display = 'flex';
 
-  /* Pilihan default: Tidak. */
+   
   document.getElementById('deleteTaskNo').focus();
 }
 
@@ -5647,15 +5913,8 @@ function confirmDeleteTask() {
 }
 
 
-/* =====================================================
-   ATUR URUTAN TUGAS (DRAG)
-   =====================================================
 
-   Tanpa ikon: tekan nama tugas dengan mouse lalu geser ke
-   atas / bawah di dalam kartu dinas yang sama. Urutan
-   disimpan ke MASTER; hanya tugas yang sedang tampil yang
-   ditukar posisinya.
-   ===================================================== */
+
 
 let dragState = null;
 let taskOrderSaving = false;
@@ -5901,7 +6160,7 @@ function applyLocalReorder(dinas, names) {
     if (
       a.dinas === dinas &&
       names.indexOf(a.task) !== -1 &&
-      isTaskForCurrentDate(a.hari)
+      isTaskForCurrentDate(a.hari, a.task)
     ) {
       idxs.push(i);
     }
@@ -5974,9 +6233,8 @@ function saveTaskOrder(dinas, names) {
 }
 
 
-/* =====================================================
-   LOAD AWAL
-   ===================================================== */
+
+
 
 let firstLoadDone = false;
 
@@ -5988,16 +6246,15 @@ function onFirstDashboardLoad() {
 
   firstLoadDone = true;
 
-  /* Status arsip & monitoring tidak lagi berebut dengan load dashboard. */
+   
   refreshArchiveStatus();
 
   setTimeout(prefetchMonitoring, 800);
 }
 
 
-/* =====================================================
-   MONTHLY ARCHIVE
-   ===================================================== */
+
+
 
 const ARCHIVE_MONTH_NAMES = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -6020,8 +6277,8 @@ function initializeArchiveControls() {
   });
 
   const now = new Date();
-  month.value = String(now.getMonth() + 1);
-  year.value = String(now.getFullYear());
+  month.value = String(now.getUTCMonth() + 1);
+  year.value = String(now.getUTCFullYear());
 }
 
 function getArchiveSelection() {
@@ -6177,9 +6434,8 @@ function confirmDeleteArchive() {
     );
 }
 
-/* =====================================================
-   ERROR
-   ===================================================== */
+
+
 
 function showError(
   message
@@ -6208,9 +6464,8 @@ function showError(
 }
 
 
-/* =====================================================
-   ESCAPE
-   ===================================================== */
+
+
 
 function escapeHtml(
   value
@@ -6260,9 +6515,8 @@ function escapeJs(
 }
 
 
-/* =====================================================
-   ORDER
-   ===================================================== */
+
+
 
 const DINAS_ORDER = [
   'PS1',
