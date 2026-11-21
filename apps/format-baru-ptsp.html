@@ -207,7 +207,7 @@ async function findSig(){for(const pi in S.P){if(!S.D.reports.some(r=>r.pi==pi))
  o.getContext('2d').drawImage(c,x0,y0,o.width,o.height,0,0,o.width,o.height);return png(o)}return null}
 
 /* ---------- util ---------- */
-const BF=[1,4,7,11,16,22,28,34,41,48,56,64];
+const BF=[1,4,7,11,17,22,28,34,41,48,56,64];
 function beaufort(v){const n=(v.match(/\d+(?:[.,]\d+)?/g)||[]).map(x=>+x.replace(',','.'));if(!n.length)return'-';const a=BF.filter(t=>Math.min(...n)>=t).length,b=BF.filter(t=>Math.max(...n)>=t).length;return a===b?''+a:a+' - '+b}
 function splitDV(c){const l=c.split('\n').map(x=>x.trim()).filter(Boolean);return l.length&&/^[\d.,\s–\-—]+$/.test(l[l.length-1])?[l.slice(0,-1).join(' '),l[l.length-1]]:[l.join(' '),'']}
 const MONI={jan:0,feb:1,mar:2,apr:3,may:4,mei:4,jun:5,jul:6,aug:7,agu:7,agt:7,sep:8,oct:9,okt:9,nov:10,dec:11,des:11};
