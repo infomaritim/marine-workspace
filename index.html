@@ -55,27 +55,31 @@
   #routine-menu .tool .entry-desc{grid-column:2;grid-row:2;font-size:13px;line-height:1.35;margin:0;max-width:none;align-self:start}
   #routine-menu .tool:hover{border-color:rgb(var(--tc-rgb));box-shadow:0 6px 18px rgba(var(--tc-rgb),.28)}
 
-  /* warna per baris: biru - oranye - ungu (desktop 4 kolom) */
+  /* warna per baris: biru - oranye - ungu - merah muda (desktop 4 kolom) */
   #routine-menu .tool:nth-child(n+1):nth-child(-n+4){--tc-rgb:37,99,235}
   #routine-menu .tool:nth-child(n+5):nth-child(-n+8){--tc-rgb:232,89,12}
   #routine-menu .tool:nth-child(n+9):nth-child(-n+12){--tc-rgb:147,51,234}
+  #routine-menu .tool:nth-child(n+13):nth-child(-n+16){--tc-rgb:219,39,119}
   html[data-theme="dark"] #routine-menu .tool:nth-child(n+1):nth-child(-n+4){--tc-rgb:110,168,255}
   html[data-theme="dark"] #routine-menu .tool:nth-child(n+5):nth-child(-n+8){--tc-rgb:255,154,92}
   html[data-theme="dark"] #routine-menu .tool:nth-child(n+9):nth-child(-n+12){--tc-rgb:196,139,255}
+  html[data-theme="dark"] #routine-menu .tool:nth-child(n+13):nth-child(-n+16){--tc-rgb:255,127,181}
 
-  /* tablet: 3 kolom = 4 baris (biru, oranye, ungu, merah muda) */
+  /* tablet: 3 kolom = 5 baris (biru, oranye, ungu, merah muda, biru) */
   @media (max-width:960px){
     #routine-menu.menu-routine{grid-template-columns:repeat(3,minmax(0,1fr))}
     #routine-menu .tool:nth-child(n+1):nth-child(-n+3){--tc-rgb:37,99,235}
     #routine-menu .tool:nth-child(n+4):nth-child(-n+6){--tc-rgb:232,89,12}
     #routine-menu .tool:nth-child(n+7):nth-child(-n+9){--tc-rgb:147,51,234}
     #routine-menu .tool:nth-child(n+10):nth-child(-n+12){--tc-rgb:219,39,119}
+    #routine-menu .tool:nth-child(n+13):nth-child(-n+15){--tc-rgb:37,99,235}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+1):nth-child(-n+3){--tc-rgb:110,168,255}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+4):nth-child(-n+6){--tc-rgb:255,154,92}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+7):nth-child(-n+9){--tc-rgb:196,139,255}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+10):nth-child(-n+12){--tc-rgb:255,127,181}
+    html[data-theme="dark"] #routine-menu .tool:nth-child(n+13):nth-child(-n+15){--tc-rgb:110,168,255}
   }
-  /* HP: 2 kolom = 6 baris (biru, oranye, ungu, merah muda, biru, oranye) */
+  /* HP: 2 kolom = 7 baris (biru, oranye, ungu, merah muda, biru, oranye, ungu) */
   @media (max-width:620px){
     #routine-menu.menu-routine{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px 12px 56px;gap:8px;font-size:14px}
     #routine-menu .tool{padding:10px;column-gap:10px}
@@ -89,12 +93,14 @@
     #routine-menu .tool:nth-child(n+7):nth-child(-n+8){--tc-rgb:219,39,119}
     #routine-menu .tool:nth-child(n+9):nth-child(-n+10){--tc-rgb:37,99,235}
     #routine-menu .tool:nth-child(n+11):nth-child(-n+12){--tc-rgb:232,89,12}
+    #routine-menu .tool:nth-child(n+13):nth-child(-n+14){--tc-rgb:147,51,234}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+1):nth-child(-n+2){--tc-rgb:110,168,255}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+3):nth-child(-n+4){--tc-rgb:255,154,92}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+5):nth-child(-n+6){--tc-rgb:196,139,255}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+7):nth-child(-n+8){--tc-rgb:255,127,181}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+9):nth-child(-n+10){--tc-rgb:110,168,255}
     html[data-theme="dark"] #routine-menu .tool:nth-child(n+11):nth-child(-n+12){--tc-rgb:255,154,92}
+    html[data-theme="dark"] #routine-menu .tool:nth-child(n+13):nth-child(-n+14){--tc-rgb:196,139,255}
   }
 
   /* ===== Tombol tema: icon saja, interaktif ===== */
@@ -174,7 +180,7 @@ document.documentElement.classList.add('locked');
       </span>
       <span class="entry-title">Dashboard</span>
       <span class="entry-desc">Rekapitulasi data tim kerja dalam satu tempat.</span>
-      <span class="chips"><i data-go-dash="kapal">Kecelakaan Kapal</i><i data-go-dash="rob">Banjir Rob</i><i data-go-dash="ptsp">Kinerja PTSP</i><i data-go-dash="skk">SKK Migas</i></span>
+      <span class="chips"><i data-go-dash="kapal">Kecelakaan Kapal</i><i data-go-dash="rob">Banjir Rob</i><i data-go-dash="ptsp">PTSP</i><i data-go-dash="skk">SKK Migas</i></span>
       <span class="entry-cta">Buka dashboard</span>
     </button>
 
@@ -265,6 +271,11 @@ document.documentElement.classList.add('locked');
       <span class="entry-title">MET-PUBLIK</span>
       <span class="entry-desc">Web Meteorologi Publik.</span>
     </a>
+    <a class="tool" target="_blank" rel="noopener" href="https://convertjson-eta.vercel.app/">
+      <span class="entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 15c2.2-2.5 4.2-2.5 6.5 0s4.3 2.5 6.5 0 3.8-2.2 7 0M2 20c2.2-2.5 4.2-2.5 6.5 0s4.3 2.5 6.5 0 3.8-2.2 7 0"/><path d="M12 3v7M12 13h.01"/></svg></span>
+      <span class="entry-title">Peringatan Dini Banjir Rob Indonesia</span>
+      <span class="entry-desc">Pembuatan peringatan dini banjir rob Indonesia.</span>
+    </a>
   </div>
   <div class="stage" id="stage-routine" hidden></div>
 </section>
@@ -344,7 +355,7 @@ document.documentElement.classList.add('locked');
     if (g) g.remove();
     document.documentElement.classList.remove('locked');
     var s = document.createElement('script');
-    s.src = 'assets/shell.js?v=12';
+    s.src = 'assets/shell.js?v=13';
     document.body.appendChild(s);
   }
 
