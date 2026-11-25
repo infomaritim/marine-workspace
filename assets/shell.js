@@ -12,7 +12,7 @@
     'convert-pdf': { label: 'Convert PDF Scan', src: 'apps/convert-pdf-scan.html' },
     'satelit-ptsp': { label: 'Satelit PTSP', src: 'apps/satelit-ptsp.html' }
   };
-  var V = '13';
+  var V = '14';
   function bust(u) { return u + (u.indexOf('?') < 0 ? '?' : '&') + 'v=' + V; }
   var ROUTINE = { task: { label: 'Task Management', src: 'apps/fod.html' } };
 
