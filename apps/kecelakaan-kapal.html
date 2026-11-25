@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <style>
     * { box-sizing: border-box; }
@@ -403,6 +404,31 @@
     .table-title { font-size: 14px; font-weight: 600; color: var(--navy); white-space: nowrap; }
     .result-count { color: var(--muted); font-size: 12px; margin-left: auto; white-space: nowrap; }
 
+    .btn-excel {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 13px;
+      border: 1px solid #166534;
+      border-radius: 4px;
+      background: #15803D;
+      color: #fff;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background .15s ease, opacity .15s ease;
+    }
+    .btn-excel:hover:not(:disabled) { background: #166534; }
+    .btn-excel:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-excel svg {
+      width: 14px; height: 14px;
+      fill: none; stroke: currentColor; stroke-width: 2.2;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+
     .table-search { position: relative; width: 310px; max-width: 45%; }
     .table-search input { padding-left: 34px; }
     .table-search svg {
@@ -717,6 +743,11 @@
       <div class="table-title">Ringkasan Analisis Kecelakaan Kapal *</div>
 
       <div class="result-count" id="resultCount">0 data</div>
+
+      <button type="button" class="btn-excel" id="downloadExcelBtn" onclick="downloadTableExcel()" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        Download Excel
+      </button>
 
       <div class="table-search">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -2157,6 +2188,9 @@
     document.getElementById('resultCount').textContent =
       filteredData.length + ' data';
 
+    const excelBtn = document.getElementById('downloadExcelBtn');
+    if (excelBtn) excelBtn.disabled = !filteredData.length;
+
     if (!filteredData.length) {
       tbody.innerHTML =
         '<tr><td colspan="12" class="empty">' +
@@ -2300,6 +2334,96 @@
 
     currentTablePage = newPage;
     updateTable();
+  }
+
+  function downloadTableExcel() {
+    if (!filteredData.length) {
+      alert('Tidak ada data untuk diunduh.');
+      return;
+    }
+
+    const headers = [
+      'No',
+      'Tahun',
+      'Bulan',
+      'Tanggal',
+      'Nama Kapal',
+      'Kondisi',
+      'Lokasi Kejadian',
+      'Cuaca',
+      'Gelombang (m)',
+      'Arah Angin',
+      'Kec. Angin (knot)',
+      'Kec. Arus (cm/s)'
+    ];
+
+    const rows = filteredData.map((d, index) => ([
+      index + 1,
+      d.tahun || '',
+      d.bulan || '',
+      getDayOnly(d.tanggal) || '',
+      d.namaKapal || '',
+      d.kondisi || '',
+      d.lokasi || '',
+      d.cuaca || '',
+      d.gelombang || '',
+      d.arahAngin || '',
+      d.angin || '',
+      d.arus || ''
+    ]));
+
+    const year = document.getElementById('yearFilter').value;
+    const yearFrom = document.getElementById('yearFrom').value;
+    const yearTo = document.getElementById('yearTo').value;
+    const month = document.getElementById('monthFilter').value;
+
+    const tagParts = [];
+    if (year && year !== 'ALL') {
+      tagParts.push(year);
+    } else if ((yearFrom && yearFrom !== 'ALL') || (yearTo && yearTo !== 'ALL')) {
+      tagParts.push((yearFrom !== 'ALL' ? yearFrom : 'awal') + '-' + (yearTo !== 'ALL' ? yearTo : 'akhir'));
+    }
+    if (month && month !== 'ALL') {
+      tagParts.push(month);
+    }
+    const suffix = tagParts.length ? '_' + tagParts.join('_').replace(/[^\w\-]+/g, '_') : '';
+
+    if (typeof XLSX !== 'undefined') {
+      const aoa = [headers].concat(rows);
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      ws['!cols'] = [
+        { wch: 5 },
+        { wch: 8 },
+        { wch: 13 },
+        { wch: 10 },
+        { wch: 24 },
+        { wch: 16 },
+        { wch: 32 },
+        { wch: 20 },
+        { wch: 15 },
+        { wch: 16 },
+        { wch: 18 },
+        { wch: 18 }
+      ];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Ringkasan Analisis');
+      XLSX.writeFile(wb, 'Ringkasan_Analisis_Kecelakaan_Kapal' + suffix + '.xlsx');
+      return;
+    }
+
+    // Fallback CSV jika library XLSX dari CDN gagal dimuat
+    const csvLines = [headers].concat(rows).map(r =>
+      r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')
+    );
+    const blob = new Blob(['\uFEFF' + csvLines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Ringkasan_Analisis_Kecelakaan_Kapal' + suffix + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
   }
 
   function escapeHtml(value) {
