@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="assets/shell.css?v=9">
+<link rel="stylesheet" href="assets/shell.css?v=10">
 <style>
   html.locked body > main,
   html.locked body > section,
@@ -174,7 +174,7 @@ document.documentElement.classList.add('locked');
       </span>
       <span class="entry-title">Dashboard</span>
       <span class="entry-desc">Rekapitulasi data tim kerja dalam satu tempat.</span>
-      <span class="chips"><i>Kecelakaan Kapal</i><i>Banjir Rob</i><i>Kinerja PTSP</i><i>SKK Migas</i></span>
+      <span class="chips"><i data-go-dash="kapal">Kecelakaan Kapal</i><i data-go-dash="rob">Banjir Rob</i><i data-go-dash="ptsp">Kinerja PTSP</i><i data-go-dash="skk">SKK Migas</i></span>
       <span class="entry-cta">Buka dashboard</span>
     </button>
 
@@ -184,7 +184,7 @@ document.documentElement.classList.add('locked');
       </span>
       <span class="entry-title">Layanan Khusus</span>
       <span class="entry-desc">Alat bantu untuk pekerjaan layanan informasi.</span>
-      <span class="chips"><i>Format Lama PTSP</i><i>Convert PDF Scan</i><i>Satelit PTSP</i></span>
+      <span class="chips"><i data-go-tool="format-lama">Format Lama PTSP</i><i data-go-tool="convert-pdf">Convert PDF Scan</i><i data-go-tool="satelit-ptsp">Satelit PTSP</i></span>
       <span class="entry-cta">Buka layanan</span>
     </button>
   </section>
@@ -344,7 +344,7 @@ document.documentElement.classList.add('locked');
     if (g) g.remove();
     document.documentElement.classList.remove('locked');
     var s = document.createElement('script');
-    s.src = 'assets/shell.js?v=9';
+    s.src = 'assets/shell.js?v=12';
     document.body.appendChild(s);
   }
 

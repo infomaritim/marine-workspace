@@ -12,7 +12,7 @@
     'convert-pdf': { label: 'Convert PDF Scan', src: 'apps/convert-pdf-scan.html' },
     'satelit-ptsp': { label: 'Satelit PTSP', src: 'apps/satelit-ptsp.html' }
   };
-  var V = '11';
+  var V = '13';
   function bust(u) { return u + (u.indexOf('?') < 0 ? '?' : '&') + 'v=' + V; }
   var ROUTINE = { task: { label: 'Task Management', src: 'apps/fod.html' } };
 
@@ -297,6 +297,24 @@
     if (th) { setTheme(th.dataset.themeSet); return; }
     var bar = e.target.closest('[data-bar]');
     if (bar) { setBar(bar.dataset.bar === 'hide'); return; }
+    var goDash = e.target.closest('[data-go-dash]');
+    if (goDash) {
+      e.preventDefault();
+      e.stopPropagation();
+      openDashboard(goDash.dataset.goDash);
+      return;
+    }
+    var goTool = e.target.closest('[data-go-tool]');
+    if (goTool) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (TOOLS[goTool.dataset.goTool]) {
+        show('layanan', true);
+        resetLayanan();
+        openTool(goTool.dataset.goTool);
+      }
+      return;
+    }
     var go = e.target.closest('[data-go]');
     if (go) {
       var to = go.dataset.go;
