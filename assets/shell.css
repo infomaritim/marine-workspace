@@ -52,6 +52,8 @@ svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-l
 .entry-desc{color:var(--muted);font-size:.95rem;max-width:34ch}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .chips i{font-style:normal;font-size:.8rem;font-weight:600;color:var(--navy-ink);background:var(--soft);padding:3px 10px;border-radius:999px}
+.chips i[data-go-dash],.chips i[data-go-tool]{cursor:pointer;transition:background-color .15s ease,color .15s ease,transform .12s ease}
+.chips i[data-go-dash]:hover,.chips i[data-go-tool]:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
 .entry-cta{margin-top:auto;padding-top:14px;font-weight:700;color:var(--accent);font-size:.95rem}
 .entry-special .entry-cta{color:var(--amber-ink)}
 
